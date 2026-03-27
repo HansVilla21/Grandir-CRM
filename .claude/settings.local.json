@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh api:*)",
+      "Bash(for skill:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $skill ===\")",
+      "Bash(done)",
+      "Bash(do echo:*)",
+      "Bash(/dev/null echo:*)",
+      "Read(//c/Users/hvill/.claude/projects/d--Antigravity-Grandir-CRM/memory 2>/dev/**)",
+      "Read(//c/Users/hvill/.claude/projects/d--Antigravity-Grandir-CRM/**)",
+      "mcp__supabase__get_project_url",
+      "mcp__supabase__list_migrations",
+      "Read(//c/Users/hvill/.claude/**)",
+      "Bash(find ~/.claude -name *.json -type f)",
+      "Bash(xargs grep:*)",
+      "Read(//c/Users/hvill/**)",
+      "Read(//d/Antigravity/**)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__execute_sql"
+    ],
+    "additionalDirectories": [
+      "d:\\Antigravity\\Grandir CRM\\.claude\\skills",
+      "C:\\Users\\hvill\\.claude\\projects\\d--Antigravity-Grandir-CRM",
+      "C:\\Users\\hvill"
+    ]
+  }
+}

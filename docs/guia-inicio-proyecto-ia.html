@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Iniciar un Proyecto Profesional con IA — Guía para Desarrolladores</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #0ea5e9;
+    --accent: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #0f172a;
+    --gray-900: #1e293b;
+    --gray-800: #334155;
+    --gray-600: #475569;
+    --gray-400: #94a3b8;
+    --gray-200: #e2e8f0;
+    --gray-100: #f1f5f9;
+    --white: #ffffff;
+    --code-bg: #1e293b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--gray-900);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── PORTADA ── */
+  .cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(99,102,241,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(14,165,233,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .cover-badge {
+    background: rgba(99,102,241,0.2);
+    border: 1px solid rgba(99,102,241,0.4);
+    color: #a5b4fc;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover h1 {
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    max-width: 700px;
+  }
+
+  .cover h1 span {
+    background: linear-gradient(135deg, #6366f1, #0ea5e9, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cover-subtitle {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 560px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .cover-meta-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+  }
+
+  .cover-meta-item .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #cbd5e1;
+  }
+
+  .cover-divider {
+    width: 1px;
+    height: 40px;
+    background: #334155;
+  }
+
+  /* ── CONTENIDO ── */
+  .content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* ── SECCIONES ── */
+  .section {
+    margin-bottom: 60px;
+    page-break-inside: avoid;
+  }
+
+  .section-number {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    margin-top: 28px;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-600);
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+
+  p {
+    color: var(--gray-800);
+    margin-bottom: 14px;
+  }
+
+  /* ── INTRO DESTACADA ── */
+  .intro-box {
+    background: linear-gradient(135deg, #f0f4ff 0%, #f0fdf4 100%);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 12px 12px 0;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+
+  .intro-box p {
+    font-size: 16px;
+    color: var(--gray-800);
+    margin: 0;
+  }
+
+  /* ── PASOS NUMERADOS ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px 24px;
+    background: var(--gray-100);
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+    page-break-inside: avoid;
+  }
+
+  .step.highlight {
+    background: linear-gradient(135deg, #eef2ff 0%, #e0f2fe 100%);
+    border-color: #c7d2fe;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .step-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 6px 0;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .step-content p {
+    font-size: 14px;
+    margin: 0;
+    color: var(--gray-600);
+  }
+
+  /* ── CODE BLOCKS ── */
+  pre {
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    margin: 16px 0;
+    border: 1px solid #334155;
+    page-break-inside: avoid;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  pre code {
+    color: #e2e8f0;
+  }
+
+  .inline-code {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--primary-dark);
+  }
+
+  /* Syntax highlighting simple */
+  .tok-comment { color: #64748b; }
+  .tok-string { color: #86efac; }
+  .tok-keyword { color: #a5b4fc; }
+  .tok-value { color: #fca5a5; }
+  .tok-key { color: #7dd3fc; }
+  .tok-section { color: #fbbf24; font-weight: 600; }
+  .tok-cmd { color: #34d399; }
+
+  /* ── CARDS GRID ── */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 20px;
+    page-break-inside: avoid;
+  }
+
+  .card-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 6px 0;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .card p {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin: 0;
+  }
+
+  /* ── ALERT BOXES ── */
+  .alert {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    page-break-inside: avoid;
+  }
+
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+
+  .alert-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+  }
+
+  .alert-warning {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+  }
+
+  .alert-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+  }
+
+  .alert-danger {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+  }
+
+  .alert p { margin: 0; font-size: 14px; }
+  .alert p strong { display: block; margin-bottom: 4px; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .flow-step.alt { background: var(--secondary); }
+  .flow-step.accent { background: var(--accent); }
+  .flow-step.warn { background: var(--warning); }
+
+  .flow-arrow {
+    color: var(--gray-400);
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist {
+    list-style: none;
+    margin: 16px 0;
+  }
+
+  .checklist li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 14px;
+    color: var(--gray-800);
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .checklist .check {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--gray-300);
+    border-radius: 4px;
+    margin-top: 1px;
+  }
+
+  .checklist .check.done {
+    background: var(--accent);
+    border-color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+  }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  th {
+    background: var(--dark);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--gray-800);
+  }
+
+  tr:nth-child(even) td { background: var(--gray-100); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    border: none;
+    border-top: 2px solid var(--gray-200);
+    margin: 48px 0;
+  }
+
+  /* ── PAGE BREAK ── */
+  .page-break { page-break-before: always; }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin: 20px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+    page-break-inside: avoid;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+
+  .timeline-item h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 6px 0;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .timeline-item p {
+    font-size: 14px;
+    margin: 0;
+    color: var(--gray-600);
+  }
+
+  /* ── ESTRUCTURA DE CARPETAS ── */
+  .file-tree {
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: #94a3b8;
+    page-break-inside: avoid;
+  }
+
+  .file-tree .dir { color: #7dd3fc; font-weight: 500; }
+  .file-tree .file { color: #e2e8f0; }
+  .file-tree .comment { color: #475569; font-style: italic; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--dark);
+    color: var(--gray-400);
+    text-align: center;
+    padding: 40px;
+    font-size: 13px;
+    margin-top: 80px;
+  }
+
+  .footer strong { color: var(--gray-200); }
+
+  /* ── PRINT ── */
+  @media print {
+    body { font-size: 13px; }
+    .cover { min-height: auto; padding: 80px 60px; }
+    .cover h1 { font-size: 40px; }
+    .content { padding: 40px; }
+    pre { font-size: 11px; }
+    .page-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     PORTADA
+════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">Guía Práctica · Desarrollo con IA</div>
+  <h1>Cómo Iniciar un Proyecto Profesional<br><span>con Agentes de IA</span></h1>
+  <p class="cover-subtitle">Del caos a la claridad — el proceso completo desde la idea hasta el primer commit, con Claude Code y superpowers</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="label">Nivel</span>
+      <span class="value">Intermedio / Avanzado</span>
+    </div>
+    <div class="cover-divider"></div>
+    <div class="cover-meta-item">
+      <span class="label">Herramientas</span>
+      <span class="value">Claude Code · Supabase · Next.js</span>
+    </div>
+    <div class="cover-divider"></div>
+    <div class="cover-meta-item">
+      <span class="label">Proyecto real</span>
+      <span class="value">Grandir CRM</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     CONTENIDO
+════════════════════════════════════════════ -->
+<div class="content">
+
+
+  <!-- ── INTRO ── -->
+  <div class="section">
+    <div class="section-number">Introducción</div>
+    <h2>El problema que resuelve esta guía</h2>
+
+    <div class="intro-box">
+      <p>La mayoría de los desarrolladores que trabajan con IA empiezan a escribir código inmediatamente. Abren Claude, pegan un requerimiento, y esperan magia. El resultado: código que no escala, contexto perdido entre sesiones, y proyectos que se vuelven imposibles de mantener.</p>
+    </div>
+
+    <p>Esta guía muestra el proceso <strong>exacto</strong> que usamos para iniciar el proyecto <strong>Grandir CRM</strong> — un sistema de gestión para un fondo de inversión costarricense con 20+ módulos, múltiples roles de usuario, y portal externo para clientes.</p>
+
+    <p>El proceso tiene tres etapas fundamentales:</p>
+
+    <div class="flow">
+      <div class="flow-step">1. Contexto global</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step alt">2. Inicialización del proyecto</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step accent">3. Skills + Agentes</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step warn">4. Desarrollo iterativo</div>
+    </div>
+
+    <p>Si haces esto bien desde el inicio, Claude tendrá todo el contexto necesario para trabajar contigo como un desarrollador senior durante semanas, sin perder el hilo.</p>
+  </div>
+
+
+  <!-- ── PARTE 0: ANTES DE EMPEZAR ── -->
+  <hr class="section-divider">
+  <div class="section">
+    <div class="section-number">Parte 0 — Antes de abrir Claude Code</div>
+    <h2>La infraestructura base</h2>
+
+    <p>Antes de escribir una sola línea de código o hablar con Claude, necesitas tener tu infraestructura lista. Esto es lo que el cliente / tú ya deben tener configurado:</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🗄️</div>
+        <h4>Supabase</h4>
+        <p>Crea tu proyecto en supabase.com. Conecta el MCP de Supabase en Claude Code para que el agente pueda ejecutar SQL directamente.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h4>Vercel</h4>
+        <p>Crea el proyecto en vercel.com y conecta el MCP de Vercel para deployar directamente desde Claude Code.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <h4>Repositorio Git</h4>
+        <p>Crea el repo en GitHub. La carpeta del proyecto ya debe existir localmente y estar abierta en VS Code.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔑</div>
+        <h4>API Keys</h4>
+        <p>Ten a la mano: Supabase URL + keys, Resend API key (para emails), y cualquier otro servicio que vayas a usar.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <p><strong>Importante sobre los MCPs</strong><br>
+      Los MCP tools (Supabase, Vercel) se configuran en Claude Code antes de iniciar el proyecto. Son la razón por la que Claude puede crear tablas en tu base de datos o hacer deploy sin salir del chat. Si no los tienes configurados, muchos comandos del agente no funcionarán.</p>
+    </div>
+
+    <h3>Cómo conectar el MCP de Supabase</h3>
+    <p>En Claude Code (VS Code extension o CLI), abre la configuración de MCPs y agrega:</p>
+
+    <pre><code><span class="tok-comment">// .claude/settings.json o configuración global</span>
+{
+  <span class="tok-key">"mcpServers"</span>: {
+    <span class="tok-key">"supabase"</span>: {
+      <span class="tok-key">"command"</span>: <span class="tok-string">"npx"</span>,
+      <span class="tok-key">"args"</span>: [<span class="tok-string">"-y"</span>, <span class="tok-string">"@supabase/mcp-server-supabase@latest"</span>,
+               <span class="tok-string">"--supabase-url"</span>, <span class="tok-string">"TU_SUPABASE_URL"</span>,
+               <span class="tok-string">"--supabase-key"</span>, <span class="tok-string">"TU_SERVICE_ROLE_KEY"</span>]
+    }
+  }
+}</code></pre>
+  </div>
+
+
+  <!-- ── PARTE 1: CLAUDE.md GLOBAL ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Parte 1 — Configuración Global</div>
+    <h2>El <span style="font-family: monospace; font-size: 26px;">CLAUDE.md</span> global: tu memoria persistente</h2>
+
+    <p>Claude Code puede leer un archivo <span class="inline-code">CLAUDE.md</span> global en <span class="inline-code">~/.claude/CLAUDE.md</span>. Este archivo se carga en <strong>todos</strong> tus proyectos automáticamente, antes de cualquier otra cosa.</p>
+
+    <p>Aquí defines cómo quieres que Claude se comporte en general: idioma, reglas de seguridad, convenciones de git, comandos disponibles.</p>
+
+    <div class="alert alert-success">
+      <span class="alert-icon">💡</span>
+      <p><strong>Por qué importa</strong><br>
+      Sin este archivo, Claude empieza desde cero en cada sesión. Con él, tienes un asistente que ya sabe tus reglas antes de que digas una palabra.</p>
+    </div>
+
+    <h3>Estructura del CLAUDE.md global</h3>
+
+    <pre><code><span class="tok-section"># Instrucciones Globales — Claude Code</span>
+
+<span class="tok-section">## Comportamiento General</span>
+- Responde siempre en el mismo idioma que el usuario
+- Planifica primero, ejecuta después
+- Calidad sobre velocidad
+
+<span class="tok-section">## Reglas de Seguridad (Sin Excepciones)</span>
+- NUNCA escribas passwords, API keys o tokens en archivos
+- NUNCA hagas commit de <span class="tok-string">.env</span>
+- NUNCA hagas commit directo en <span class="tok-string">main</span> o <span class="tok-string">master</span>
+- NUNCA hagas deploy a producción sin confirmación
+
+<span class="tok-section">## Reglas de Git</span>
+- Ramas: <span class="tok-string">feat/</span>, <span class="tok-string">fix/</span>, <span class="tok-string">docs/</span>, <span class="tok-string">refactor/</span>
+- Mensajes de commit: tipo: descripción breve
+
+<span class="tok-section">## Comandos Disponibles</span>
+- /init-proyecto → Inicializa proyecto nuevo
+- /review        → Revisa código actual
+- /commit        → Commit inteligente
+- /progress      → Estado del proyecto</code></pre>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">📌</span>
+      <p><strong>También puedes crear skills globales</strong><br>
+      En <span class="inline-code">~/.claude/skills/</span> puedes poner skills que estén disponibles en todos tus proyectos. Ideal para comandos como <span class="inline-code">/commit</span> o <span class="inline-code">/review</span> que uses siempre.</p>
+    </div>
+  </div>
+
+
+  <!-- ── PARTE 2: DOCUMENTACIÓN AL AGENTE ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Parte 2 — Alimentar al Agente</div>
+    <h2>Cómo darle contexto al agente de forma eficiente</h2>
+
+    <p>Este es el paso que más diferencia a los desarrolladores que obtienen buenos resultados con IA de los que no. <strong>La calidad del output depende directamente de la calidad del input.</strong></p>
+
+    <h3>¿Qué documentos debe recibir Claude?</h3>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📄</div>
+        <h4>Requerimientos del cliente</h4>
+        <p>Documentos Word, Notion, PDFs con lo que el cliente describió. Entre más detallado, mejor. Grandir CM nos dio 20 páginas de requerimientos.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <h4>Propuesta / Contrato</h4>
+        <p>Lo que prometiste entregar. Define el alcance V1 y evita que Claude sobre-construya funcionalidades no solicitadas.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📐</div>
+        <h4>Templates o ejemplos</h4>
+        <p>Contratos, formularios, pantallas de referencia que el cliente ya usa. Claude los analiza y los refleja en el sistema.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗺️</div>
+        <h4>Wireframes o diseños</h4>
+        <p>Si tienes Figma o bocetos, compártelos. Claude puede leer imágenes y entender la UI esperada antes de codear.</p>
+      </div>
+    </div>
+
+    <h3>La forma correcta de pasarle la información</h3>
+
+    <div class="steps">
+      <div class="step highlight">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Abre todos los archivos en VS Code antes de hablar</h4>
+          <p>Claude Code tiene acceso a todos los archivos abiertos en tu editor. Arrastra los PDFs, documentos y requerimientos al workspace antes de iniciar la conversación.</p>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Dale el contexto de negocio en lenguaje natural</h4>
+          <p>No solo pegues specs técnicas. Explica qué problema resuelve el sistema, quién lo usa, y por qué importa. Claude necesita entender el negocio para tomar buenas decisiones técnicas.</p>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Especifica el stack tecnológico deseado</h4>
+          <p>Dile exactamente qué tecnologías quieres usar. Si no lo especificas, Claude elegirá por ti — lo cual no siempre alineará con tus preferencias o lo que el cliente espera.</p>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Pídele que lea, entienda, y planifique — NO que codee</h4>
+          <p>El error más común: pedir código inmediatamente. El primer mensaje debe terminar con "lee esto, entiéndelo, y vamos a planificar el proyecto." Esto activa el modo de análisis, no el de ejecución.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <span class="alert-icon">🚫</span>
+      <p><strong>Anti-patrón común</strong><br>
+      "Aquí está el requerimiento, créame el proyecto completo." — Esto produce código desorganizado, sin tests, sin estructura, y que no escala. Claude necesita un proceso, no solo un prompt.</p>
+    </div>
+  </div>
+
+
+  <!-- ── PARTE 3: INIT PROYECTO ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Parte 3 — /init-proyecto</div>
+    <h2>Inicializar el proyecto correctamente</h2>
+
+    <p>El skill <span class="inline-code">/init-proyecto</span> crea la base del proyecto de forma estructurada. En lugar de crear archivos manualmente, le dices a Claude el nombre, propósito y tipo de proyecto, y él genera toda la estructura.</p>
+
+    <h3>Qué genera /init-proyecto</h3>
+
+    <div class="file-tree">
+<span class="dir">mi-proyecto/</span>
+├── <span class="file">.gitignore</span>          <span class="comment"># Secretos, node_modules, .env</span>
+├── <span class="file">.env.example</span>       <span class="comment"># Template con variables reales (sin valores)</span>
+├── <span class="file">CLAUDE.md</span>          <span class="comment"># Cerebro del proyecto — reglas + contexto</span>
+├── <span class="file">README.md</span>          <span class="comment"># Documentación para desarrolladores</span>
+├── <span class="dir">.claude/</span>
+│   ├── <span class="dir">agents/</span>         <span class="comment"># Agentes especializados</span>
+│   └── <span class="dir">skills/</span>         <span class="comment"># Skills del proyecto</span>
+├── <span class="dir">docs/</span>              <span class="comment"># Specs, planes, diseños</span>
+├── <span class="dir">memory/</span>            <span class="comment"># Contexto persistente entre sesiones</span>
+└── <span class="dir">src/</span>               <span class="comment"># Código fuente</span>
+    </div>
+
+    <h3>El archivo más importante: CLAUDE.md del proyecto</h3>
+
+    <p>Este es el archivo que Claude leerá al inicio de <strong>cada sesión</strong>. Debe contener:</p>
+
+    <table>
+      <tr>
+        <th>Sección</th>
+        <th>Qué incluir</th>
+      </tr>
+      <tr>
+        <td><strong>Qué es el proyecto</strong></td>
+        <td>2-3 oraciones del propósito del sistema</td>
+      </tr>
+      <tr>
+        <td><strong>El negocio / contexto</strong></td>
+        <td>Quién lo usa, para qué, objetivos</td>
+      </tr>
+      <tr>
+        <td><strong>Stack tecnológico</strong></td>
+        <td>Framework, DB, servicios, deploy</td>
+      </tr>
+      <tr>
+        <td><strong>Módulos del sistema</strong></td>
+        <td>Lista de todas las funcionalidades</td>
+      </tr>
+      <tr>
+        <td><strong>Cómo trabajamos</strong></td>
+        <td>Qué hacer sin preguntar vs qué requiere confirmación</td>
+      </tr>
+      <tr>
+        <td><strong>Convenciones</strong></td>
+        <td>Idioma, nombres de ramas, formato de commits</td>
+      </tr>
+      <tr>
+        <td><strong>Reglas específicas</strong></td>
+        <td>Restricciones propias del dominio del proyecto</td>
+      </tr>
+    </table>
+
+    <div class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      <p><strong>Resultado de hacerlo bien</strong><br>
+      Con un buen CLAUDE.md, puedes cerrar el chat, volver una semana después, y Claude tendrá todo el contexto necesario para continuar exactamente donde se quedó.</p>
+    </div>
+  </div>
+
+
+  <!-- ── PARTE 4: SUPERPOWERS ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Parte 4 — Skills de Superpowers</div>
+    <h2>Instalar superpowers: el framework de desarrollo</h2>
+
+    <p><a href="https://github.com/obra/superpowers" style="color: var(--primary);">Superpowers</a> es un conjunto de skills (habilidades) que definen cómo Claude debe abordar el desarrollo de software. No es un framework de código — es un framework de <em>proceso</em>.</p>
+
+    <h3>El flujo que impone superpowers</h3>
+
+    <div class="flow">
+      <div class="flow-step">brainstorming</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step alt">writing-plans</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step accent">subagent-driven<br>development</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background: #7c3aed">finishing-a-branch</div>
+    </div>
+
+    <h3>Descripción de cada skill</h3>
+
+    <table>
+      <tr>
+        <th>Skill</th>
+        <th>Cuándo usarla</th>
+        <th>Qué hace</th>
+      </tr>
+      <tr>
+        <td><strong>brainstorming</strong></td>
+        <td>Antes de cualquier feature nueva</td>
+        <td>Hace preguntas, propone 2-3 enfoques, escribe el spec y lo guarda en docs/</td>
+      </tr>
+      <tr>
+        <td><strong>writing-plans</strong></td>
+        <td>Cuando tienes el spec aprobado</td>
+        <td>Crea plan de implementación con tareas de 2-5 min, código exacto, comandos</td>
+      </tr>
+      <tr>
+        <td><strong>subagent-driven-development</strong></td>
+        <td>Cuando tienes el plan</td>
+        <td>Despacha subagentes por tarea, revisa spec compliance y calidad de código</td>
+      </tr>
+      <tr>
+        <td><strong>executing-plans</strong></td>
+        <td>Alternativa a subagent</td>
+        <td>Ejecuta el plan paso a paso en la misma sesión</td>
+      </tr>
+      <tr>
+        <td><strong>test-driven-development</strong></td>
+        <td>Siempre al implementar</td>
+        <td>Fuerza el ciclo RED → GREEN → REFACTOR sin excepciones</td>
+      </tr>
+      <tr>
+        <td><strong>systematic-debugging</strong></td>
+        <td>Ante cualquier bug</td>
+        <td>Root cause analysis en 4 fases — no aplica parches sin entender la causa</td>
+      </tr>
+      <tr>
+        <td><strong>using-git-worktrees</strong></td>
+        <td>Al iniciar una rama nueva</td>
+        <td>Crea workspace aislado para la feature</td>
+      </tr>
+      <tr>
+        <td><strong>finishing-a-development-branch</strong></td>
+        <td>Al terminar una rama</td>
+        <td>Verifica tests, presenta opciones merge/PR</td>
+      </tr>
+    </table>
+
+    <h3>Instalación manual en tu proyecto</h3>
+
+    <pre><code><span class="tok-comment"># Opción 1: Plugin oficial de Claude Code</span>
+<span class="tok-cmd">/plugin install superpowers@claude-plugins-official</span>
+
+<span class="tok-comment"># Opción 2: Descarga manual desde GitHub</span>
+<span class="tok-comment"># Claude Code puede hacer esto por ti con gh CLI:</span>
+<span class="tok-cmd">gh api repos/obra/superpowers/contents/skills/brainstorming/SKILL.md \
+  --jq '.content' | base64 -d > .claude/skills/brainstorming/SKILL.md</span>
+
+<span class="tok-comment"># Repite para cada skill que necesites</span></code></pre>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <p><strong>Tip de productividad</strong><br>
+      Puedes pedirle a Claude que descargue todas las skills en paralelo. En la demo de Grandir CRM, usamos <span class="inline-code">gh api</span> para descargar 14 skills simultáneamente en menos de 30 segundos.</p>
+    </div>
+  </div>
+
+
+  <!-- ── PARTE 5: AGENTES ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Parte 5 — Agentes Especializados</div>
+    <h2>Crear agentes especializados por rol</h2>
+
+    <p>Los agentes en Claude Code son subagentes con instrucciones específicas, herramientas permitidas y contexto focalizado. En lugar de tener un solo agente que sabe todo, tienes especialistas.</p>
+
+    <h3>Agentes creados para Grandir CRM</h3>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>orquestador</h4>
+        <p>Punto de entrada. Lee el contexto, decide qué agente/skill usar, coordina. Úsalo cuando no sepas por dónde empezar.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗄️</div>
+        <h4>db-architect</h4>
+        <p>Solo trabaja con Supabase: schema, migraciones, RLS policies, tipos TypeScript. Tiene acceso a los MCP tools de Supabase.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h4>backend-dev</h4>
+        <p>API routes, lógica de negocio, generación de PDFs, emails con Resend. Sigue TDD obligatorio.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <h4>frontend-dev</h4>
+        <p>Dashboard interno y portal del inversionista. shadcn/ui + Tailwind. React Server Components por defecto.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h4>code-reviewer</h4>
+        <p>Solo lee, nunca modifica. Audita seguridad, calidad, tests, y cumplimiento de reglas del proyecto.</p>
+      </div>
+    </div>
+
+    <h3>Estructura de un agente (.claude/agents/nombre.md)</h3>
+
+    <pre><code><span class="tok-comment">---</span>
+<span class="tok-key">name:</span> <span class="tok-string">db-architect</span>
+<span class="tok-key">description:</span> <span class="tok-string">Diseña el schema de Supabase. Llámame cuando necesites</span>
+           <span class="tok-string">crear tablas, migraciones o RLS policies.</span>
+<span class="tok-key">allowed-tools:</span> <span class="tok-string">Read, Write, Edit, Bash, mcp__supabase__execute_sql</span>
+<span class="tok-comment">---</span>
+
+<span class="tok-comment"># Instrucciones del agente en Markdown</span>
+Eres el arquitecto de base de datos de este proyecto.
+Tu especialidad es PostgreSQL + Supabase.
+
+<span class="tok-comment">## Reglas</span>
+- RLS habilitado en TODAS las tablas
+- Migraciones con nombres: YYYYMMDDHHMMSS_descripcion.sql
+- Nunca eliminas migraciones ya aplicadas</code></pre>
+
+    <div class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      <p><strong>Por qué funciona esta separación</strong><br>
+      Cada agente tiene contexto reducido y focalizado. El db-architect no sabe nada de CSS, y el frontend-dev no sabe nada de migraciones. Esto reduce errores y hace que cada uno sea mejor en su área.</p>
+    </div>
+  </div>
+
+
+  <!-- ── PARTE 6: LO QUE SIGUE ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Parte 6 — El Desarrollo</div>
+    <h2>Lo que viene después: el ciclo de desarrollo</h2>
+
+    <p>Con la base instalada, el ciclo de desarrollo de cada feature sigue siempre el mismo patrón:</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>1. Brainstorming del módulo</h4>
+        <p>Activas el skill <span class="inline-code">brainstorming</span> para el primer módulo (generalmente el schema de base de datos). Claude hace preguntas una a una, propone 2-3 enfoques con trade-offs, y espera tu aprobación antes de escribir cualquier código.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>2. Spec document</h4>
+        <p>Brainstorming genera automáticamente un documento de spec en <span class="inline-code">docs/superpowers/specs/YYYY-MM-DD-nombre.md</span>. Tú lo revisas, pides ajustes si es necesario, y apruebas. Este documento es el contrato del módulo.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>3. Plan de implementación</h4>
+        <p>El skill <span class="inline-code">writing-plans</span> toma el spec y crea un plan detallado con tareas de 2-5 minutos, código exacto en cada paso, y comandos para verificar que cada pieza funciona.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>4. Ejecución con subagentes</h4>
+        <p><span class="inline-code">subagent-driven-development</span> despacha un subagente fresco por cada tarea del plan. Después de cada tarea: revisa spec compliance, luego calidad de código. Si algo falla, el subagente lo corrige antes de pasar a la siguiente tarea.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>5. Finishing the branch</h4>
+        <p>Al terminar todas las tareas, <span class="inline-code">finishing-a-development-branch</span> verifica que todos los tests pasen y presenta las opciones: merge directo, crear PR, o solicitar code review adicional.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>6. Repetir por módulo</h4>
+        <p>Vuelves al paso 1 con el siguiente módulo. Cada uno tiene su spec, su plan, su rama, y sus tests. El sistema crece de forma controlada y verificable.</p>
+      </div>
+    </div>
+
+    <h3>Orden sugerido de módulos para un CRM</h3>
+
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Módulo</th>
+        <th>Por qué primero</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Schema de base de datos</td>
+        <td>Todo lo demás depende de esto. Diseñar bien el schema evita refactors costosos.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Auth + Roles</td>
+        <td>Sin auth, no hay seguridad. Se construye sobre el schema.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>CRUD de entidades principales</td>
+        <td>Inversionistas, contratos — el núcleo del sistema.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Formulario externo + Portal</td>
+        <td>Las dos interfaces públicas. Requieren las entidades del paso 3.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Flujo de contratos (estados)</td>
+        <td>La lógica más compleja. Requiere todo lo anterior.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Pagos y reportes</td>
+        <td>Funcionalidades secundarias que dependen de contratos activos.</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Notificaciones y comunicación</td>
+        <td>Capa transversal que conecta todos los módulos anteriores.</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Dashboard de métricas</td>
+        <td>Lectura pura sobre datos existentes. Se hace al final.</td>
+      </tr>
+    </table>
+  </div>
+
+
+  <!-- ── CHECKLIST FINAL ── -->
+  <hr class="section-divider">
+  <div class="section page-break">
+    <div class="section-number">Resumen</div>
+    <h2>Checklist completo de inicio de proyecto</h2>
+
+    <p>Usa esta lista antes de escribir la primera línea de código en cualquier proyecto profesional:</p>
+
+    <h4>Antes de abrir Claude Code</h4>
+    <ul class="checklist">
+      <li><span class="check done">✓</span> Cuenta de Supabase creada y proyecto configurado</li>
+      <li><span class="check done">✓</span> Proyecto en Vercel creado (si aplica)</li>
+      <li><span class="check done">✓</span> MCPs configurados en Claude Code (Supabase, Vercel)</li>
+      <li><span class="check done">✓</span> Repositorio Git creado</li>
+      <li><span class="check"></span> Documentos del cliente recopilados (reqs, propuesta, ejemplos)</li>
+    </ul>
+
+    <h4>CLAUDE.md global</h4>
+    <ul class="checklist">
+      <li><span class="check done">✓</span> <span class="inline-code">~/.claude/CLAUDE.md</span> con reglas globales de comportamiento</li>
+      <li><span class="check done">✓</span> Reglas de seguridad absolutas definidas</li>
+      <li><span class="check done">✓</span> Convenciones de Git definidas</li>
+      <li><span class="check done">✓</span> Skills globales instaladas (<span class="inline-code">/commit</span>, <span class="inline-code">/review</span>, etc.)</li>
+    </ul>
+
+    <h4>Inicialización del proyecto</h4>
+    <ul class="checklist">
+      <li><span class="check"></span> <span class="inline-code">/init-proyecto</span> ejecutado (o estructura creada manualmente)</li>
+      <li><span class="check"></span> <span class="inline-code">CLAUDE.md</span> del proyecto con contexto completo</li>
+      <li><span class="check"></span> <span class="inline-code">.env.example</span> con todas las variables necesarias</li>
+      <li><span class="check"></span> <span class="inline-code">.gitignore</span> con <span class="inline-code">.env</span> incluido</li>
+    </ul>
+
+    <h4>Skills y agentes</h4>
+    <ul class="checklist">
+      <li><span class="check"></span> Skills de superpowers instaladas en <span class="inline-code">.claude/skills/</span></li>
+      <li><span class="check"></span> Agentes especializados creados en <span class="inline-code">.claude/agents/</span></li>
+      <li><span class="check"></span> Spec maestra del proyecto escrita en <span class="inline-code">docs/superpowers/specs/</span></li>
+    </ul>
+
+    <h4>Listo para desarrollar</h4>
+    <ul class="checklist">
+      <li><span class="check"></span> Primer módulo en brainstorming</li>
+      <li><span class="check"></span> Spec aprobada por el cliente / tú mismo</li>
+      <li><span class="check"></span> Plan de implementación generado</li>
+      <li><span class="check"></span> Rama de Git creada (<span class="inline-code">feat/nombre-modulo</span>)</li>
+    </ul>
+
+    <div class="alert alert-success">
+      <span class="alert-icon">🎯</span>
+      <p><strong>Si hiciste todo esto</strong><br>
+      Tienes un proyecto que puede ser trabajado por Claude durante semanas con contexto completo, por múltiples agentes especializados, con tests automatizados en cada paso, y con documentación que persiste entre sesiones. Esto es lo que diferencia un proyecto profesional de un experimento.</p>
+    </div>
+  </div>
+
+
+  <!-- ── CASO REAL ── -->
+  <hr class="section-divider">
+  <div class="section">
+    <div class="section-number">Caso Real</div>
+    <h2>Grandir CRM — Lo que se construyó en la sesión inicial</h2>
+
+    <p>Para contextualizar: en una sola sesión de trabajo, con este proceso, se generó toda la base de un CRM complejo para un cliente real que pagó $3,500:</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <h4>33 archivos creados</h4>
+        <p>Estructura completa del proyecto, ninguno con código de producción aún — todo es contexto, configuración y documentación.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h4>5 agentes especializados</h4>
+        <p>Orquestador, db-architect, backend-dev, frontend-dev, y code-reviewer — cada uno con su scope definido.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>14 skills instaladas</h4>
+        <p>Todo el framework de superpowers descargado directamente de GitHub y personalizado para el proyecto.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📄</div>
+        <h4>Spec maestra de 20 secciones</h4>
+        <p>Documento de referencia completo que cubre todos los módulos, estados, flujos y reglas de negocio.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">⏱️</span>
+      <p><strong>Tiempo invertido vs beneficio</strong><br>
+      Esta sesión tomó aproximadamente 30-45 minutos. Sin esta base, cada nueva sesión de Claude requeriría re-explicar el contexto, resultando en inconsistencias y pérdida de productividad. Con la base bien puesta, cada sesión siguiente arranca en 10 segundos con contexto completo.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<div class="footer">
+  <p><strong>Guía práctica de desarrollo con IA</strong></p>
+  <p style="margin-top: 8px;">Basada en el proceso real de inicialización del proyecto Grandir CRM · 2026</p>
+  <p style="margin-top: 8px; color: #475569;">Stack: Claude Code · Next.js · Supabase · superpowers (obra/superpowers)</p>
+</div>
+
+</body>
+</html>
