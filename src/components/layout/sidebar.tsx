@@ -12,58 +12,39 @@ import {
   Bell,
   GitBranch,
   Settings,
+  HelpCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const navItems = [
+const navSections = [
   {
-    label: 'Inicio',
-    href: '/dashboard',
-    icon: LayoutDashboard,
+    label: 'General',
+    items: [
+      { label: 'Inicio',          href: '/dashboard',              icon: LayoutDashboard },
+    ],
   },
   {
-    label: 'Inversionistas',
-    href: '/dashboard/investors',
-    icon: Users,
+    label: 'Gestión',
+    items: [
+      { label: 'Inversionistas',  href: '/dashboard/investors',    icon: Users },
+      { label: 'Contratos',       href: '/dashboard/contracts',    icon: FileText },
+      { label: 'Pagos',           href: '/dashboard/payments',     icon: CreditCard },
+      { label: 'Referidos',       href: '/dashboard/referrals',    icon: GitBranch },
+    ],
   },
   {
-    label: 'Contratos',
-    href: '/dashboard/contracts',
-    icon: FileText,
-  },
-  {
-    label: 'Pagos',
-    href: '/dashboard/payments',
-    icon: CreditCard,
-  },
-  {
-    label: 'Reportes',
-    href: '/dashboard/reports',
-    icon: BarChart2,
-  },
-  {
-    label: 'Boletines',
-    href: '/dashboard/bulletins',
-    icon: Newspaper,
-  },
-  {
-    label: 'Notificaciones',
-    href: '/dashboard/notifications',
-    icon: Bell,
-  },
-  {
-    label: 'Referidos',
-    href: '/dashboard/referrals',
-    icon: GitBranch,
+    label: 'Comunicación',
+    items: [
+      { label: 'Reportes',        href: '/dashboard/reports',      icon: BarChart2 },
+      { label: 'Boletines',       href: '/dashboard/bulletins',    icon: Newspaper },
+      { label: 'Notificaciones',  href: '/dashboard/notifications',icon: Bell },
+    ],
   },
 ]
 
 const bottomItems = [
-  {
-    label: 'Configuración',
-    href: '/dashboard/settings',
-    icon: Settings,
-  },
+  { label: 'Ayuda',          href: '/dashboard/help',     icon: HelpCircle },
+  { label: 'Configuración',  href: '/dashboard/settings', icon: Settings },
 ]
 
 export function Sidebar() {
@@ -86,26 +67,35 @@ export function Sidebar() {
       </div>
 
       {/* Nav principal */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {navItems.map((item) => {
-          const Icon = item.icon
-          const active = isActive(item.href)
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-                active
-                  ? 'bg-zinc-800 text-white'
-                  : 'text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200'
-              )}
-            >
-              <Icon size={16} strokeWidth={1.75} />
-              {item.label}
-            </Link>
-          )
-        })}
+      <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+        {navSections.map((section) => (
+          <div key={section.label}>
+            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+              {section.label}
+            </p>
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const Icon = item.icon
+                const active = isActive(item.href)
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                      active
+                        ? 'bg-zinc-800 text-white'
+                        : 'text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200'
+                    )}
+                  >
+                    <Icon size={16} strokeWidth={1.75} />
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Separador + items de abajo */}
