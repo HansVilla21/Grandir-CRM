@@ -62,7 +62,7 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
         {/* Search */}
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1 sm:max-w-sm">
           <Search
             size={14}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -103,7 +103,7 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
         <button
           type="button"
           onClick={() => setFormOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-700 transition-colors shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-700 transition-colors shrink-0 w-full sm:w-auto"
         >
           <Plus size={14} />
           Registrar pago
@@ -117,10 +117,10 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-100">
-                <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
+                <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
                   Fecha
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
@@ -141,7 +141,7 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
                 <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Estado
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-left pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Acciones
                 </th>
               </tr>
@@ -149,7 +149,7 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
             <tbody className="divide-y divide-zinc-100">
               {filtered.map((payment) => (
                 <tr key={payment.id} className="hover:bg-zinc-50 transition-colors">
-                  <td className="px-4 py-3 text-xs text-zinc-600 whitespace-nowrap">
+                  <td className="pl-4 sm:pl-6 pr-4 py-3 text-xs text-zinc-600 whitespace-nowrap">
                     {formatDate(payment.payment_date)}
                   </td>
                   <td className="px-4 py-3 font-medium text-zinc-900">
@@ -174,7 +174,7 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
                   <td className="px-4 py-3">
                     <VerifiedBadge verified={payment.verified} />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="pl-4 pr-4 sm:pr-6 py-3">
                     <PaymentVerifyButton
                       paymentId={payment.id}
                       verified={payment.verified}

@@ -76,7 +76,7 @@ export function ReferralsTable({ commissions }: ReferralsTableProps) {
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[720px]">
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-100">
                 <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">

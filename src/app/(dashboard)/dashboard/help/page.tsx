@@ -153,8 +153,8 @@ function SubTitle({ children }: { children: React.ReactNode }) {
 
 function FieldRow({ name, desc }: { name: string; desc: string }) {
   return (
-    <div className="flex gap-2 text-sm">
-      <span className="font-medium text-zinc-800 w-44 shrink-0">{name}</span>
+    <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 text-sm">
+      <span className="font-medium text-zinc-800 sm:w-44 sm:shrink-0">{name}</span>
       <span className="text-zinc-500">{desc}</span>
     </div>
   )
@@ -208,14 +208,14 @@ export default function HelpPage() {
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* ── Header ── */}
-      <div className="bg-zinc-900 px-8 py-10">
+      <div className="bg-zinc-900 px-4 sm:px-8 py-8 sm:py-10">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-2 text-zinc-400 text-xs mb-4">
             <span>Dashboard</span>
             <ChevronRight size={12} />
             <span className="text-zinc-200">Centro de Ayuda</span>
           </div>
-          <h1 className="text-3xl font-semibold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
             Centro de Ayuda
           </h1>
           <p className="mt-1.5 text-zinc-400 text-sm">
@@ -231,7 +231,7 @@ export default function HelpPage() {
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-5xl mx-auto px-8 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
         <div className="flex gap-8 items-start">
 
           {/* ── TOC ── */}
@@ -272,7 +272,7 @@ export default function HelpPage() {
                     Seguí estos 6 pasos para procesar tu primera inversión de principio a fin.
                   </p>
                 </div>
-                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {quickStartSteps.map((step) => (
                     <div
                       key={step.number}
@@ -297,7 +297,7 @@ export default function HelpPage() {
 
             {/* ══ DASHBOARD ══ */}
             <section id="dashboard" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="dashboard-title" icon={LayoutDashboard}>
                   El Dashboard (Inicio)
                 </SectionTitle>
@@ -347,7 +347,7 @@ export default function HelpPage() {
 
             {/* ══ INVERSIONISTAS ══ */}
             <section id="investors" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="investors-title" icon={Users}>
                   Inversionistas
                 </SectionTitle>
@@ -398,7 +398,7 @@ export default function HelpPage() {
 
             {/* ══ CONTRATOS ══ */}
             <section id="contracts" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="contracts-title" icon={FileText}>
                   Contratos
                 </SectionTitle>
@@ -496,7 +496,7 @@ export default function HelpPage() {
 
             {/* ══ PAGOS ══ */}
             <section id="payments" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="payments-title" icon={CreditCard}>
                   Pagos y Depósitos
                 </SectionTitle>
@@ -543,7 +543,7 @@ export default function HelpPage() {
 
             {/* ══ REPORTES ══ */}
             <section id="reports" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="reports-title" icon={BarChart2}>
                   Reportes Periódicos
                 </SectionTitle>
@@ -606,7 +606,7 @@ export default function HelpPage() {
 
             {/* ══ BOLETINES ══ */}
             <section id="bulletins" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="bulletins-title" icon={Newspaper}>
                   Boletines
                 </SectionTitle>
@@ -662,7 +662,7 @@ export default function HelpPage() {
 
             {/* ══ NOTIFICACIONES ══ */}
             <section id="notifications" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="notifications-title" icon={Bell}>
                   Notificaciones
                 </SectionTitle>
@@ -716,7 +716,7 @@ export default function HelpPage() {
 
             {/* ══ REFERIDOS ══ */}
             <section id="referrals" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="referrals-title" icon={GitBranch}>
                   Referidos
                 </SectionTitle>
@@ -757,7 +757,7 @@ export default function HelpPage() {
 
             {/* ══ PORTAL ══ */}
             <section id="portal" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="portal-title" icon={Globe}>
                   Portal del Inversionista
                 </SectionTitle>
@@ -813,7 +813,7 @@ export default function HelpPage() {
 
             {/* ══ CONFIGURACIÓN ══ */}
             <section id="settings" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="settings-title" icon={Settings}>
                   Configuración
                 </SectionTitle>
@@ -859,7 +859,7 @@ export default function HelpPage() {
 
             {/* ══ FAQ ══ */}
             <section id="faq" className="scroll-mt-6">
-              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-6 space-y-5">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm p-4 sm:p-6 space-y-5">
                 <SectionTitle id="faq-title" icon={HelpCircle}>
                   Preguntas Frecuentes
                 </SectionTitle>

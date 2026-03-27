@@ -125,7 +125,7 @@ export function ReportForm({ contracts, onSuccess, defaultContractId }: ReportFo
         >
           <div className="bg-white rounded-xl border border-zinc-200 shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-100">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-zinc-100">
               <h2 className="text-base font-semibold text-zinc-900">Nuevo reporte</h2>
               <button
                 onClick={() => setOpen(false)}
@@ -137,7 +137,7 @@ export function ReportForm({ contracts, onSuccess, defaultContractId }: ReportFo
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
+            <form onSubmit={handleSubmit} className="px-4 sm:px-6 py-5 sm:py-6 space-y-5">
               {/* Contrato */}
               <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-1.5">
@@ -158,7 +158,7 @@ export function ReportForm({ contracts, onSuccess, defaultContractId }: ReportFo
               </div>
 
               {/* Período */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-zinc-700 mb-1.5">
                     Período inicio <span className="text-red-500">*</span>
@@ -184,7 +184,7 @@ export function ReportForm({ contracts, onSuccess, defaultContractId }: ReportFo
               </div>
 
               {/* Tasa + Monto */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-zinc-700 mb-1.5">
                     Tasa de crecimiento (%) <span className="text-red-500">*</span>
@@ -236,7 +236,7 @@ export function ReportForm({ contracts, onSuccess, defaultContractId }: ReportFo
               )}
 
               {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-1">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-1">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

@@ -93,6 +93,7 @@ brainstorming → writing-plans → subagent-driven-development → finishing-a-
 4. Los contratos activos NO se pueden editar — crear addendum/nueva versión
 5. Toda acción del usuario del sistema queda en audit log
 6. RLS de Supabase habilitado en todas las tablas
+7. TODO componente y página DEBE ser responsive (mobile-first) — usar breakpoints sm/md/lg de Tailwind
 
 ## Estructura del Proyecto
 

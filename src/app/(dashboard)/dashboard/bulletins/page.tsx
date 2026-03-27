@@ -9,7 +9,7 @@ export const metadata = {
 
 function StatCard({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-5">
+    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-5">
       <p className="text-xs text-zinc-500 mb-1">{label}</p>
       <p className="text-2xl font-semibold text-zinc-900">{value}</p>
     </div>
@@ -60,7 +60,7 @@ export default async function BulletinsPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold text-zinc-900">Boletines</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
@@ -69,7 +69,7 @@ export default async function BulletinsPage() {
         </div>
         <Link
           href="/dashboard/bulletins/new"
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors text-center sm:text-left"
         >
           Nuevo boletín
         </Link>
@@ -83,7 +83,7 @@ export default async function BulletinsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <BulletinsTable bulletins={bulletins} />
       </div>
     </div>

@@ -93,18 +93,18 @@ export function InvestorStatusToggle({
               <span className="font-medium text-zinc-700">{actionLabel}</span> al
               inversionista <span className="font-medium text-zinc-700">{investorName}</span>?
             </p>
-            <div className="flex items-center justify-end gap-3">
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 transition-colors"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 transition-colors w-full sm:w-auto"
               >
                 Cancelar
               </button>
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
+                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors w-full sm:w-auto"
               >
                 Confirmar
               </button>

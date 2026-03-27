@@ -199,11 +199,11 @@ export function BulletinForm({ plans, defaultValues, bulletinId }: BulletinFormP
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg border border-zinc-200 px-4 py-2 text-sm text-zinc-600 hover:bg-zinc-50 transition-colors"
+          className="rounded-lg border border-zinc-200 px-4 py-2 text-sm text-zinc-600 hover:bg-zinc-50 transition-colors text-center"
         >
           Cancelar
         </button>
@@ -211,7 +211,7 @@ export function BulletinForm({ plans, defaultValues, bulletinId }: BulletinFormP
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-center"
         >
           {saving ? 'Guardando...' : 'Guardar borrador'}
         </button>

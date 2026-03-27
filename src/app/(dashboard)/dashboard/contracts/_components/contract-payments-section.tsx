@@ -104,12 +104,12 @@ export function ContractPaymentsSection({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
         <h2 className="text-sm font-semibold text-zinc-900">Pagos</h2>
         <button
           type="button"
           onClick={() => setFormOpen(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-lg hover:bg-zinc-200 transition-colors"
+          className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-lg hover:bg-zinc-200 transition-colors w-full sm:w-auto"
         >
           <Plus size={13} />
           Registrar pago
@@ -117,7 +117,7 @@ export function ContractPaymentsSection({
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div className="rounded-lg bg-green-50 px-4 py-3">
           <p className="text-xs text-green-700 font-medium">Total depositado</p>
           <p className="text-base font-semibold text-green-900 mt-0.5">
@@ -136,10 +136,10 @@ export function ContractPaymentsSection({
         <p className="text-sm text-zinc-500">Sin pagos registrados.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-100">
-                <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Tipo
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -154,7 +154,7 @@ export function ContractPaymentsSection({
                 <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Estado
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-left pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Acciones
                 </th>
               </tr>
@@ -162,7 +162,7 @@ export function ContractPaymentsSection({
             <tbody className="divide-y divide-zinc-100">
               {payments.map((payment) => (
                 <tr key={payment.id} className="hover:bg-zinc-50 transition-colors">
-                  <td className="px-4 py-3">
+                  <td className="pl-4 sm:pl-6 pr-4 py-3">
                     <TypeBadge type={payment.type} />
                   </td>
                   <td className="px-4 py-3 text-right font-mono font-medium text-zinc-900">
@@ -189,7 +189,7 @@ export function ContractPaymentsSection({
                       {payment.verified ? 'Verificado' : 'Pendiente'}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="pl-4 pr-4 sm:pr-6 py-3">
                     <PaymentVerifyButton
                       paymentId={payment.id}
                       verified={payment.verified}

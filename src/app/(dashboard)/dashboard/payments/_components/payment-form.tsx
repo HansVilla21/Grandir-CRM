@@ -126,9 +126,9 @@ export function PaymentForm({
       />
 
       {/* Panel */}
-      <div className="relative z-10 w-full max-w-lg mx-4 bg-white rounded-xl border border-zinc-200 shadow-xl">
+      <div className="relative z-10 w-full max-w-lg mx-4 bg-white rounded-xl border border-zinc-200 shadow-xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-zinc-100">
           <h2 id="payment-form-title" className="text-sm font-semibold text-zinc-900">
             Registrar pago
           </h2>
@@ -143,7 +143,7 @@ export function PaymentForm({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <form onSubmit={handleSubmit} className="px-4 sm:px-6 py-5 space-y-4">
           {/* Contract */}
           <div>
             <label className="block text-xs font-medium text-zinc-700 mb-1.5">
@@ -167,7 +167,7 @@ export function PaymentForm({
           </div>
 
           {/* Type + Amount row */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-zinc-700 mb-1.5">
                 Tipo <span className="text-red-500">*</span>
@@ -261,19 +261,19 @@ export function PaymentForm({
           )}
 
           {/* Actions */}
-          <div className="flex justify-end gap-2 pt-1">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium text-zinc-700 bg-zinc-100 rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-zinc-700 bg-zinc-100 rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               {loading ? 'Registrando...' : 'Registrar pago'}

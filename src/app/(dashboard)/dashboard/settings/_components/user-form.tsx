@@ -87,7 +87,7 @@ export function UserForm({ user, onClose }: UserFormProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -95,7 +95,7 @@ export function UserForm({ user, onClose }: UserFormProps) {
       <dialog
         ref={dialogRef}
         open
-        className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl m-0"
+        className="relative w-full max-w-md rounded-t-xl sm:rounded-xl bg-white p-4 sm:p-6 shadow-xl m-0 max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">

@@ -51,7 +51,7 @@ export default async function InvestorsPage() {
     .map((inv) => ({ id: inv.id, full_name: inv.full_name }))
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0">
       <InvestorsTable investors={investors} activeInvestors={activeInvestors} />
     </div>
   )

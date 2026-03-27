@@ -168,7 +168,7 @@ export function InvestorForm({
         className="relative z-10 bg-white rounded-xl shadow-xl border border-zinc-200 w-full max-w-md mx-4 outline-none"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-zinc-100">
           <h2 className="text-base font-semibold text-zinc-900">
             {isEdit ? 'Editar inversionista' : 'Nuevo inversionista'}
           </h2>
@@ -184,7 +184,7 @@ export function InvestorForm({
 
         {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
-          <div className="px-6 py-5 space-y-4">
+          <div className="px-4 sm:px-6 py-5 space-y-4">
             {/* Server error */}
             {errors.server && (
               <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
@@ -299,19 +299,19 @@ export function InvestorForm({
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-zinc-100">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-zinc-100">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 transition-colors disabled:opacity-50"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 transition-colors disabled:opacity-50 w-full sm:w-auto"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {loading ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear inversionista'}
             </button>

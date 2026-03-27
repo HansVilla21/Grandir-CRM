@@ -25,7 +25,7 @@ export default async function NewBulletinPage() {
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <BulletinForm plans={plans} />
       </div>
     </div>

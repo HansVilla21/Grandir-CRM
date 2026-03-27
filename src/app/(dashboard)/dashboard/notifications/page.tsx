@@ -79,7 +79,7 @@ function NotificationRow({ n }: { n: NotificationItem }) {
   const Inner = (
     <div
       className={[
-        'flex items-start gap-3 px-4 py-3 rounded-lg transition-colors',
+        'flex items-start gap-3 px-3 sm:px-4 py-3 rounded-lg transition-colors',
         !n.read ? 'bg-zinc-50' : 'bg-white',
         href ? 'hover:bg-zinc-100/60' : '',
       ].join(' ')}
@@ -155,9 +155,9 @@ export default async function NotificationsPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-zinc-900">Notificaciones</h1>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-lg sm:text-xl font-semibold text-zinc-900">Notificaciones</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
             {unreadCount > 0
               ? `${unreadCount} sin leer`

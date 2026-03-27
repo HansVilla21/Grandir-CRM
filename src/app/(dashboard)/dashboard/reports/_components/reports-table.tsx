@@ -103,10 +103,10 @@ export function ReportsTable({ reports, contracts, defaultContractId }: ReportsT
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-zinc-200">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[540px]">
           <thead>
             <tr className="bg-zinc-50 border-b border-zinc-200">
-              <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
+              <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
                 Período
               </th>
               <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -124,7 +124,7 @@ export function ReportsTable({ reports, contracts, defaultContractId }: ReportsT
               <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                 Estado
               </th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
+              <th className="text-left pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
                 Fecha envío
               </th>
             </tr>
@@ -144,7 +144,7 @@ export function ReportsTable({ reports, contracts, defaultContractId }: ReportsT
                   onClick={() => handleRowClick(report.id)}
                   className="cursor-pointer hover:bg-zinc-50 transition-colors"
                 >
-                  <td className="px-4 py-3 text-xs text-zinc-600 whitespace-nowrap">
+                  <td className="pl-4 sm:pl-6 pr-4 py-3 text-xs text-zinc-600 whitespace-nowrap">
                     {formatDate(report.period_start)} — {formatDate(report.period_end)}
                   </td>
                   <td className="px-4 py-3 font-medium text-zinc-900">
@@ -162,7 +162,7 @@ export function ReportsTable({ reports, contracts, defaultContractId }: ReportsT
                   <td className="px-4 py-3">
                     <StatusBadge status={report.status} />
                   </td>
-                  <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+                  <td className="pl-4 pr-4 sm:pr-6 py-3 text-xs text-zinc-500 whitespace-nowrap">
                     {formatDate(report.sent_at)}
                   </td>
                 </tr>

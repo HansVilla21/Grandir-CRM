@@ -97,20 +97,20 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
   const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0)
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 py-6 sm:py-10 space-y-6 sm:space-y-8">
 
       {/* Header de bienvenida */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900">
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
           Bienvenido, {investor?.full_name ?? 'Inversionista'}
         </h1>
-        <p className="mt-1 text-lg text-zinc-500">
+        <p className="mt-1 text-base sm:text-lg text-zinc-500">
           Contrato de Inversion &mdash; {plan?.name ?? 'Plan de inversion'}
         </p>
       </div>
 
       {/* Card de estado */}
-      <div className="rounded-xl bg-white border border-zinc-200 p-6 space-y-4">
+      <div className="rounded-xl bg-white border border-zinc-200 p-4 sm:p-6 space-y-4">
         <div className="flex items-center gap-3 flex-wrap">
           <span className="text-sm font-medium text-zinc-500">Estado del contrato:</span>
           <StatusBadge status={contract.status} />
@@ -154,7 +154,7 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
       </div>
 
       {/* Resumen de inversion */}
-      <div className="rounded-xl bg-white border border-zinc-200 p-6">
+      <div className="rounded-xl bg-white border border-zinc-200 p-4 sm:p-6">
         <h2 className="text-lg font-semibold text-zinc-900 mb-5">
           Resumen de tu inversion
         </h2>
@@ -206,10 +206,10 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
 
       {/* Pagos */}
       {payments.length > 0 && (
-        <div className="rounded-xl bg-white border border-zinc-200 p-6">
+        <div className="rounded-xl bg-white border border-zinc-200 p-4 sm:p-6">
           <h2 className="text-lg font-semibold text-zinc-900 mb-5">Pagos recibidos</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[420px]">
               <thead>
                 <tr className="border-b border-zinc-100">
                   <th className="pb-3 text-left font-medium text-zinc-500">Tipo</th>
@@ -252,7 +252,7 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
       )}
 
       {/* Documentos */}
-      <div className="rounded-xl bg-white border border-zinc-200 p-6">
+      <div className="rounded-xl bg-white border border-zinc-200 p-4 sm:p-6">
         <h2 className="text-lg font-semibold text-zinc-900 mb-5">Documentos</h2>
 
         {documents.length === 0 ? (
@@ -297,7 +297,7 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
 
       {/* Reportes */}
       {reports.length > 0 && (
-        <div className="rounded-xl bg-white border border-zinc-200 p-6">
+        <div className="rounded-xl bg-white border border-zinc-200 p-4 sm:p-6">
           <h2 className="text-lg font-semibold text-zinc-900 mb-5">Reportes periodicos</h2>
           <ul className="divide-y divide-zinc-100">
             {reports.map((report) => (
@@ -334,7 +334,7 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
 
       {/* Acciones: solo si está pendiente */}
       {isPendingApproval && (
-        <div className="rounded-xl border-2 border-green-200 bg-green-50 p-6 space-y-4">
+        <div className="rounded-xl border-2 border-green-200 bg-green-50 p-4 sm:p-6 space-y-4">
           <div>
             <h2 className="text-lg font-semibold text-zinc-900">
               ¿Estas de acuerdo con los terminos del contrato?

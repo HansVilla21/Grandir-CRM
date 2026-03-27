@@ -81,7 +81,7 @@ export default async function BulletinDetailPage({
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Link
@@ -117,7 +117,7 @@ export default async function BulletinDetailPage({
       {isDraft ? (
         <>
           {/* Edit form */}
-          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
             <BulletinForm
               plans={plans}
               bulletinId={bulletin.id}
@@ -131,7 +131,7 @@ export default async function BulletinDetailPage({
           </div>
 
           {/* Send section */}
-          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 space-y-3">
+          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6 space-y-3">
             <div>
               <p className="text-sm font-medium text-zinc-900">
                 Enviar boletín
@@ -150,8 +150,8 @@ export default async function BulletinDetailPage({
       ) : (
         <>
           {/* Read-only body */}
-          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm border-b border-zinc-100 pb-4">
+          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm border-b border-zinc-100 pb-4">
               <div>
                 <p className="text-xs text-zinc-400">Enviado el</p>
                 <p className="text-zinc-900 mt-0.5">
@@ -176,25 +176,25 @@ export default async function BulletinDetailPage({
 
           {/* Recipients table */}
           {recipients && recipients.length > 0 && (
-            <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 space-y-4">
+            <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6 space-y-4">
               <p className="text-sm font-medium text-zinc-900">
                 Destinatarios ({recipients.length})
               </p>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm min-w-[540px]">
                   <thead>
                     <tr className="text-left text-xs text-zinc-400 border-b border-zinc-100">
-                      <th className="pb-2 pr-4 font-medium">Email</th>
+                      <th className="pb-2 pl-4 sm:pl-6 pr-4 font-medium">Email</th>
                       <th className="pb-2 pr-4 font-medium text-center">
                         Entregado
                       </th>
-                      <th className="pb-2 font-medium text-center">Abierto</th>
+                      <th className="pb-2 pr-4 sm:pr-6 font-medium text-center">Abierto</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-50">
                     {recipients.map((r) => (
                       <tr key={r.id}>
-                        <td className="py-2.5 pr-4 text-zinc-700">
+                        <td className="py-2.5 pl-4 sm:pl-6 pr-4 text-zinc-700">
                           {r.email}
                         </td>
                         <td className="py-2.5 pr-4 text-center">
@@ -208,7 +208,7 @@ export default async function BulletinDetailPage({
                             {r.delivered ? 'Si' : '—'}
                           </span>
                         </td>
-                        <td className="py-2.5 text-center">
+                        <td className="py-2.5 pr-4 sm:pr-6 text-center">
                           <span
                             className={
                               r.opened ? 'text-emerald-600' : 'text-zinc-300'

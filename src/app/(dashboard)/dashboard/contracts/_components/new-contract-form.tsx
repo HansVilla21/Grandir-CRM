@@ -318,18 +318,18 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+          className="rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 transition-colors w-full sm:w-auto"
         >
           {submitting ? 'Creando...' : 'Crear contrato'}
         </button>
         <button
           type="button"
           onClick={() => router.push('/dashboard/contracts')}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
+          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors w-full sm:w-auto"
         >
           Cancelar
         </button>

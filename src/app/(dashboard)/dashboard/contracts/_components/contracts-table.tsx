@@ -72,7 +72,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
   return (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h1 className="text-xl font-semibold text-zinc-900">Contratos</h1>
           <p className="mt-0.5 text-sm text-zinc-500">
@@ -83,7 +83,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
         <button
           type="button"
           onClick={() => router.push('/dashboard/contracts/new')}
-          className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors w-full sm:w-auto"
         >
           <Plus size={15} />
           Nuevo contrato
@@ -94,7 +94,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
       <div className="flex flex-col gap-3 mb-4">
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search */}
-          <div className="relative flex-1 max-w-xs">
+          <div className="relative flex-1 sm:max-w-xs">
             <Search
               size={14}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -165,10 +165,10 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="bg-zinc-50 border-b border-zinc-100">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     ID
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -186,7 +186,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Inicio
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Plazo
                   </th>
                 </tr>
@@ -200,7 +200,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
                     }
                     className="hover:bg-zinc-50 cursor-pointer transition-colors"
                   >
-                    <td className="px-4 py-3">
+                    <td className="pl-4 sm:pl-6 pr-4 py-3">
                       <span className="font-mono text-xs text-zinc-500">
                         {contract.id.slice(0, 8)}
                       </span>
@@ -224,7 +224,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
                     <td className="px-4 py-3 text-zinc-500 text-xs">
                       {formatDate(contract.start_date)}
                     </td>
-                    <td className="px-4 py-3 text-zinc-600">
+                    <td className="pl-4 pr-4 sm:pr-6 py-3 text-zinc-600">
                       {contract.term_months} mes{contract.term_months !== 1 ? 'es' : ''}
                     </td>
                   </tr>

@@ -48,20 +48,20 @@ export function BulletinsTable({ bulletins }: BulletinsTableProps) {
         </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[540px]">
             <thead>
               <tr className="text-left text-xs text-zinc-400 border-b border-zinc-100">
-                <th className="pb-2 pr-4 font-medium">Asunto</th>
+                <th className="pb-2 pl-4 sm:pl-6 pr-4 font-medium">Asunto</th>
                 <th className="pb-2 pr-4 font-medium">Grupo objetivo</th>
                 <th className="pb-2 pr-4 font-medium text-right">Destinatarios</th>
                 <th className="pb-2 pr-4 font-medium">Estado</th>
-                <th className="pb-2 font-medium">Fecha</th>
+                <th className="pb-2 pr-4 sm:pr-6 font-medium">Fecha</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-50">
               {filtered.map((b) => (
                 <tr key={b.id} className="hover:bg-zinc-50/60 transition-colors">
-                  <td className="py-3 pr-4">
+                  <td className="py-3 pl-4 sm:pl-6 pr-4">
                     <Link
                       href={`/dashboard/bulletins/${b.id}`}
                       className="font-medium text-zinc-900 hover:underline"
@@ -89,7 +89,7 @@ export function BulletinsTable({ bulletins }: BulletinsTableProps) {
                       {b.status === 'draft' ? 'Borrador' : 'Enviado'}
                     </span>
                   </td>
-                  <td className="py-3 text-zinc-400 text-xs">
+                  <td className="py-3 pr-4 sm:pr-6 text-zinc-400 text-xs">
                     {b.status === 'sent' && b.sent_at
                       ? formatDate(b.sent_at)
                       : formatDate(b.created_at)}

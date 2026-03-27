@@ -14,7 +14,7 @@ function StatCard({
   value: number
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-5">
+    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-5">
       <p className="text-xs text-zinc-500 mb-1">{label}</p>
       <p className="text-2xl font-semibold text-zinc-900">{value}</p>
     </div>
@@ -148,7 +148,7 @@ export default async function ReportsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <ReportsTable reports={reports} contracts={contracts} />
       </div>
     </div>

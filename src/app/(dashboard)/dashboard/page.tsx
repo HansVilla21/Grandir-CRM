@@ -224,7 +224,7 @@ export default async function DashboardPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="mb-2">
-        <h1 className="text-xl font-semibold text-zinc-900">
+        <h1 className="text-lg sm:text-xl font-semibold text-zinc-900 break-words">
           Bienvenido, {firstName}.
         </h1>
         <p className="mt-1 text-sm text-zinc-500 capitalize">{today}</p>

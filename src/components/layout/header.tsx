@@ -1,9 +1,13 @@
-import { logout } from '@/lib/auth/actions'
+'use client'
+
 import { NotificationsBell } from '@/components/layout/notifications-bell'
+import { useMobileSidebar } from './mobile-sidebar-context'
+import { Menu } from 'lucide-react'
 
 interface HeaderProps {
   userName: string
   userRole: string
+  logoutAction: () => Promise<void>
 }
 
 function getInitials(name: string) {
@@ -20,12 +24,24 @@ const roleLabels: Record<string, string> = {
   assistant: 'Asistente',
 }
 
-export function Header({ userName, userRole }: HeaderProps) {
-  return (
-    <header className="flex items-center justify-between px-6 h-14 bg-white border-b border-zinc-200 shrink-0">
-      <div />
+export function Header({ userName, userRole, logoutAction }: HeaderProps) {
+  const { toggle } = useMobileSidebar()
 
-      <div className="flex items-center gap-3">
+  return (
+    <header className="flex items-center justify-between px-4 sm:px-6 h-14 bg-white border-b border-zinc-200 shrink-0">
+      {/* Left side: hamburger on mobile */}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={toggle}
+          className="flex lg:hidden items-center justify-center h-9 w-9 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
+          aria-label="Abrir menú"
+        >
+          <Menu size={20} />
+        </button>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Notifications bell */}
         <NotificationsBell />
 
@@ -37,7 +53,7 @@ export function Header({ userName, userRole }: HeaderProps) {
           {getInitials(userName)}
         </div>
 
-        {/* Info del usuario */}
+        {/* Info del usuario — hidden on small screens */}
         <div className="text-right hidden sm:block">
           <p className="text-sm font-medium text-zinc-900 leading-none">
             {userName}
@@ -48,10 +64,10 @@ export function Header({ userName, userRole }: HeaderProps) {
         </div>
 
         {/* Separador */}
-        <div className="h-5 w-px bg-zinc-200" />
+        <div className="h-5 w-px bg-zinc-200 hidden sm:block" />
 
         {/* Logout */}
-        <form action={logout}>
+        <form action={logoutAction}>
           <button
             type="submit"
             className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors"

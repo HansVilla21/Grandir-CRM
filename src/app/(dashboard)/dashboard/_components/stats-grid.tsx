@@ -11,15 +11,15 @@ interface StatsGridProps {
 
 export function StatsGrid({ cards }: StatsGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       {cards.map((card) => (
         <div
           key={card.label}
-          className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6"
+          className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6"
         >
           <p className="text-sm font-medium text-zinc-500">{card.label}</p>
           <p
-            className={`mt-2 text-3xl font-semibold ${
+            className={`mt-2 text-2xl sm:text-3xl font-semibold ${
               card.alert ? 'text-yellow-600' : 'text-zinc-900'
             }`}
           >

@@ -131,7 +131,7 @@ export default async function PaymentsPage() {
       {/* Summary stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total depositado */}
-        <div className="bg-white border border-zinc-200 rounded-lg p-5">
+        <div className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5">
           <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1.5">
             Total depositado
           </p>
@@ -142,7 +142,7 @@ export default async function PaymentsPage() {
         </div>
 
         {/* Total retirado */}
-        <div className="bg-white border border-zinc-200 rounded-lg p-5">
+        <div className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5">
           <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1.5">
             Total retirado
           </p>
@@ -153,7 +153,7 @@ export default async function PaymentsPage() {
         </div>
 
         {/* Pendientes de verificación */}
-        <div className="bg-white border border-zinc-200 rounded-lg p-5">
+        <div className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5">
           <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1.5">
             Pendientes de verificación
           </p>
@@ -172,7 +172,7 @@ export default async function PaymentsPage() {
       </div>
 
       {/* Table card */}
-      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
+      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-4 sm:p-6">
         <PaymentsTable initialPayments={paymentList} contracts={contracts} />
       </div>
     </div>

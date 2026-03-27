@@ -23,20 +23,20 @@ interface ContractsByStatusProps {
 export function ContractsByStatus({ statusCounts }: ContractsByStatusProps) {
   return (
     <div className="bg-white rounded-xl border border-zinc-200 shadow-sm">
-      <div className="px-6 py-4 border-b border-zinc-100">
+      <div className="px-4 sm:px-6 py-4 border-b border-zinc-100">
         <h2 className="text-sm font-semibold text-zinc-900">Contratos por estado</h2>
       </div>
-      <div className="px-6 py-4">
+      <div className="px-4 sm:px-6 py-4">
         <div className="flex flex-wrap gap-3">
           {statusCounts.map(({ status, count }) => (
             <div
               key={status}
-              className={`flex items-center gap-2 px-4 py-3 rounded-lg border ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border min-w-0 ${
                 STATUS_STYLES[status] ?? 'bg-zinc-50 text-zinc-600 border-zinc-200'
               }`}
             >
-              <span className="text-2xl font-semibold">{count}</span>
-              <span className="text-sm font-medium leading-tight">
+              <span className="text-xl sm:text-2xl font-semibold shrink-0">{count}</span>
+              <span className="text-xs sm:text-sm font-medium leading-tight">
                 {STATUS_LABELS[status] ?? status}
               </span>
             </div>

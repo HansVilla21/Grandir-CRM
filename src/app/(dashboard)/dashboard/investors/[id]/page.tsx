@@ -150,7 +150,7 @@ export default async function InvestorDetailPage({
   const primaryEmail = investor.emails?.find((e) => e.is_primary)
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-6 lg:px-0">
       {/* Back link */}
       <Link
         href="/dashboard/investors"
@@ -161,8 +161,8 @@ export default async function InvestorDetailPage({
       </Link>
 
       {/* Header card */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
-        <div className="flex items-start justify-between gap-4">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="flex items-center gap-4">
             {/* Avatar */}
             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center">
@@ -172,10 +172,10 @@ export default async function InvestorDetailPage({
             </div>
             <div>
               <h1 className="text-xl font-semibold text-zinc-900">{investor.full_name}</h1>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <StatusBadge status={investor.status} />
                 {primaryEmail && (
-                  <span className="text-sm text-zinc-500">{primaryEmail.email}</span>
+                  <span className="text-sm text-zinc-500 break-all">{primaryEmail.email}</span>
                 )}
               </div>
             </div>
@@ -195,7 +195,7 @@ export default async function InvestorDetailPage({
       </div>
 
       {/* Personal info */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <h2 className="text-sm font-semibold text-zinc-900 mb-4">Información personal</h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
@@ -243,7 +243,7 @@ export default async function InvestorDetailPage({
       </div>
 
       {/* Emails */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-zinc-900">Correos electrónicos</h2>
         </div>
@@ -272,7 +272,7 @@ export default async function InvestorDetailPage({
       </div>
 
       {/* Contracts */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-zinc-900">Contratos</h2>
           <span className="text-xs text-zinc-500">
@@ -282,11 +282,11 @@ export default async function InvestorDetailPage({
         {contractInvestors.length === 0 ? (
           <p className="text-sm text-zinc-400 italic">Sin contratos asociados</p>
         ) : (
-          <div className="overflow-x-auto -mx-6">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[600px]">
               <thead>
                 <tr className="bg-zinc-50 border-y border-zinc-100">
-                  <th className="text-left px-6 py-2.5 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 sm:pl-6 pr-4 py-2.5 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Plan
                   </th>
                   <th className="text-left px-4 py-2.5 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -301,7 +301,7 @@ export default async function InvestorDetailPage({
                   <th className="text-left px-4 py-2.5 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Inicio
                   </th>
-                  <th className="text-left px-4 py-2.5 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 pr-4 sm:pr-6 py-2.5 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Vencimiento
                   </th>
                 </tr>
@@ -312,7 +312,7 @@ export default async function InvestorDetailPage({
                   if (!contract) return null
                   return (
                     <tr key={ci.id} className="hover:bg-zinc-50 transition-colors">
-                      <td className="px-6 py-3">
+                      <td className="pl-4 sm:pl-6 pr-4 py-3">
                         <Link
                           href={`/dashboard/contracts/${contract.id}`}
                           className="font-medium text-zinc-900 hover:underline"
@@ -332,7 +332,7 @@ export default async function InvestorDetailPage({
                       <td className="px-4 py-3 text-zinc-500 text-xs">
                         {formatDate(contract.start_date)}
                       </td>
-                      <td className="px-4 py-3 text-zinc-500 text-xs">
+                      <td className="pl-4 pr-4 sm:pr-6 py-3 text-zinc-500 text-xs">
                         {formatDate(contract.end_date)}
                       </td>
                     </tr>

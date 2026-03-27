@@ -18,7 +18,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+    <div className="min-h-screen flex items-center justify-center bg-zinc-50 px-4">
       <div className="w-full max-w-sm">
         {/* Logo / Nombre */}
         <div className="mb-8 text-center">
@@ -29,7 +29,7 @@ export function LoginForm() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-8">
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 sm:p-8">
           <h2 className="text-base font-medium text-zinc-900 mb-6">
             Iniciar sesión
           </h2>

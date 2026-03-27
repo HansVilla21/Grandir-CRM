@@ -29,20 +29,21 @@ function getDaysLeft(endDate: string): number {
 export function ExpiringContracts({ contracts }: ExpiringContractsProps) {
   return (
     <div className="bg-white rounded-xl border border-zinc-200 shadow-sm">
-      <div className="px-6 py-4 border-b border-zinc-100">
+      <div className="px-4 sm:px-6 py-4 border-b border-zinc-100">
         <h2 className="text-sm font-semibold text-zinc-900">Próximos a vencer</h2>
         <p className="mt-0.5 text-xs text-zinc-400">Contratos activos que vencen en los próximos 60 días</p>
       </div>
-      <div className="px-6 py-2">
+      <div className="px-4 sm:px-6 py-2">
         {contracts.length === 0 ? (
           <p className="py-6 text-center text-sm text-zinc-400">
             Sin contratos próximos a vencer.
           </p>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[540px]">
             <thead>
               <tr className="border-b border-zinc-100">
-                <th className="text-left py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-left py-3 pl-4 sm:pl-6 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Titular
                 </th>
                 <th className="text-left py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -54,7 +55,7 @@ export function ExpiringContracts({ contracts }: ExpiringContractsProps) {
                 <th className="text-left py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Vence
                 </th>
-                <th className="text-right py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-right py-3 pr-4 sm:pr-6 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Días
                 </th>
               </tr>
@@ -66,7 +67,7 @@ export function ExpiringContracts({ contracts }: ExpiringContractsProps) {
                   daysLeft <= 30 ? 'text-red-600' : 'text-yellow-600'
                 return (
                   <tr key={contract.id} className="hover:bg-zinc-50 transition-colors">
-                    <td className="py-3 font-medium text-zinc-900">
+                    <td className="py-3 pl-4 sm:pl-6 font-medium text-zinc-900">
                       <Link
                         href={`/dashboard/contracts/${contract.id}`}
                         className="hover:underline underline-offset-2"
@@ -81,7 +82,7 @@ export function ExpiringContracts({ contracts }: ExpiringContractsProps) {
                     <td className="py-3 text-zinc-500 text-xs">
                       {formatDate(contract.end_date)}
                     </td>
-                    <td className={`py-3 text-right font-semibold text-sm ${daysColor}`}>
+                    <td className={`py-3 pr-4 sm:pr-6 text-right font-semibold text-sm ${daysColor}`}>
                       {daysLeft}d
                     </td>
                   </tr>
@@ -89,6 +90,7 @@ export function ExpiringContracts({ contracts }: ExpiringContractsProps) {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

@@ -56,12 +56,12 @@ function ConfirmDialog({
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl outline-none"
+        className="relative z-10 w-full max-w-md rounded-xl bg-white p-4 sm:p-6 shadow-xl outline-none mx-4 sm:mx-0"
       >
         <h3 className="text-base font-semibold text-zinc-900">{title}</h3>
         <p className="mt-1.5 text-sm text-zinc-600">{description}</p>
         {children && <div className="mt-4">{children}</div>}
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-6 flex flex-col sm:flex-row sm:justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}

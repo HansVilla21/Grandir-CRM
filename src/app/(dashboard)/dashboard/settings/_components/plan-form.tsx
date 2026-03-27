@@ -112,7 +112,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -120,7 +120,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
       <dialog
         ref={dialogRef}
         open
-        className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl m-0 max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-t-xl sm:rounded-xl bg-white p-4 sm:p-6 shadow-xl m-0 max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
@@ -174,7 +174,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
           )}
 
           {/* Tasa anual y monto mínimo */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-zinc-700 mb-1">
                 Tasa anual (%)
@@ -221,7 +221,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
           </div>
 
           {/* Vigencia */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-zinc-700 mb-1">
                 Válido desde{' '}

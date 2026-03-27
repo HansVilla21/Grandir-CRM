@@ -13,8 +13,10 @@ import {
   GitBranch,
   Settings,
   HelpCircle,
+  X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useMobileSidebar } from './mobile-sidebar-context'
 
 const navSections = [
   {
@@ -47,7 +49,7 @@ const bottomItems = [
   { label: 'Configuración',  href: '/dashboard/settings', icon: Settings },
 ]
 
-export function Sidebar() {
+function SidebarContent() {
   const pathname = usePathname()
 
   function isActive(href: string) {
@@ -58,14 +60,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="flex flex-col w-60 shrink-0 bg-zinc-900 min-h-screen">
-      {/* Logo */}
-      <div className="px-6 py-5 border-b border-zinc-800">
-        <span className="text-base font-semibold tracking-tight text-white">
-          Grandir CM
-        </span>
-      </div>
-
+    <>
       {/* Nav principal */}
       <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
         {navSections.map((section) => (
@@ -98,7 +93,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Separador + items de abajo */}
+      {/* Items de abajo */}
       <div className="px-3 pb-4 border-t border-zinc-800 pt-3 space-y-0.5">
         {bottomItems.map((item) => {
           const Icon = item.icon
@@ -120,6 +115,58 @@ export function Sidebar() {
           )
         })}
       </div>
-    </aside>
+    </>
+  )
+}
+
+export function Sidebar() {
+  const { isOpen, close } = useMobileSidebar()
+
+  return (
+    <>
+      {/* Desktop sidebar — always visible on lg+ */}
+      <aside className="hidden lg:flex flex-col w-60 shrink-0 bg-zinc-900 min-h-screen">
+        <div className="px-6 py-5 border-b border-zinc-800">
+          <span className="text-base font-semibold tracking-tight text-white">
+            Grandir CM
+          </span>
+        </div>
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile sidebar — overlay drawer */}
+      {/* Backdrop */}
+      <div
+        className={cn(
+          'fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden',
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        )}
+        onClick={close}
+        aria-hidden="true"
+      />
+
+      {/* Drawer */}
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-zinc-900 transition-transform duration-300 ease-in-out lg:hidden',
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
+        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
+          <span className="text-base font-semibold tracking-tight text-white">
+            Grandir CM
+          </span>
+          <button
+            type="button"
+            onClick={close}
+            className="flex items-center justify-center h-8 w-8 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            aria-label="Cerrar menú"
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <SidebarContent />
+      </aside>
+    </>
   )
 }

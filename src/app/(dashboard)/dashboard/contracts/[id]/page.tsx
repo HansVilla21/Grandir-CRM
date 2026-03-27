@@ -187,7 +187,7 @@ export default async function ContractDetailPage({
       </Link>
 
       {/* Header card */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 flex-wrap">
@@ -215,9 +215,9 @@ export default async function ContractDetailPage({
       </div>
 
       {/* Summary */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <h2 className="text-sm font-semibold text-zinc-900 mb-4">Resumen</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           <div>
             <p className="text-xs text-zinc-500 mb-0.5">Monto</p>
             <p className="text-sm font-semibold text-zinc-900">
@@ -281,7 +281,7 @@ export default async function ContractDetailPage({
       </div>
 
       {/* Investors */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-zinc-900">Inversionistas</h2>
         </div>
@@ -289,10 +289,10 @@ export default async function ContractDetailPage({
           <p className="text-sm text-zinc-500">Sin inversionistas asociados.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="bg-zinc-50 border-b border-zinc-100">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Nombre
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -304,7 +304,7 @@ export default async function ContractDetailPage({
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Aprobación
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Portal
                   </th>
                 </tr>
@@ -317,7 +317,7 @@ export default async function ContractDetailPage({
                   } | null
                   return (
                     <tr key={ci.id}>
-                      <td className="px-4 py-3 font-medium text-zinc-900">
+                      <td className="pl-4 sm:pl-6 pr-4 py-3 font-medium text-zinc-900">
                         {inv?.full_name ?? '—'}
                       </td>
                       <td className="px-4 py-3 font-mono text-xs text-zinc-600">
@@ -340,7 +340,7 @@ export default async function ContractDetailPage({
                             ci.approval_status}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="pl-4 pr-4 sm:pr-6 py-3">
                         {ci.portal_token ? (
                           <span className="inline-flex items-center gap-1 font-mono text-xs text-zinc-500">
                             {ci.portal_token.slice(0, 12)}…
@@ -368,7 +368,7 @@ export default async function ContractDetailPage({
       </div>
 
       {/* Payments */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <ContractPaymentsSection
           contractId={contract.id}
           payments={contract.payments}
@@ -377,7 +377,7 @@ export default async function ContractDetailPage({
       </div>
 
       {/* Documents */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <h2 className="text-sm font-semibold text-zinc-900 mb-4">Documentos</h2>
 
         {contract.contract_documents.length === 0 ? (
@@ -409,7 +409,7 @@ export default async function ContractDetailPage({
       </div>
 
       {/* Reports */}
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-zinc-900">Reportes</h2>
           <Link
@@ -424,10 +424,10 @@ export default async function ContractDetailPage({
           <p className="text-sm text-zinc-500">Sin reportes generados.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="bg-zinc-50 border-b border-zinc-100">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Período
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
@@ -439,7 +439,7 @@ export default async function ContractDetailPage({
                   <th className="text-right px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     PDF
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                  <th className="text-right pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Detalle
                   </th>
                 </tr>
@@ -447,7 +447,7 @@ export default async function ContractDetailPage({
               <tbody className="divide-y divide-zinc-100">
                 {contract.reports.map((report) => (
                   <tr key={report.id}>
-                    <td className="px-4 py-3 text-zinc-700 text-xs">
+                    <td className="pl-4 sm:pl-6 pr-4 py-3 text-zinc-700 text-xs">
                       {formatDate(report.period_start)} — {formatDate(report.period_end)}
                     </td>
                     <td className="px-4 py-3">
@@ -476,7 +476,7 @@ export default async function ContractDetailPage({
                         <span className="text-zinc-400 text-xs">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="pl-4 pr-4 sm:pr-6 py-3 text-right">
                       <Link
                         href={`/dashboard/reports/${report.id}`}
                         className="text-xs text-zinc-500 hover:text-zinc-900 underline underline-offset-2 transition-colors"

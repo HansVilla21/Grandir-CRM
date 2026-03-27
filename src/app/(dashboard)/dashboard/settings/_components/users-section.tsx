@@ -61,22 +61,22 @@ export function UsersSection({ users, currentUserRole }: UsersSectionProps) {
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="text-sm font-semibold text-zinc-900">Usuarios del sistema</h2>
           <p className="text-xs text-zinc-500 mt-0.5">Administradores y asistentes con acceso al CRM</p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white hover:bg-zinc-700 transition-colors"
+          className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white hover:bg-zinc-700 transition-colors self-start sm:self-auto"
         >
           <Plus size={14} />
           Nuevo usuario
         </button>
       </div>
 
-      <div className="rounded-xl border border-zinc-200 overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="rounded-xl border border-zinc-200 overflow-x-auto">
+        <table className="w-full text-sm min-w-[600px]">
           <thead>
             <tr className="bg-zinc-50 border-b border-zinc-200">
               <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500">Nombre</th>

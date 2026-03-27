@@ -105,19 +105,19 @@ export default async function ReferralsPage() {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold text-zinc-900">Referidos</h1>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-lg sm:text-xl font-semibold text-zinc-900">Referidos</h1>
         <p className="mt-1 text-sm text-zinc-500">
           Comisiones por referidos de inversionistas.
         </p>
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {summaryCards.map((card) => (
           <div
             key={card.label}
-            className="bg-white rounded-xl border border-zinc-200 shadow-sm p-5"
+            className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-5"
           >
             <p className="text-sm font-medium text-zinc-500">{card.label}</p>
             <p
@@ -134,10 +134,10 @@ export default async function ReferralsPage() {
 
       {/* Table section */}
       <div className="bg-white rounded-xl border border-zinc-200 shadow-sm">
-        <div className="px-6 py-4 border-b border-zinc-100">
+        <div className="px-4 sm:px-6 py-4 border-b border-zinc-100">
           <h2 className="text-sm font-semibold text-zinc-900">Comisiones</h2>
         </div>
-        <div className="px-6 py-4">
+        <div className="px-4 sm:px-6 py-4">
           <ReferralsTable commissions={commissions} />
         </div>
       </div>
