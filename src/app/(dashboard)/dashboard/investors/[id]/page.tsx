@@ -82,14 +82,10 @@ export default async function InvestorDetailPage({
   const { id } = await params
   const supabase = await createAdminClient()
 
-  // Investor + emails + referrer
+  // Investor
   const { data: investorRaw, error } = await supabase
     .from('investors')
-    .select(`
-      *,
-      emails:investor_emails(id, email, is_primary, verified, created_at),
-      referrer:investors!investors_referrer_id_fkey(id, full_name)
-    `)
+    .select('*')
     .eq('id', id)
     .single()
 
@@ -97,7 +93,28 @@ export default async function InvestorDetailPage({
     notFound()
   }
 
-  const investor = investorRaw as unknown as InvestorDetail
+  // Emails
+  const { data: emails } = await supabase
+    .from('investor_emails')
+    .select('id, email, is_primary, verified, created_at')
+    .eq('investor_id', id)
+
+  // Referrer
+  let referrer: { id: string; full_name: string } | null = null
+  if (investorRaw.referrer_id) {
+    const { data: ref } = await supabase
+      .from('investors')
+      .select('id, full_name')
+      .eq('id', investorRaw.referrer_id)
+      .single()
+    referrer = ref
+  }
+
+  const investor: InvestorDetail = {
+    ...investorRaw,
+    emails: emails ?? [],
+    referrer,
+  }
 
   // Contracts
   const { data: contractInvestorsRaw } = await supabase
@@ -299,7 +316,6 @@ export default async function InvestorDetailPage({
                         <Link
                           href={`/dashboard/contracts/${contract.id}`}
                           className="font-medium text-zinc-900 hover:underline"
-                          onClick={(e) => e.stopPropagation()}
                         >
                           {contract.plan?.name ?? '—'}
                         </Link>
