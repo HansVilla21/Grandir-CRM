@@ -1,7 +1,5 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 interface SendReportEmailParams {
   to: string[]
   investorName: string
@@ -134,6 +132,7 @@ export async function sendReportEmail(params: SendReportEmailParams) {
 </html>
   `.trim()
 
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const result = await resend.emails.send({
     from: 'Grandir CM <reportes@grandir.com>',
     to: params.to,
