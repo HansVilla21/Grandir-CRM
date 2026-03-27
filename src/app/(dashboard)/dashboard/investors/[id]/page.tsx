@@ -96,7 +96,7 @@ export default async function InvestorDetailPage({
   // Emails
   const { data: emails } = await supabase
     .from('investor_emails')
-    .select('id, email, is_primary, verified, created_at')
+    .select('id, investor_id, email, is_primary, verified, created_at')
     .eq('investor_id', id)
 
   // Referrer
