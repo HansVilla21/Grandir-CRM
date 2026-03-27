@@ -24,7 +24,10 @@
       "mcp__claude_ai_Supabase__apply_migration",
       "mcp__supabase__list_tables",
       "mcp__supabase__apply_migration",
-      "mcp__supabase__execute_sql"
+      "mcp__supabase__execute_sql",
+      "Bash(mkdir -p \"d:/Antigravity/Grandir CRM/public/fonts\")",
+      "Bash(cp \"d:/Antigravity/Grandir CRM/docs/Montserrat/Montserrat-VariableFont_wght.ttf\" \"d:/Antigravity/Grandir CRM/public/fonts/\")",
+      "Bash(cp \"d:/Antigravity/Grandir CRM/docs/Montserrat/Montserrat-Italic-VariableFont_wght.ttf\" \"d:/Antigravity/Grandir CRM/public/fonts/\")"
     ],
     "additionalDirectories": [
       "d:\\Antigravity\\Grandir CRM\\.claude\\skills",
