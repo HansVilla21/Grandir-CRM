@@ -144,3 +144,10 @@
     @apply font-sans;
   }
 }
+
+/* Force hide mobile-only elements on desktop — bypasses tailwind-merge conflicts */
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none !important;
+  }
+}

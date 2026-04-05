@@ -125,48 +125,43 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop sidebar — always visible on lg+ */}
-      <aside className="hidden lg:flex flex-col w-60 shrink-0 bg-zinc-900 min-h-screen">
-        <div className="px-6 py-5 border-b border-zinc-800">
-          <span className="text-base font-semibold tracking-tight text-white">
-            Grandir CM
-          </span>
+      <aside className="hidden lg:block w-60 shrink-0 bg-zinc-900 min-h-screen">
+        <div className="flex flex-col h-full">
+          <div className="px-6 py-5 border-b border-zinc-800">
+            <span className="text-base font-semibold tracking-tight text-white">
+              Grandir CM
+            </span>
+          </div>
+          <SidebarContent />
         </div>
-        <SidebarContent />
       </aside>
 
-      {/* Mobile sidebar — overlay drawer */}
-      {/* Backdrop */}
-      <div
-        className={cn(
-          'fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden',
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        )}
-        onClick={close}
-        aria-hidden="true"
-      />
-
-      {/* Drawer */}
-      <aside
-        className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-zinc-900 transition-transform duration-300 ease-in-out lg:hidden',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
-        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
-          <span className="text-base font-semibold tracking-tight text-white">
-            Grandir CM
-          </span>
-          <button
-            type="button"
+      {/* Mobile sidebar — only rendered when open, so it never appears on desktop */}
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/50"
             onClick={close}
-            className="flex items-center justify-center h-8 w-8 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-            aria-label="Cerrar menú"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        <SidebarContent />
-      </aside>
+            aria-hidden="true"
+          />
+          <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-900 flex flex-col">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
+              <span className="text-base font-semibold tracking-tight text-white">
+                Grandir CM
+              </span>
+              <button
+                type="button"
+                onClick={close}
+                className="flex items-center justify-center h-8 w-8 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                aria-label="Cerrar menú"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <SidebarContent />
+          </aside>
+        </>
+      )}
     </>
   )
 }
