@@ -1,6 +1,7 @@
 import type { Database } from './database'
 
 export type ContractStatus = Database['public']['Enums']['contract_status']
+export type ContractSource = 'external_form' | 'manual'
 export type DocumentType = Database['public']['Enums']['document_type']
 export type ApprovalStatus = Database['public']['Enums']['approval_status']
 export type ContractInvestorRole = Database['public']['Enums']['contract_investor_role']
@@ -13,6 +14,7 @@ export interface ContractListItem {
   holder_name: string | null
   amount: number
   status: ContractStatus
+  source: ContractSource
   term_months: number
   start_date: string | null
   end_date: string | null
@@ -82,6 +84,7 @@ export interface ContractDetail {
   plan_id: string
   amount: number
   status: ContractStatus
+  source: ContractSource
   term_months: number
   start_date: string | null
   end_date: string | null

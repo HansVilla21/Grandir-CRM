@@ -385,6 +385,7 @@ export type Database = {
           parent_contract_id: string | null
           plan_id: string
           report_frequency_months: number
+          source: Database["public"]["Enums"]["contract_source"]
           start_date: string | null
           status: Database["public"]["Enums"]["contract_status"]
           term_months: number
@@ -400,6 +401,7 @@ export type Database = {
           parent_contract_id?: string | null
           plan_id: string
           report_frequency_months?: number
+          source?: Database["public"]["Enums"]["contract_source"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
           term_months: number
@@ -415,6 +417,7 @@ export type Database = {
           parent_contract_id?: string | null
           plan_id?: string
           report_frequency_months?: number
+          source?: Database["public"]["Enums"]["contract_source"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
           term_months?: number
@@ -867,6 +870,7 @@ export type Database = {
       bulletin_status: "draft" | "sent"
       bulletin_target: "all_active" | "all_inactive" | "by_plan" | "custom"
       contract_investor_role: "holder" | "co_investor"
+      contract_source: "external_form" | "manual"
       contract_status:
         | "draft"
         | "pending_approval"
@@ -1026,6 +1030,7 @@ export const Constants = {
       bulletin_status: ["draft", "sent"],
       bulletin_target: ["all_active", "all_inactive", "by_plan", "custom"],
       contract_investor_role: ["holder", "co_investor"],
+      contract_source: ["external_form", "manual"],
       contract_status: [
         "draft",
         "pending_approval",
