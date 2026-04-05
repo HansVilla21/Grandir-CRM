@@ -62,7 +62,7 @@ export async function createAndSendCode(
     return {
       success: false,
       masked_email: masked,
-      error: 'Se ha excedido el limite de codigos por hora. Intente mas tarde.',
+      error: 'RATE_LIMIT',
     }
   }
 
@@ -98,7 +98,7 @@ export async function createAndSendCode(
   // 5. Send code via email
   try {
     await sendVerificationCodeEmail({
-      to: recipientEmail,
+      to: [recipientEmail],
       investorName,
       code,
     })
