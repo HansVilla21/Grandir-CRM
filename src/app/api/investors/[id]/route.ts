@@ -105,3 +105,40 @@ export async function PATCH(
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const supabase = await createAdminClient()
+
+    // Check if investor has active contracts
+    const { count } = await supabase
+      .from('contract_investors')
+      .select('id', { count: 'exact', head: true })
+      .eq('investor_id', id)
+
+    if (count && count > 0) {
+      return NextResponse.json(
+        { error: 'No se puede eliminar un inversionista con contratos asociados. Elimine los contratos primero.' },
+        { status: 409 }
+      )
+    }
+
+    const { error } = await supabase
+      .from('investors')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Error inesperado'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}

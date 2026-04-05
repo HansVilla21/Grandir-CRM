@@ -4,6 +4,7 @@ import { ArrowLeft, Mail, Phone, Calendar, User, CheckCircle2 } from 'lucide-rea
 import { createAdminClient } from '@/lib/supabase/server'
 import { InvestorStatusToggle } from '../_components/investor-status-toggle'
 import { InvestorEditButton } from '../_components/investor-edit-button'
+import { InvestorDeleteButton } from '../_components/investor-delete-button'
 import { cn } from '@/lib/utils'
 import type { InvestorDetail, LinkedContract } from '@/types/investors'
 
@@ -189,6 +190,10 @@ export default async function InvestorDetailPage({
             <InvestorEditButton
               investor={investor}
               activeInvestors={activeInvestors}
+            />
+            <InvestorDeleteButton
+              investorId={investor.id}
+              investorName={investor.full_name}
             />
           </div>
         </div>
