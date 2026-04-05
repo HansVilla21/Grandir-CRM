@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Search, Plus, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ContractStatusBadge } from './contract-status-badge'
-import type { ContractListItem, ContractStatus } from '@/types/contracts'
+import type {
+  ContractListItem,
+  ContractSource,
+  ContractStatus,
+} from '@/types/contracts'
 
 interface Plan {
   id: string
@@ -18,6 +22,7 @@ interface ContractsTableProps {
 }
 
 type StatusFilter = 'all' | ContractStatus
+type SourceFilter = 'all' | ContractSource
 
 const STATUS_TABS: { value: StatusFilter; label: string }[] = [
   { value: 'all', label: 'Todos' },
@@ -27,6 +32,34 @@ const STATUS_TABS: { value: StatusFilter; label: string }[] = [
   { value: 'expired', label: 'Vencido' },
   { value: 'cancelled', label: 'Cancelado' },
 ]
+
+const SOURCE_CONFIG: Record<
+  ContractSource,
+  { label: string; className: string }
+> = {
+  external_form: {
+    label: 'Externa',
+    className: 'bg-green-50 text-green-700 border-green-200',
+  },
+  manual: {
+    label: 'Manual',
+    className: 'bg-zinc-100 text-zinc-600 border-zinc-200',
+  },
+}
+
+function ContractSourceBadge({ source }: { source: ContractSource }) {
+  const config = SOURCE_CONFIG[source]
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium border',
+        config.className
+      )}
+    >
+      {config.label}
+    </span>
+  )
+}
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -47,6 +80,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [planFilter, setPlanFilter] = useState<string>('all')
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all')
 
   const filtered = useMemo(() => {
     let result = contracts
@@ -59,6 +93,10 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
       result = result.filter((c) => c.plan_id === planFilter)
     }
 
+    if (sourceFilter !== 'all') {
+      result = result.filter((c) => c.source === sourceFilter)
+    }
+
     if (search.trim()) {
       const q = search.trim().toLowerCase()
       result = result.filter(
@@ -67,7 +105,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
     }
 
     return result
-  }, [contracts, statusFilter, planFilter, search])
+  }, [contracts, statusFilter, planFilter, sourceFilter, search])
 
   return (
     <>
@@ -112,6 +150,8 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
+            title="Filtrar por plan"
+            aria-label="Filtrar por plan"
             className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 transition-colors"
           >
             <option value="all">Todos los planes</option>
@@ -120,6 +160,19 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
                 {plan.name}
               </option>
             ))}
+          </select>
+
+          {/* Source filter */}
+          <select
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value as SourceFilter)}
+            title="Filtrar por origen"
+            aria-label="Filtrar por origen"
+            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 transition-colors"
+          >
+            <option value="all">Todos los orígenes</option>
+            <option value="external_form">Formulario externo</option>
+            <option value="manual">Manual</option>
           </select>
         </div>
 
@@ -149,11 +202,17 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <FileText size={36} className="text-zinc-300 mb-3" strokeWidth={1.5} />
             <p className="text-sm font-medium text-zinc-500">
-              {search || statusFilter !== 'all' || planFilter !== 'all'
+              {search ||
+              statusFilter !== 'all' ||
+              planFilter !== 'all' ||
+              sourceFilter !== 'all'
                 ? 'No se encontraron resultados'
                 : 'Sin contratos registrados'}
             </p>
-            {!search && statusFilter === 'all' && planFilter === 'all' && (
+            {!search &&
+              statusFilter === 'all' &&
+              planFilter === 'all' &&
+              sourceFilter === 'all' && (
               <button
                 type="button"
                 onClick={() => router.push('/dashboard/contracts/new')}
@@ -201,9 +260,12 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
                     className="hover:bg-zinc-50 cursor-pointer transition-colors"
                   >
                     <td className="pl-4 sm:pl-6 pr-4 py-3">
-                      <span className="font-mono text-xs text-zinc-500">
-                        {contract.id.slice(0, 8)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs text-zinc-500">
+                          {contract.id.slice(0, 8)}
+                        </span>
+                        <ContractSourceBadge source={contract.source} />
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <span className="font-medium text-zinc-900">
