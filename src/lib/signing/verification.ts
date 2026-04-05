@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { sendVerificationCodeEmail } from '@/lib/email/verification-code-email'
 
 // ---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ export async function createAndSendCode(
   recipientEmail: string,
   investorName: string,
 ): Promise<CreateCodeResult> {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
   const masked = maskEmail(recipientEmail)
 
   // 1. Rate limit: max 5 codes per hour for this contract_investor_id
@@ -118,7 +118,7 @@ export async function validateCode(
   contractInvestorId: string,
   inputCode: string,
 ): Promise<ValidateCodeResult> {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // 1. Find the most recent unused code for this contract_investor_id
   const { data: codeRecord, error: fetchError } = await supabase

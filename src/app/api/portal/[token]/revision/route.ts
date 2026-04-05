@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 
 export async function POST(
   req: NextRequest,
@@ -29,7 +29,7 @@ export async function POST(
     )
   }
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Buscar contract_investor por token
   const { data: contractInvestor, error: ciError } = await supabase

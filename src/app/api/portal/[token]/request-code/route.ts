@@ -1,29 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { createAndSendCode } from '@/lib/signing/verification'
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Normaliza nombre: quita acentos, lowercase, colapsa espacios */
-function normalizeName(s: string): string {
-  return s
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim()
-}
 
 /** Normaliza cedula: solo digitos */
 function normalizeCedula(s: string): string {
   return s.replace(/\D/g, '')
 }
-
-// ---------------------------------------------------------------------------
-// POST /api/portal/[token]/request-code
-// ---------------------------------------------------------------------------
 
 export async function POST(
   request: NextRequest,
@@ -32,7 +14,7 @@ export async function POST(
   const { token } = await params
 
   // 1. Parsear body
-  let body: { name?: string; cedula?: string }
+  let body: { cedula?: string }
   try {
     body = await request.json()
   } catch {
@@ -42,16 +24,16 @@ export async function POST(
     )
   }
 
-  const { name, cedula } = body
+  const { cedula } = body
 
-  if (!name || !cedula) {
+  if (!cedula) {
     return NextResponse.json(
-      { error: 'MISSING_FIELDS', message: 'Nombre y cedula son requeridos.' },
+      { error: 'MISSING_FIELDS', message: 'La cedula es requerida.' },
       { status: 400 }
     )
   }
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // 2. Validar token: buscar contract_investor
   const { data: ci, error: ciError } = await supabase
@@ -95,13 +77,10 @@ export async function POST(
     )
   }
 
-  // 4. Validar identidad
-  const nameMatch = normalizeName(name) === normalizeName(investor.full_name)
-  const cedulaMatch = normalizeCedula(cedula) === normalizeCedula(investor.cedula)
-
-  if (!nameMatch || !cedulaMatch) {
+  // 4. Validar identidad por cedula
+  if (normalizeCedula(cedula) !== normalizeCedula(investor.cedula)) {
     return NextResponse.json(
-      { error: 'IDENTITY_MISMATCH', message: 'Los datos ingresados no coinciden con el inversionista.' },
+      { error: 'IDENTITY_MISMATCH', message: 'La cedula no coincide con la registrada.' },
       { status: 422 }
     )
   }

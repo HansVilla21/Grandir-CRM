@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import type { Database } from '@/types/database'
 
 type DocumentType = Database['public']['Enums']['document_type']
@@ -12,7 +12,7 @@ export async function POST(
 ) {
   const { token } = await params
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Buscar contract_investor por token
   const { data: contractInvestor, error: ciError } = await supabase
@@ -70,6 +70,7 @@ export async function POST(
     })
 
   if (uploadError) {
+    console.error('[documents] Upload error:', uploadError)
     return NextResponse.json(
       { error: 'UPLOAD_FAILED', details: uploadError.message },
       { status: 500 }
@@ -93,6 +94,7 @@ export async function POST(
     .single()
 
   if (insertError) {
+    console.error('[documents] Insert error:', insertError)
     return NextResponse.json(
       { error: 'INSERT_FAILED', details: insertError.message },
       { status: 500 }

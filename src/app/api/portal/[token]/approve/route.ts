@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 
 function addMonths(date: Date, months: number): Date {
   const result = new Date(date)
@@ -13,7 +13,7 @@ export async function POST(
 ) {
   const { token } = await params
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // 1. Buscar contract_investor por token
   const { data: contractInvestor, error: ciError } = await supabase

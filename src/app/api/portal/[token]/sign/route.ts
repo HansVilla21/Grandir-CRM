@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { validateCode } from '@/lib/signing/verification'
 import {
   generateSignedContractPdf,
@@ -35,7 +35,7 @@ export async function POST(
       )
     }
 
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // 2. Validate token — find contract_investor by portal_token
     const { data: ci, error: ciError } = await supabase

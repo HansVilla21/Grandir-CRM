@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 
 export async function GET(
   _req: NextRequest,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const { token } = await params
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // 1. Buscar contract_investor por portal_token
   const { data: contractInvestor, error: ciError } = await supabase
@@ -127,6 +127,8 @@ export async function GET(
       approval_status: contractInvestor.approval_status,
       revision_comment: contractInvestor.revision_comment,
       approved_at: contractInvestor.approved_at,
+      signed_at: contractInvestor.signed_at,
+      signature_name: contractInvestor.signature_name,
     },
     investor: investor
       ? {

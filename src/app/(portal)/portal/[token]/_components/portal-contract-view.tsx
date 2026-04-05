@@ -14,11 +14,13 @@ function formatCurrency(amount: number): string {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return 'Por confirmar'
+  const date = new Date(dateStr)
+  if (isNaN(date.getTime())) return '—'
   return new Intl.DateTimeFormat('es-CR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date(dateStr + 'T12:00:00'))
+  }).format(date)
 }
 
 function describePaymentStructure(planType: string): string {

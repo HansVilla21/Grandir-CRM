@@ -38,7 +38,6 @@ export function SigningFlow({ token, amount }: SigningFlowProps) {
   const [maskedEmail, setMaskedEmail] = useState('')
 
   // Identity inputs
-  const [name, setName] = useState('')
   const [cedula, setCedula] = useState('')
 
   // Verification
@@ -65,14 +64,14 @@ export function SigningFlow({ token, amount }: SigningFlowProps) {
       const res = await fetch(`/api/portal/${token}/request-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, cedula: cedula.replace(/\D/g, '') }),
+        body: JSON.stringify({ cedula: cedula.replace(/\D/g, '') }),
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error ?? 'Error al verificar identidad')
+        setError(data.message ?? data.error ?? 'Error al verificar identidad')
         return
       }
-      setMaskedEmail(data.maskedEmail ?? '')
+      setMaskedEmail(data.masked_email ?? '')
       setCooldown(60)
       setStep('verification')
     } catch {
@@ -80,7 +79,7 @@ export function SigningFlow({ token, amount }: SigningFlowProps) {
     } finally {
       setLoading(false)
     }
-  }, [token, name, cedula])
+  }, [token, cedula])
 
   // ── Resend code ─────────────────────────────────────────────────────────
 
@@ -92,11 +91,11 @@ export function SigningFlow({ token, amount }: SigningFlowProps) {
       const res = await fetch(`/api/portal/${token}/request-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, cedula: cedula.replace(/\D/g, '') }),
+        body: JSON.stringify({ cedula: cedula.replace(/\D/g, '') }),
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error ?? 'Error al reenviar codigo')
+        setError(data.message ?? data.error ?? 'Error al reenviar codigo')
         return
       }
       setCooldown(60)
@@ -105,7 +104,7 @@ export function SigningFlow({ token, amount }: SigningFlowProps) {
     } finally {
       setLoading(false)
     }
-  }, [token, name, cedula, cooldown])
+  }, [token, cedula, cooldown])
 
   // ── Step 3: Sign contract ───────────────────────────────────────────────
 
@@ -211,49 +210,30 @@ export function SigningFlow({ token, amount }: SigningFlowProps) {
               Verifica tu identidad
             </h2>
             <p className="text-sm text-zinc-600 mt-1">
-              Ingresa tus datos para verificar que eres el titular del contrato.
+              Ingresa tu numero de cedula para verificar que eres el titular del contrato.
             </p>
           </div>
 
-          <div className="space-y-3">
-            <div>
-              <label
-                htmlFor="signing-name"
-                className="block text-sm font-medium text-zinc-700 mb-1"
-              >
-                Nombre completo
-              </label>
-              <input
-                id="signing-name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ej: Maria Lopez Gonzalez"
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="signing-cedula"
-                className="block text-sm font-medium text-zinc-700 mb-1"
-              >
-                Numero de cedula
-              </label>
-              <input
-                id="signing-cedula"
-                type="text"
-                value={cedula}
-                onChange={(e) => setCedula(formatCedula(e.target.value))}
-                placeholder="X-XXXX-XXXX"
-                className={inputClass}
-              />
-            </div>
+          <div>
+            <label
+              htmlFor="signing-cedula"
+              className="block text-sm font-medium text-zinc-700 mb-1"
+            >
+              Numero de cedula
+            </label>
+            <input
+              id="signing-cedula"
+              type="text"
+              value={cedula}
+              onChange={(e) => setCedula(formatCedula(e.target.value))}
+              placeholder="X-XXXX-XXXX"
+              className={inputClass}
+            />
           </div>
 
           <button
             onClick={handleRequestCode}
-            disabled={loading || !name.trim() || cedula.replace(/\D/g, '').length < 9}
+            disabled={loading || cedula.replace(/\D/g, '').length < 9}
             className={buttonClass}
           >
             {loading ? 'Verificando...' : 'Verificar identidad'}
