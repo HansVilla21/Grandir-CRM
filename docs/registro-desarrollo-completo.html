@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grandir CRM - Registro Completo de Desarrollo</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #18181b;
+      --muted: #71717a;
+      --border: #e4e4e7;
+      --accent: #18181b;
+      --accent-light: #f4f4f5;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --orange: #ea580c;
+      --purple: #7c3aed;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .hero {
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-bottom: 3rem;
+      background: var(--accent);
+      color: white;
+      border-radius: 16px;
+    }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .hero .subtitle {
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-bottom: 1.5rem;
+    }
+    .hero .meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    .hero .meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 3rem;
+    }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text);
+    }
+    h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 1rem 0 0.5rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.8rem;
+    }
+
+    p {
+      margin-bottom: 0.75rem;
+      color: #3f3f46;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Stats */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      background: var(--accent-light);
+    }
+    td { color: #3f3f46; }
+
+    /* Code */
+    code {
+      background: var(--accent-light);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+    }
+    pre {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      padding: 1.25rem;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    /* Lists */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    li {
+      margin-bottom: 0.35rem;
+      color: #3f3f46;
+    }
+
+    /* Tags */
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .tag-green { background: #dcfce7; color: #166534; }
+    .tag-blue { background: #dbeafe; color: #1e40af; }
+    .tag-orange { background: #ffedd5; color: #9a3412; }
+    .tag-purple { background: #ede9fe; color: #5b21b6; }
+    .tag-gray { background: #f4f4f5; color: #3f3f46; }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.65rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .timeline-item .time {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .timeline-item .title {
+      font-weight: 600;
+      margin: 0.15rem 0;
+    }
+    .timeline-item .desc {
+      font-size: 0.9rem;
+      color: #52525b;
+    }
+
+    /* Callout */
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-light);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+    .callout.tip { border-color: var(--green); background: #f0fdf4; }
+    .callout.warn { border-color: var(--orange); background: #fff7ed; }
+    .callout.info { border-color: var(--blue); background: #eff6ff; }
+
+    /* Decision */
+    .decision {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .decision .q {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .decision .a {
+      color: #52525b;
+      font-size: 0.9rem;
+    }
+    .decision .why {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      font-style: italic;
+    }
+
+    /* File tree */
+    .file-tree {
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      padding: 1.5rem;
+      border-radius: 10px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .file-tree .folder { color: #89b4fa; }
+    .file-tree .file { color: #a6adc8; }
+    .file-tree .highlight { color: #a6e3a1; }
+
+    /* TOC */
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+    }
+    .toc h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+    .toc ol {
+      padding-left: 1.25rem;
+    }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      body { padding: 1rem 0.5rem; }
+      .hero { padding: 2rem 1rem; }
+      .hero h1 { font-size: 1.5rem; }
+      .hero .meta { flex-direction: column; gap: 0.5rem; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 1rem; }
+      pre { padding: 1rem; font-size: 0.78rem; }
+      table { font-size: 0.82rem; }
+      th, td { padding: 0.4rem 0.5rem; }
+    }
+
+    /* Print */
+    @media print {
+      body { padding: 0; }
+      .hero { background: white; color: black; border: 2px solid black; }
+      pre { border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ========== HERO ========== -->
+    <div class="hero">
+      <h1>Grandir CRM</h1>
+      <p class="subtitle">Registro Completo de Desarrollo</p>
+      <div class="meta">
+        <span>Marzo 2026</span>
+        <span>Next.js + Supabase + Vercel</span>
+        <span>~15,000 lineas de codigo</span>
+        <span>Claude Code (AI-assisted)</span>
+      </div>
+    </div>
+
+    <!-- ========== TOC ========== -->
+    <div class="toc">
+      <h3>Contenido</h3>
+      <ol>
+        <li><a href="#contexto">Contexto del Proyecto</a></li>
+        <li><a href="#stack">Stack Tecnologico y Justificacion</a></li>
+        <li><a href="#metodologia">Metodologia de Desarrollo</a></li>
+        <li><a href="#arquitectura">Arquitectura del Sistema</a></li>
+        <li><a href="#database">Base de Datos</a></li>
+        <li><a href="#modulos">Modulos Implementados</a></li>
+        <li><a href="#api">API Routes</a></li>
+        <li><a href="#decisiones">Decisiones Clave</a></li>
+        <li><a href="#timeline">Timeline de Desarrollo</a></li>
+        <li><a href="#patrones">Patrones y Convenciones</a></li>
+        <li><a href="#seguridad">Seguridad</a></li>
+        <li><a href="#responsive">Responsive Design</a></li>
+        <li><a href="#agentes">Sistema de Agentes IA</a></li>
+        <li><a href="#lecciones">Lecciones Aprendidas</a></li>
+        <li><a href="#metricas">Metricas Finales</a></li>
+      </ol>
+    </div>
+
+    <!-- ========== 1. CONTEXTO ========== -->
+    <section id="contexto">
+      <h2>1. Contexto del Proyecto</h2>
+
+      <div class="card">
+        <h4>El Cliente</h4>
+        <p><strong>April Mora Araya / Grandir CM Sociedad de Responsabilidad Limitada</strong> (cedula juridica 3-102-873916)</p>
+        <p>Fondo de inversion costarricense que opera con tres planes: Anual (120%), Mensual (125%) y Semestral (135%). El negocio gestionaba todo con Excel, carpetas compartidas y seguimiento por correo.</p>
+      </div>
+
+      <div class="card">
+        <h4>El Problema</h4>
+        <ul>
+          <li>Sin sistema centralizado - datos dispersos en hojas de calculo</li>
+          <li>Seguimiento manual de contratos, pagos y vencimientos</li>
+          <li>Comunicacion con inversionistas por correo individual</li>
+          <li>Reportes periodicos generados manualmente</li>
+          <li>Sin portal para que inversionistas vean su estado</li>
+          <li>Sin registro de auditor&iacute;a de acciones</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4>La Solucion</h4>
+        <p>CRM interno completo con 10 modulos, portal de inversionista por token unico, generacion de reportes, sistema de boletines y dashboard de metricas en tiempo real.</p>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="value">$3,500</div>
+          <div class="label">Presupuesto</div>
+        </div>
+        <div class="stat">
+          <div class="value">30 dias</div>
+          <div class="label">Plazo</div>
+        </div>
+        <div class="stat">
+          <div class="value">10</div>
+          <div class="label">Modulos</div>
+        </div>
+        <div class="stat">
+          <div class="value">~15,000</div>
+          <div class="label">Lineas de codigo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 2. STACK ========== -->
+    <section id="stack">
+      <h2>2. Stack Tecnologico y Justificacion</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tecnologia</th>
+            <th>Uso</th>
+            <th>Por que esta y no otra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Next.js 16</strong></td>
+            <td>Frontend + Backend (App Router)</td>
+            <td>Full-stack en un solo framework, SSR, API routes integradas, deploy trivial en Vercel</td>
+          </tr>
+          <tr>
+            <td><strong>TypeScript</strong></td>
+            <td>Tipado estatico</td>
+            <td>Previene errores en tiempo de compilacion, autocomplete, refactoring seguro</td>
+          </tr>
+          <tr>
+            <td><strong>Supabase</strong></td>
+            <td>Base de datos + Auth + Storage</td>
+            <td>PostgreSQL completo, RLS nativo, Auth listo, Storage para PDFs, tier gratis generoso</td>
+          </tr>
+          <tr>
+            <td><strong>Tailwind CSS v4</strong></td>
+            <td>Estilos</td>
+            <td>Utility-first, responsive nativo con breakpoints, sin CSS custom, coherencia visual</td>
+          </tr>
+          <tr>
+            <td><strong>shadcn/ui</strong></td>
+            <td>Componentes UI base</td>
+            <td>Componentes copiados (no dependencia), personalizables, accesibles, Tailwind nativo</td>
+          </tr>
+          <tr>
+            <td><strong>Lucide React</strong></td>
+            <td>Iconos</td>
+            <td>Iconos SVG consistentes, tree-shakeable, misma estetica que shadcn</td>
+          </tr>
+          <tr>
+            <td><strong>Resend</strong></td>
+            <td>Envio de emails</td>
+            <td>API moderna, soporte React Email, tracking de entrega, tier gratis suficiente</td>
+          </tr>
+          <tr>
+            <td><strong>Vercel</strong></td>
+            <td>Deploy + Hosting</td>
+            <td>Deploy automatico desde Git, edge functions, preview deploys, integracion nativa Next.js</td>
+          </tr>
+          <tr>
+            <td><strong>React 19</strong></td>
+            <td>UI Library</td>
+            <td>Server Components, Server Actions, Suspense - reducen codigo cliente</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Dependencias del proyecto</h3>
+      <pre>{
+  "@supabase/ssr": "^0.9.0",
+  "@supabase/supabase-js": "^2.100.1",
+  "class-variance-authority": "^0.7.1",
+  "clsx": "^2.1.1",
+  "lucide-react": "^1.7.0",
+  "next": "16.2.1",
+  "react": "19.2.4",
+  "resend": "^6.9.4",
+  "shadcn": "^4.1.0",
+  "tailwind-merge": "^3.5.0"
+}</pre>
+
+      <div class="callout tip">
+        <strong>Principio:</strong> Minimas dependencias. Solo lo necesario. Cada libreria agregada es deuda tecnica futura. El proyecto tiene solo 10 dependencias de produccion.
+      </div>
+    </section>
+
+    <!-- ========== 3. METODOLOGIA ========== -->
+    <section id="metodologia">
+      <h2>3. Metodologia de Desarrollo</h2>
+
+      <p>El proyecto se desarrollo usando <strong>Claude Code</strong> (IA de Anthropic) con un sistema de agentes especializados y skills predefinidos. El flujo completo:</p>
+
+      <pre>brainstorming  -->  writing-plans  -->  subagent-driven-development  -->  finishing-branch</pre>
+
+      <h3>3.1 Flujo Superpowers</h3>
+      <div class="card">
+        <ol>
+          <li><strong>Brainstorming:</strong> Discusion libre sobre el feature. Se exploran alternativas, se define el alcance, se aclaran dudas de negocio.</li>
+          <li><strong>Writing Plans:</strong> Se escribe un plan detallado de implementacion con tareas numeradas, archivos a crear/modificar, y criterios de verificacion.</li>
+          <li><strong>Subagent Development:</strong> Se ejecuta el plan usando agentes especializados en paralelo (frontend-dev, backend-dev, db-architect).</li>
+          <li><strong>Verification:</strong> Se verifica el build, se revisan los cambios, se corren tests.</li>
+          <li><strong>Finishing:</strong> Se prepara el merge/commit final.</li>
+        </ol>
+      </div>
+
+      <h3>3.2 Agentes Especializados</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Agente</th>
+            <th>Responsabilidad</th>
+            <th>Herramientas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>orquestador</code></td>
+            <td>Coordina el desarrollo, delega a otros agentes</td>
+            <td>Todas</td>
+          </tr>
+          <tr>
+            <td><code>db-architect</code></td>
+            <td>Schema, migraciones, RLS policies</td>
+            <td>Supabase MCP, SQL</td>
+          </tr>
+          <tr>
+            <td><code>backend-dev</code></td>
+            <td>API routes, logica de negocio, integraciones</td>
+            <td>All tools, TDD</td>
+          </tr>
+          <tr>
+            <td><code>frontend-dev</code></td>
+            <td>UI, componentes, responsive</td>
+            <td>All tools, TDD</td>
+          </tr>
+          <tr>
+            <td><code>code-reviewer</code></td>
+            <td>Revisa calidad, seguridad, tests</td>
+            <td>Solo lectura</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.3 Skills Disponibles</h3>
+      <div class="card-grid">
+        <div class="card">
+          <strong>brainstorming</strong>
+          <p>Diseno de features antes de codear</p>
+        </div>
+        <div class="card">
+          <strong>writing-plans</strong>
+          <p>Plan detallado de implementacion</p>
+        </div>
+        <div class="card">
+          <strong>test-driven-development</strong>
+          <p>TDD obligatorio para logica</p>
+        </div>
+        <div class="card">
+          <strong>systematic-debugging</strong>
+          <p>Debugging con root cause analysis</p>
+        </div>
+        <div class="card">
+          <strong>verification-before-completion</strong>
+          <p>Validacion antes de cerrar tarea</p>
+        </div>
+        <div class="card">
+          <strong>using-git-worktrees</strong>
+          <p>Ramas aisladas para features</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 4. ARQUITECTURA ========== -->
+    <section id="arquitectura">
+      <h2>4. Arquitectura del Sistema</h2>
+
+      <h3>4.1 Estructura de Carpetas</h3>
+      <div class="file-tree">
+<span class="folder">grandir-crm/</span>
+<span class="folder">  src/</span>
+<span class="folder">    app/</span>
+<span class="folder">      (auth)/</span><span class="file">               # Login con Supabase Auth</span>
+<span class="folder">      (dashboard)/</span><span class="file">           # Dashboard interno (protegido)</span>
+<span class="folder">        dashboard/</span>
+<span class="folder">          _components/</span><span class="file">      # Stats, graficas, widgets del inicio</span>
+<span class="folder">          investors/</span><span class="file">        # CRUD inversionistas</span>
+<span class="folder">          contracts/</span><span class="file">        # CRUD contratos + portal</span>
+<span class="folder">          payments/</span><span class="file">         # Registro y verificacion de pagos</span>
+<span class="folder">          reports/</span><span class="file">          # Reportes periodicos</span>
+<span class="folder">          bulletins/</span><span class="file">        # Boletines masivos</span>
+<span class="folder">          notifications/</span><span class="file">    # Centro de notificaciones</span>
+<span class="folder">          referrals/</span><span class="file">        # Sistema de referidos</span>
+<span class="folder">          settings/</span><span class="file">         # Usuarios y planes</span>
+<span class="folder">          help/</span><span class="file">             # Documentacion interna</span>
+<span class="folder">      (portal)/</span><span class="file">              # Portal inversionista (publico por token)</span>
+<span class="folder">      api/</span><span class="file">                  # 30+ API routes</span>
+<span class="folder">    components/</span>
+<span class="folder">      layout/</span><span class="file">               # Sidebar, Header, Mobile context</span>
+<span class="folder">      ui/</span><span class="file">                   # shadcn/ui components</span>
+<span class="folder">    lib/</span>
+<span class="folder">      supabase/</span><span class="file">             # Cliente server + client</span>
+<span class="folder">      auth/</span><span class="file">                 # Server actions (login, logout)</span>
+<span class="folder">      email/</span><span class="file">                # Templates de email (Resend)</span>
+<span class="folder">      notifications/</span><span class="file">        # Creacion de notificaciones</span>
+<span class="highlight">    types/</span><span class="file">                  # 9 archivos de tipos TypeScript</span>
+<span class="folder">  supabase/</span>
+<span class="folder">    migrations/</span><span class="file">             # 20 migraciones SQL</span>
+<span class="folder">  docs/</span>
+<span class="folder">    superpowers/</span>
+<span class="folder">      specs/</span><span class="file">                # Especificacion maestra + schema design</span>
+<span class="folder">      plans/</span><span class="file">                # Planes de implementacion</span>
+<span class="folder">  .claude/</span>
+<span class="folder">    agents/</span><span class="file">                 # 5 agentes especializados</span>
+<span class="folder">    skills/</span><span class="file">                 # 13 skills de desarrollo</span>
+      </div>
+
+      <h3>4.2 Patron de Server/Client Components</h3>
+      <div class="card">
+        <p>Next.js App Router diferencia entre Server Components (por defecto) y Client Components (<code>'use client'</code>). La regla del proyecto:</p>
+        <ul>
+          <li><strong>Pages (page.tsx):</strong> Server Components - hacen fetch de datos directo con Supabase</li>
+          <li><strong>Tables/Forms:</strong> Client Components - manejan estado (search, filters, modals)</li>
+          <li><strong>Layout:</strong> Server Component que pasa datos como props a componentes client</li>
+          <li><strong>API Routes:</strong> Server-side, manejan mutaciones con validacion</li>
+        </ul>
+      </div>
+
+      <div class="callout info">
+        <strong>Patron clave:</strong> Los Server Components hacen el fetch y pasan datos como props a Client Components. Las mutaciones van por API Routes, no por Server Actions directamente desde el cliente (excepto auth).
+      </div>
+
+      <h3>4.3 Flujo de Datos</h3>
+      <pre>
+[Browser] --> [Next.js Server Component] --> [Supabase] --> [Render HTML]
+                                                |
+[Browser] --> [API Route POST/PUT/DELETE] --> [Supabase] --> [JSON Response]
+                                                |
+[Browser] --> [Portal (publico)] --> [API Route con token] --> [Supabase] --> [Render]
+      </pre>
+    </section>
+
+    <!-- ========== 5. DATABASE ========== -->
+    <section id="database">
+      <h2>5. Base de Datos</h2>
+
+      <h3>5.1 Numeros</h3>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="value">16</div>
+          <div class="label">Tablas</div>
+        </div>
+        <div class="stat">
+          <div class="value">13</div>
+          <div class="label">Enums PostgreSQL</div>
+        </div>
+        <div class="stat">
+          <div class="value">4</div>
+          <div class="label">Storage Buckets</div>
+        </div>
+        <div class="stat">
+          <div class="value">17</div>
+          <div class="label">Indices</div>
+        </div>
+        <div class="stat">
+          <div class="value">~30</div>
+          <div class="label">RLS Policies</div>
+        </div>
+        <div class="stat">
+          <div class="value">20</div>
+          <div class="label">Migraciones SQL</div>
+        </div>
+      </div>
+
+      <h3>5.2 Tablas Principales</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tabla</th>
+            <th>Proposito</th>
+            <th>Relaciones Clave</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>user_profiles</code></td>
+            <td>Equipo interno (admin/asistente)</td>
+            <td>FK -> auth.users</td>
+          </tr>
+          <tr>
+            <td><code>investors</code></td>
+            <td>Inversionistas externos</td>
+            <td>Self-ref (referrer_id)</td>
+          </tr>
+          <tr>
+            <td><code>investor_emails</code></td>
+            <td>Multiples emails por inversionista</td>
+            <td>FK -> investors (1:N)</td>
+          </tr>
+          <tr>
+            <td><code>investment_plans</code></td>
+            <td>Planes configurables</td>
+            <td>FK desde contracts</td>
+          </tr>
+          <tr>
+            <td><code>contracts</code></td>
+            <td>Contratos de inversion</td>
+            <td>FK -> plans, self-ref (versiones)</td>
+          </tr>
+          <tr>
+            <td><code>contract_investors</code></td>
+            <td>N:M contratos-inversionistas</td>
+            <td>portal_token unico por par</td>
+          </tr>
+          <tr>
+            <td><code>beneficiaries</code></td>
+            <td>Beneficiarios de contratos</td>
+            <td>N:M via contract_beneficiaries</td>
+          </tr>
+          <tr>
+            <td><code>payments</code></td>
+            <td>Depositos, retiros, comisiones</td>
+            <td>FK -> contracts</td>
+          </tr>
+          <tr>
+            <td><code>contract_documents</code></td>
+            <td>PDFs adjuntos</td>
+            <td>FK -> contracts, Supabase Storage</td>
+          </tr>
+          <tr>
+            <td><code>reports</code></td>
+            <td>Reportes periodicos</td>
+            <td>FK -> contracts</td>
+          </tr>
+          <tr>
+            <td><code>notifications</code></td>
+            <td>Alertas internas/email</td>
+            <td>FK -> auth.users, contracts, investors</td>
+          </tr>
+          <tr>
+            <td><code>bulletins</code></td>
+            <td>Boletines masivos</td>
+            <td>FK -> auth.users, plans</td>
+          </tr>
+          <tr>
+            <td><code>bulletin_recipients</code></td>
+            <td>Tracking por destinatario</td>
+            <td>FK -> bulletins, investors</td>
+          </tr>
+          <tr>
+            <td><code>referral_commissions</code></td>
+            <td>Comisiones por referidos</td>
+            <td>FK -> investors (x2), contracts</td>
+          </tr>
+          <tr>
+            <td><code>audit_logs</code></td>
+            <td>Audit trail inmutable</td>
+            <td>FK -> auth.users, JSONB diff</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>5.3 Principios de Diseno de BD</h3>
+      <div class="decision">
+        <div class="q">Normalizado vs Denormalizado</div>
+        <div class="a">Siempre normalizado. Tablas intermedias para N:M (contract_investors, contract_beneficiaries), emails como tabla aparte (1:N).</div>
+        <div class="why">Porque: escalabilidad, integridad referencial, un inversionista puede tener N emails y estar en N contratos.</div>
+      </div>
+      <div class="decision">
+        <div class="q">Token por relacion vs Token por inversionista</div>
+        <div class="a">Token unico por par inversionista-contrato en contract_investors.portal_token.</div>
+        <div class="why">Porque: un inversionista puede tener multiples contratos, cada portal muestra datos de UN contrato especifico.</div>
+      </div>
+      <div class="decision">
+        <div class="q">Montos pre-calculados vs Calculados on-the-fly</div>
+        <div class="a">Pre-calculados y almacenados (reports.calculated_amount). Los planes pueden cambiar pero los reportes historicos no.</div>
+        <div class="why">Porque: inmutabilidad financiera. Si cambias la tasa del plan, los reportes pasados no deben cambiar.</div>
+      </div>
+    </section>
+
+    <!-- ========== 6. MODULOS ========== -->
+    <section id="modulos">
+      <h2>6. Modulos Implementados</h2>
+
+      <h3>6.1 Dashboard (Inicio)</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <p>Pantalla principal con metricas en tiempo real:</p>
+        <ul>
+          <li>4 stat cards: Capital activo, Inversionistas activos, Contratos activos, Pagos sin verificar</li>
+          <li>Contratos por estado (badges con conteo)</li>
+          <li>Contratos proximos a vencer (60 dias)</li>
+          <li>Ultimos 5 pagos pendientes de verificacion</li>
+        </ul>
+        <p><strong>Archivos:</strong> <code>page.tsx</code> (Server Component con 8 queries paralelas via Promise.all), 4 sub-componentes en <code>_components/</code></p>
+      </div>
+
+      <h3>6.2 Inversionistas</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Tabla con busqueda por nombre/cedula/email y filtro por estado</li>
+          <li>Formulario de creacion con validacion de cedula unica</li>
+          <li>Detalle con datos completos, emails, contratos asociados</li>
+          <li>Toggle de estado activo/inactivo</li>
+          <li>Edicion inline de datos</li>
+        </ul>
+        <p><strong>Archivos:</strong> 5 componentes + page + detail page + 2 API routes</p>
+      </div>
+
+      <h3>6.3 Contratos</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Tabla con filtros por estado (tabs) y por plan (dropdown)</li>
+          <li>Formulario de nuevo contrato: seleccion de inversionista, plan, monto, plazo</li>
+          <li>Detalle completo: resumen, inversionistas, pagos, documentos, reportes, historial</li>
+          <li>Acciones de cambio de estado (enviar a aprobacion, activar, cancelar)</li>
+          <li>Upload de documentos (contratos firmados, comprobantes)</li>
+          <li>Seccion de pagos asociados al contrato</li>
+        </ul>
+        <p><strong>Archivos:</strong> 6 componentes + 3 pages + 3 API routes</p>
+      </div>
+
+      <h3>6.4 Pagos</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Tabla con filtros por tipo (deposito/retiro/comision) y estado de verificacion</li>
+          <li>Formulario de nuevo pago con seleccion de contrato</li>
+          <li>Boton de verificacion (marca como verificado con usuario y timestamp)</li>
+          <li>Link a comprobante en Supabase Storage</li>
+        </ul>
+        <p><strong>Archivos:</strong> 3 componentes + page + 3 API routes</p>
+      </div>
+
+      <h3>6.5 Reportes</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Tabla con filtros por estado (pendiente/generado/enviado)</li>
+          <li>Formulario: seleccion de contrato, periodo, % crecimiento, descripcion</li>
+          <li>Upload de PDF generado</li>
+          <li>Envio por email a inversionistas del contrato (via Resend)</li>
+          <li>Detalle con historial de envios</li>
+        </ul>
+        <p><strong>Archivos:</strong> 4 componentes + 2 pages + 4 API routes</p>
+      </div>
+
+      <h3>6.6 Boletines</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Tabla de boletines con estado borrador/enviado</li>
+          <li>Formulario: asunto, cuerpo, grupo objetivo (todos activos, por plan, custom)</li>
+          <li>Envio masivo a destinatarios seleccionados</li>
+          <li>Detalle con tracking de entrega por destinatario</li>
+        </ul>
+        <p><strong>Archivos:</strong> 3 componentes + 3 pages + 3 API routes</p>
+      </div>
+
+      <h3>6.7 Notificaciones</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Centro de notificaciones con lista de alertas</li>
+          <li>Campana en header con contador de no leidas</li>
+          <li>Marcar como leida individual y "marcar todas"</li>
+          <li>Tipos: aprobacion, revision, vencimiento, reporte, pago</li>
+        </ul>
+        <p><strong>Archivos:</strong> 2 componentes + page + 2 API routes</p>
+      </div>
+
+      <h3>6.8 Referidos</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>4 stat cards: total referidos, comisiones generadas, pendientes, pagadas</li>
+          <li>Tabla de comisiones con referidor, referido, contrato, monto</li>
+          <li>Boton de marcar como pagada</li>
+        </ul>
+        <p><strong>Archivos:</strong> 2 componentes + page + 2 API routes</p>
+      </div>
+
+      <h3>6.9 Portal del Inversionista</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <span class="tag tag-purple">Publico por Token</span>
+        <ul>
+          <li>Acceso por URL unica: <code>/portal/[token]</code></li>
+          <li>Vista del contrato: plan, monto, estado, inversionistas, pagos</li>
+          <li>Aprobar borrador de contrato</li>
+          <li>Solicitar revision con comentario</li>
+          <li>Subir documentos (contrato firmado, comprobantes)</li>
+          <li>Layout propio (sin sidebar, branding Grandir)</li>
+        </ul>
+        <p><strong>Archivos:</strong> 4 componentes + page + layout + 4 API routes</p>
+      </div>
+
+      <h3>6.10 Configuracion</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <ul>
+          <li>Gestion de usuarios internos (crear, editar, activar/desactivar)</li>
+          <li>Gestion de planes de inversion (crear, editar parametros)</li>
+          <li>Formularios modales con validacion</li>
+        </ul>
+        <p><strong>Archivos:</strong> 4 componentes + page + 4 API routes</p>
+      </div>
+
+      <h3>6.11 Ayuda</h3>
+      <div class="card">
+        <span class="tag tag-green">Completo</span>
+        <p>Pagina de documentacion interna con tabla de contenidos lateral, secciones por modulo, informacion de contacto del equipo tecnico.</p>
+      </div>
+    </section>
+
+    <!-- ========== 7. API ROUTES ========== -->
+    <section id="api">
+      <h2>7. API Routes</h2>
+
+      <p>Todas las API routes siguen el mismo patron: validacion de auth, validacion de datos, operacion en Supabase, respuesta JSON.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Ruta</th>
+            <th>Metodos</th>
+            <th>Descripcion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>/api/investors</code></td><td>GET, POST</td><td>Listar y crear inversionistas</td></tr>
+          <tr><td><code>/api/investors/[id]</code></td><td>GET, PATCH</td><td>Detalle y actualizar inversionista</td></tr>
+          <tr><td><code>/api/contracts</code></td><td>GET, POST</td><td>Listar y crear contratos</td></tr>
+          <tr><td><code>/api/contracts/[id]</code></td><td>GET, PATCH</td><td>Detalle y cambiar estado</td></tr>
+          <tr><td><code>/api/contracts/[id]/documents</code></td><td>POST</td><td>Upload documentos</td></tr>
+          <tr><td><code>/api/payments</code></td><td>GET, POST</td><td>Listar y registrar pagos</td></tr>
+          <tr><td><code>/api/payments/[id]</code></td><td>PATCH</td><td>Verificar pago</td></tr>
+          <tr><td><code>/api/payments/receipt-url</code></td><td>GET</td><td>URL firmada para comprobante</td></tr>
+          <tr><td><code>/api/reports</code></td><td>GET, POST</td><td>Listar y crear reportes</td></tr>
+          <tr><td><code>/api/reports/[id]</code></td><td>GET, PATCH</td><td>Detalle y actualizar</td></tr>
+          <tr><td><code>/api/reports/[id]/upload</code></td><td>POST</td><td>Upload PDF del reporte</td></tr>
+          <tr><td><code>/api/reports/[id]/send</code></td><td>POST</td><td>Enviar reporte por email</td></tr>
+          <tr><td><code>/api/bulletins</code></td><td>GET, POST</td><td>Listar y crear boletines</td></tr>
+          <tr><td><code>/api/bulletins/[id]</code></td><td>GET</td><td>Detalle del boletin</td></tr>
+          <tr><td><code>/api/bulletins/[id]/send</code></td><td>POST</td><td>Enviar boletin masivo</td></tr>
+          <tr><td><code>/api/notifications</code></td><td>GET</td><td>Listar notificaciones</td></tr>
+          <tr><td><code>/api/notifications/[id]</code></td><td>PATCH</td><td>Marcar como leida</td></tr>
+          <tr><td><code>/api/referrals</code></td><td>GET</td><td>Listar referidos y comisiones</td></tr>
+          <tr><td><code>/api/referrals/[id]</code></td><td>PATCH</td><td>Marcar comision pagada</td></tr>
+          <tr><td><code>/api/settings/users</code></td><td>GET, POST</td><td>CRUD usuarios internos</td></tr>
+          <tr><td><code>/api/settings/users/[id]</code></td><td>PATCH</td><td>Actualizar usuario</td></tr>
+          <tr><td><code>/api/settings/plans</code></td><td>GET, POST</td><td>CRUD planes</td></tr>
+          <tr><td><code>/api/settings/plans/[id]</code></td><td>PATCH</td><td>Actualizar plan</td></tr>
+          <tr><td><code>/api/portal/[token]</code></td><td>GET</td><td>Datos del contrato por token</td></tr>
+          <tr><td><code>/api/portal/[token]/approve</code></td><td>POST</td><td>Aprobar contrato</td></tr>
+          <tr><td><code>/api/portal/[token]/revision</code></td><td>POST</td><td>Solicitar revision</td></tr>
+          <tr><td><code>/api/portal/[token]/documents</code></td><td>POST</td><td>Upload desde portal</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== 8. DECISIONES ========== -->
+    <section id="decisiones">
+      <h2>8. Decisiones Clave de Arquitectura</h2>
+
+      <div class="decision">
+        <div class="q">Supabase RLS en todas las tablas - sin excepciones</div>
+        <div class="a">Row Level Security habilitado en las 16 tablas con policies diferenciadas por rol (admin vs asistente). Funciones helper <code>is_admin()</code> e <code>is_internal_user()</code> como SECURITY DEFINER.</div>
+        <div class="why">Porque: defensa en profundidad. Incluso si hay un bug en el frontend, la BD rechaza operaciones no autorizadas.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">Montos de planes desde BD, nunca hardcodeados</div>
+        <div class="a">Los planes son completamente configurables desde el dashboard. El <code>payment_structure</code> se almacena como JSONB.</div>
+        <div class="why">Porque: el cliente necesita poder ajustar tasas y montos minimos sin tocar codigo. Y los contratos existentes no se afectan.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">Portal por token unico vs Login del inversionista</div>
+        <div class="a">Token unico por par inversionista-contrato. Sin cuenta de usuario para inversionistas.</div>
+        <div class="why">Porque: simplicidad para el inversionista (no necesita recordar password), seguridad (token expirable), y el MVP no requeria login completo.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">Server Components por defecto, Client Components solo cuando hay estado</div>
+        <div class="a">Pages son Server Components que hacen fetch directo. Tablas/formularios son Client Components.</div>
+        <div class="why">Porque: menos JavaScript en el cliente, mejor SEO, datos frescos sin cache issues. Solo se usa 'use client' cuando hay useState/useEffect.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">API Routes para mutaciones vs Server Actions</div>
+        <div class="a">Las mutaciones (crear, editar, eliminar) van por API routes. Solo auth usa Server Actions.</div>
+        <div class="why">Porque: las API routes dan mas control (headers, status codes, error handling), son testeables, y permiten reuso desde el portal.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">Audit log con JSONB diff</div>
+        <div class="a">Cada mutacion registra old_data y new_data como JSONB. La tabla es inmutable (sin updated_at).</div>
+        <div class="why">Porque: requisito de negocio (trazabilidad) y legal. Se puede reconstruir el estado de cualquier entidad en cualquier momento.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">UI minimalista monocromatica</div>
+        <div class="a">Paleta zinc (grises) con acentos minimos de color solo para badges de estado. Sin gradientes, sin sombras fuertes.</div>
+        <div class="why">Porque: decision de diseno explicita del usuario. CRM profesional, no necesita color. La informacion destaca mas sobre fondo neutro.</div>
+      </div>
+
+      <div class="decision">
+        <div class="q">Tipografia Montserrat</div>
+        <div class="a">Font local (no Google Fonts CDN) para performance y privacidad.</div>
+        <div class="why">Porque: elegancia profesional, buen soporte de caracteres latinos (tildes, enes), y carga instantanea al ser local.</div>
+      </div>
+    </section>
+
+    <!-- ========== 9. TIMELINE ========== -->
+    <section id="timeline">
+      <h2>9. Timeline de Desarrollo</h2>
+
+      <p>Todo el desarrollo se realizo en una sola sesion continua el <strong>26-27 de marzo de 2026</strong>.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="time">26 Mar - 23:56</div>
+          <div class="title">Inicio del proyecto</div>
+          <div class="desc">Creacion del repo, Next.js, estructura base, CLAUDE.md inicial.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 00:04</div>
+          <div class="title">Spec maestra + Schema de BD</div>
+          <div class="desc">Brainstorming completo con el cliente. Especificacion funcional de 242 lineas. Diseno del schema con 16 tablas, 13 enums, RLS. Aplicacion de 20 migraciones via Supabase MCP.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 01:04</div>
+          <div class="title">Implementacion de todos los modulos</div>
+          <div class="desc">Auth, Dashboard, Inversionistas, Contratos, Pagos, Reportes, Boletines, Notificaciones, Referidos, Portal del Inversionista, Configuracion, Ayuda. ~95 archivos creados. Subagentes trabajando en paralelo.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 01:07</div>
+          <div class="title">Deploy a Vercel</div>
+          <div class="desc">Primer deploy exitoso. Configuracion de variables de entorno.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 01:17</div>
+          <div class="title">Pagina de Ayuda + Sidebar reorganizado</div>
+          <div class="desc">Documentacion interna completa. Reorganizacion de la navegacion en secciones: General, Gestion, Comunicacion.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 11:24</div>
+          <div class="title">Fix: perfil inversionista</div>
+          <div class="desc">Correccion de error en query de email al cargar perfil de inversionista.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 11:30</div>
+          <div class="title">Fix: error Vercel</div>
+          <div class="desc">Correccion de tipo TypeScript para build en Vercel (investor_id en select de email).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">27 Mar - 14:06</div>
+          <div class="title">Responsive completo</div>
+          <div class="desc">Overhaul responsive de ~40 archivos. Mobile sidebar con drawer, tablas con scroll horizontal, modales bottom-sheet, grids adaptativos. 4 subagentes trabajando en paralelo.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 10. PATRONES ========== -->
+    <section id="patrones">
+      <h2>10. Patrones y Convenciones</h2>
+
+      <h3>10.1 Patron de Pagina (Server Component)</h3>
+      <pre>
+// src/app/(dashboard)/dashboard/investors/page.tsx
+import { createClient } from '@/lib/supabase/server'
+import { InvestorsTable } from './_components/investors-table'
+
+export default async function InvestorsPage() {
+  const supabase = await createClient()
+
+  // Fetch directo - Server Component
+  const { data: investors } = await supabase
+    .from('investors')
+    .select('*, investor_emails(*)')
+    .order('created_at', { ascending: false })
+
+  // Pasar datos como props al Client Component
+  return &lt;InvestorsTable investors={investors ?? []} /&gt;
+}
+      </pre>
+
+      <h3>10.2 Patron de API Route</h3>
+      <pre>
+// src/app/api/investors/route.ts
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
+
+export async function POST(request: Request) {
+  const supabase = await createClient()
+
+  // 1. Verificar auth
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'No auth' }, { status: 401 })
+
+  // 2. Validar datos
+  const body = await request.json()
+  if (!body.full_name) return NextResponse.json({ error: '...' }, { status: 400 })
+
+  // 3. Operacion
+  const { data, error } = await supabase.from('investors').insert({...})
+
+  // 4. Respuesta
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json(data, { status: 201 })
+}
+      </pre>
+
+      <h3>10.3 Patron de Tabla Responsive</h3>
+      <pre>
+// Wrapper con scroll horizontal
+&lt;div className="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden"&gt;
+  &lt;div className="overflow-x-auto"&gt;
+    &lt;table className="w-full text-sm min-w-[600px]"&gt;
+      {/* min-w fuerza ancho minimo, overflow-x-auto agrega scroll */}
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+      </pre>
+
+      <h3>10.4 Patron de Modal (Bottom Sheet en Mobile)</h3>
+      <pre>
+// Modal que sube desde abajo en mobile, centrado en desktop
+&lt;div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"&gt;
+  &lt;div className="bg-white w-full sm:max-w-lg rounded-t-xl sm:rounded-xl p-4 sm:p-6"&gt;
+    {/* contenido */}
+  &lt;/div&gt;
+&lt;/div&gt;
+      </pre>
+
+      <h3>10.5 Convenciones de Codigo</h3>
+      <table>
+        <thead>
+          <tr><th>Aspecto</th><th>Convencion</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Idioma codigo</td><td>Ingles (variables, funciones, tipos)</td></tr>
+          <tr><td>Idioma UI</td><td>Espanol (labels, textos, mensajes)</td></tr>
+          <tr><td>Commits</td><td><code>feat:</code>, <code>fix:</code>, <code>chore:</code> en espanol</td></tr>
+          <tr><td>Ramas</td><td><code>feat/nombre</code>, <code>fix/nombre</code></td></tr>
+          <tr><td>Tipos</td><td>En <code>src/types/</code>, un archivo por dominio</td></tr>
+          <tr><td>Componentes</td><td>En <code>_components/</code> junto a su page</td></tr>
+          <tr><td>Max lineas</td><td>300 por archivo</td></tr>
+          <tr><td>CSS</td><td>Solo Tailwind, cero CSS custom</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== 11. SEGURIDAD ========== -->
+    <section id="seguridad">
+      <h2>11. Seguridad</h2>
+
+      <div class="card">
+        <h4>Capas de Seguridad</h4>
+        <ol>
+          <li><strong>Supabase Auth:</strong> JWT tokens, sesion segura via cookies HttpOnly</li>
+          <li><strong>Middleware Next.js:</strong> Redirige a login si no hay sesion valida</li>
+          <li><strong>RLS PostgreSQL:</strong> Cada query filtrada por rol del usuario autenticado</li>
+          <li><strong>API Validation:</strong> Cada endpoint valida auth + datos de entrada</li>
+          <li><strong>Portal Tokens:</strong> Tokens unicos, expirables, solo lectura + acciones especificas</li>
+          <li><strong>Storage Policies:</strong> Solo usuarios autenticados pueden leer/escribir archivos</li>
+          <li><strong>.env nunca en git:</strong> Variables de entorno en Vercel, .env.example con placeholders</li>
+        </ol>
+      </div>
+
+      <div class="callout warn">
+        <strong>Reglas absolutas del proyecto:</strong>
+        <ul style="margin-bottom: 0;">
+          <li>NUNCA hardcodear API keys, tokens o secretos en ningun archivo</li>
+          <li>NUNCA hacer commit de .env</li>
+          <li>NUNCA commit directo a main</li>
+          <li>NUNCA deploy a produccion sin confirmacion explicita</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 12. RESPONSIVE ========== -->
+    <section id="responsive">
+      <h2>12. Responsive Design</h2>
+
+      <p>El sistema completo es responsive (mobile-first). Todos los breakpoints usan Tailwind CSS:</p>
+
+      <table>
+        <thead>
+          <tr><th>Breakpoint</th><th>Pixels</th><th>Uso</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>sm</code></td><td>640px+</td><td>Telefono grande / tablet pequena</td></tr>
+          <tr><td><code>md</code></td><td>768px+</td><td>Tablet</td></tr>
+          <tr><td><code>lg</code></td><td>1024px+</td><td>Sidebar visible (desktop)</td></tr>
+          <tr><td><code>xl</code></td><td>1280px+</td><td>Grids de 3-4 columnas</td></tr>
+        </tbody>
+      </table>
+
+      <h3>12.1 Mobile Sidebar</h3>
+      <div class="card">
+        <ul>
+          <li><strong>Desktop (lg+):</strong> Sidebar fijo de 240px</li>
+          <li><strong>Mobile (&lt;lg):</strong> Sidebar oculto, boton hamburguesa en header</li>
+          <li><strong>Drawer:</strong> Overlay con backdrop oscuro, animacion slide-in</li>
+          <li><strong>Context:</strong> MobileSidebarProvider maneja estado compartido</li>
+          <li>Se cierra automaticamente al navegar (useEffect on pathname)</li>
+          <li>Previene scroll del body cuando esta abierto</li>
+        </ul>
+      </div>
+
+      <h3>12.2 Patrones Responsive Aplicados</h3>
+      <table>
+        <thead>
+          <tr><th>Patron</th><th>Clases Tailwind</th><th>Donde</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tabla con scroll</td>
+            <td><code>overflow-x-auto</code> + <code>min-w-[600px]</code></td>
+            <td>Todas las tablas</td>
+          </tr>
+          <tr>
+            <td>Grid adaptativo</td>
+            <td><code>grid-cols-1 sm:grid-cols-2 xl:grid-cols-4</code></td>
+            <td>Stats, cards</td>
+          </tr>
+          <tr>
+            <td>Botones stack</td>
+            <td><code>flex-col sm:flex-row</code> + <code>w-full sm:w-auto</code></td>
+            <td>Headers de pagina</td>
+          </tr>
+          <tr>
+            <td>Card padding</td>
+            <td><code>p-4 sm:p-6</code></td>
+            <td>Todas las cards</td>
+          </tr>
+          <tr>
+            <td>Modal bottom-sheet</td>
+            <td><code>items-end sm:items-center</code></td>
+            <td>Formularios modales</td>
+          </tr>
+          <tr>
+            <td>Texto adaptativo</td>
+            <td><code>text-lg sm:text-xl</code></td>
+            <td>Titulos de pagina</td>
+          </tr>
+          <tr>
+            <td>Info oculta mobile</td>
+            <td><code>hidden sm:block</code></td>
+            <td>Nombre de usuario en header</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout tip">
+        <strong>Leccion aprendida:</strong> Nunca usar margenes negativos (<code>-mx-4</code>) en tablas dentro de cards con border. Causa desbordamiento horizontal. Usar solo <code>overflow-x-auto</code> en el wrapper.
+      </div>
+      <div class="callout tip">
+        <strong>Leccion aprendida:</strong> Los grids de 4 columnas (<code>lg:grid-cols-4</code>) no funcionan bien cuando hay sidebar de 240px en <code>lg</code>. Usar <code>xl:grid-cols-4</code> para que tengan espacio suficiente.
+      </div>
+    </section>
+
+    <!-- ========== 13. AGENTES ========== -->
+    <section id="agentes">
+      <h2>13. Sistema de Agentes IA</h2>
+
+      <p>El proyecto usa el framework <strong>"Superpowers"</strong> de Claude Code - un sistema de agentes especializados y skills que orquestan el desarrollo.</p>
+
+      <h3>13.1 Como funcionan los Agentes</h3>
+      <div class="card">
+        <p>Cada agente es un archivo Markdown en <code>.claude/agents/</code> que define:</p>
+        <ul>
+          <li><strong>Rol:</strong> Que hace este agente</li>
+          <li><strong>Herramientas:</strong> Que tools puede usar</li>
+          <li><strong>Restricciones:</strong> Que NO puede hacer</li>
+          <li><strong>Contexto:</strong> Que archivos debe leer primero (siempre CLAUDE.md)</li>
+        </ul>
+        <p>El <strong>orquestador</strong> recibe la tarea del usuario, lee el contexto, y delega a agentes especializados que trabajan en paralelo.</p>
+      </div>
+
+      <h3>13.2 Ejemplo: Responsive con 4 Subagentes</h3>
+      <div class="card">
+        <p>Para el overhaul responsive (~40 archivos), se lanzaron 4 subagentes <code>frontend-dev</code> en paralelo:</p>
+        <ol>
+          <li><strong>Agente 1:</strong> Inversionistas (page, table, form, detail, toggle)</li>
+          <li><strong>Agente 2:</strong> Contratos (page, table, form, detail, actions, payments)</li>
+          <li><strong>Agente 3:</strong> Pagos (page, table, form, verify)</li>
+          <li><strong>Agente 4:</strong> Reportes + Boletines (pages, tables, forms, detail)</li>
+        </ol>
+        <p>Mientras los subagentes trabajaban, el desarrollador principal actualizo manualmente: referidos, notificaciones, settings, help, portal, login.</p>
+        <p><strong>Resultado:</strong> ~40 archivos actualizados simultaneamente con patrones consistentes.</p>
+      </div>
+
+      <h3>13.3 Skills como "Recetas"</h3>
+      <div class="card">
+        <p>Los skills en <code>.claude/skills/</code> son plantillas reutilizables:</p>
+        <ul>
+          <li><code>/brainstorming</code> — Antes de cualquier feature nueva</li>
+          <li><code>/writing-plans</code> — Plan detallado antes de codear</li>
+          <li><code>/commit</code> — Commit con formato convencional y revision de secretos</li>
+          <li><code>/review</code> — Revision contra reglas del CLAUDE.md</li>
+          <li><code>/security-check</code> — Escaneo de secretos y configuracion</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 14. LECCIONES ========== -->
+    <section id="lecciones">
+      <h2>14. Lecciones Aprendidas</h2>
+
+      <div class="card">
+        <h4>Sobre Desarrollo con IA</h4>
+        <ul>
+          <li><strong>CLAUDE.md es critico:</strong> El archivo de instrucciones del proyecto es lo que hace que la IA mantenga coherencia entre sesiones. Sin el, cada conversacion empieza de cero.</li>
+          <li><strong>Specs antes de codigo:</strong> Invertir tiempo en la especificacion maestra ahorro horas de reescritura. La IA sigue el spec al pie de la letra.</li>
+          <li><strong>Subagentes para paralelismo:</strong> 4 agentes trabajando en paralelo es 4x mas rapido, pero requiere patrones claros para mantener consistencia.</li>
+          <li><strong>Verificar siempre:</strong> Despues de cada cambio significativo, correr <code>npx next build</code>. Los errores de tipo se acumulan si no se verifican.</li>
+          <li><strong>Memoria explicita:</strong> Las decisiones de diseno se guardan en archivos de memoria para que conversaciones futuras no las contradigan.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4>Sobre Arquitectura</h4>
+        <ul>
+          <li><strong>RLS desde el dia 1:</strong> Agregar seguridad despues es 10x mas dificil. Supabase RLS desde la primera migracion.</li>
+          <li><strong>Normalizar siempre:</strong> La tentacion de poner emails como array en investors fue grande. La tabla separada permitio multiples emails con estado individual.</li>
+          <li><strong>JSONB para configuracion flexible:</strong> <code>payment_structure</code> como JSONB permite agregar nuevos tipos de planes sin migrar la BD.</li>
+          <li><strong>Audit log inmutable:</strong> <code>old_data</code>/<code>new_data</code> como JSONB. Reconstruir el historial de cualquier entidad es trivial.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4>Sobre Responsive</h4>
+        <ul>
+          <li><strong>Mobile-first real:</strong> Empezar sin clases responsive, agregar <code>sm:</code>/<code>lg:</code> para pantallas mas grandes.</li>
+          <li><strong>Nunca margenes negativos en cards:</strong> <code>-mx-4</code> dentro de contenedores con border causa overflow invisible que rompe todo el layout.</li>
+          <li><strong>Breakpoints vs sidebar:</strong> Si hay sidebar en <code>lg</code> (1024px - 240px = 784px), los grids de 4 columnas no caben. Usar <code>xl</code>.</li>
+          <li><strong>Regla permanente:</strong> Todo componente nuevo DEBE ser responsive. Agregada al CLAUDE.md como regla #7.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4>Sobre el Proceso</h4>
+        <ul>
+          <li><strong>Un task, un chat:</strong> Mezclar temas en una sola conversacion genera confusiones.</li>
+          <li><strong>Confirmar antes de deploy:</strong> Nunca hacer deploy automatico. Siempre verificar build local primero.</li>
+          <li><strong>Errors como oportunidad:</strong> Cada error encontrado en produccion se convierte en una regla en CLAUDE.md para que no se repita.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 15. METRICAS ========== -->
+    <section id="metricas">
+      <h2>15. Metricas Finales</h2>
+
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="value">95+</div>
+          <div class="label">Archivos TypeScript</div>
+        </div>
+        <div class="stat">
+          <div class="value">~15,000</div>
+          <div class="label">Lineas de codigo</div>
+        </div>
+        <div class="stat">
+          <div class="value">30+</div>
+          <div class="label">API Routes</div>
+        </div>
+        <div class="stat">
+          <div class="value">16</div>
+          <div class="label">Tablas PostgreSQL</div>
+        </div>
+        <div class="stat">
+          <div class="value">13</div>
+          <div class="label">Enums</div>
+        </div>
+        <div class="stat">
+          <div class="value">~30</div>
+          <div class="label">RLS Policies</div>
+        </div>
+        <div class="stat">
+          <div class="value">17</div>
+          <div class="label">Indices de BD</div>
+        </div>
+        <div class="stat">
+          <div class="value">4</div>
+          <div class="label">Storage Buckets</div>
+        </div>
+        <div class="stat">
+          <div class="value">10</div>
+          <div class="label">Modulos completos</div>
+        </div>
+        <div class="stat">
+          <div class="value">5</div>
+          <div class="label">Agentes IA</div>
+        </div>
+        <div class="stat">
+          <div class="value">13</div>
+          <div class="label">Skills</div>
+        </div>
+        <div class="stat">
+          <div class="value">8</div>
+          <div class="label">Commits</div>
+        </div>
+      </div>
+
+      <div class="card" style="text-align: center; padding: 2rem;">
+        <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.5rem;">Documento generado el</p>
+        <p style="font-size: 1.2rem; font-weight: 600;">27 de Marzo de 2026</p>
+        <p style="font-size: 0.85rem; color: var(--muted); margin-top: 1rem;">
+          Desarrollado con Claude Code (Anthropic) + Next.js + Supabase<br/>
+          Para Grandir CM Sociedad de Responsabilidad Limitada
+        </p>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
