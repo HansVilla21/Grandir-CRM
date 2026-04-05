@@ -28,6 +28,7 @@ export interface ContractInvestorDetail {
   portal_token: string | null
   token_expires_at: string | null
   revision_comment: string | null
+  signed_at: string | null
   approved_at: string | null
   created_at: string
   investor: {
