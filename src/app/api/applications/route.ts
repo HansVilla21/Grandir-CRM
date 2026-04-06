@@ -233,14 +233,18 @@ export async function POST(request: NextRequest) {
 
       if (adminEmails.length > 0) {
         const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-        await sendNewApplicationEmail({
-          to: adminEmails,
-          investorName: body.full_name,
-          planName: plan.name,
-          amount: body.amount,
-          contractId: contract.id,
-          dashboardUrl: `${appUrl}/dashboard/contracts/${contract.id}`,
-        })
+        try {
+          await sendNewApplicationEmail({
+            to: adminEmails,
+            investorName: body.full_name,
+            planName: plan.name,
+            amount: body.amount,
+            contractId: contract.id,
+            dashboardUrl: `${appUrl}/dashboard/contracts/${contract.id}`,
+          })
+        } catch (emailErr) {
+          console.error('[applications] Error sending admin email:', emailErr)
+        }
       }
     }
 

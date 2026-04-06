@@ -247,15 +247,19 @@ export async function PATCH(
               console.error('Error generating contract PDF:', pdfErr)
             }
 
-            // Send invitation email
-            await sendContractInvitationEmail({
-              to: [primaryEmail],
-              investorName: investor.full_name,
-              planName: plan?.name ?? '—',
-              amount: contractWithPlan.amount,
-              termMonths: contractWithPlan.term_months,
-              portalUrl: `${appUrl}/portal/${portalToken}`,
-            })
+            // Send invitation email (non-blocking — don't break if Resend fails)
+            try {
+              await sendContractInvitationEmail({
+                to: [primaryEmail],
+                investorName: investor.full_name,
+                planName: plan?.name ?? '—',
+                amount: contractWithPlan.amount,
+                termMonths: contractWithPlan.term_months,
+                portalUrl: `${appUrl}/portal/${portalToken}`,
+              })
+            } catch (emailErr) {
+              console.error('Error sending invitation email:', emailErr)
+            }
           }
         }
       }

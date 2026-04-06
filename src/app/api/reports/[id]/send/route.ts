@@ -96,18 +96,22 @@ export async function POST(
       investment_plans: { name: string } | null
     } | null
 
-    // Send email
-    await sendReportEmail({
-      to: recipientEmails,
-      investorName: holderName,
-      contractId: report.contract_id,
-      periodStart: report.period_start,
-      periodEnd: report.period_end,
-      growthRate: report.growth_rate,
-      calculatedAmount: report.calculated_amount,
-      description: report.description,
-      pdfUrl,
-    })
+    // Send email (non-blocking — don't break if Resend fails)
+    try {
+      await sendReportEmail({
+        to: recipientEmails,
+        investorName: holderName,
+        contractId: report.contract_id,
+        periodStart: report.period_start,
+        periodEnd: report.period_end,
+        growthRate: report.growth_rate,
+        calculatedAmount: report.calculated_amount,
+        description: report.description,
+        pdfUrl,
+      })
+    } catch (emailErr) {
+      console.error('[reports] Error sending report email:', emailErr)
+    }
 
     // Update report status
     const { data: updated, error: updateError } = await supabase
