@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Plus, FileText } from 'lucide-react'
+import { Search, Plus, FileText, Link2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ContractStatusBadge } from './contract-status-badge'
 import type {
@@ -75,6 +75,28 @@ function formatDate(dateStr: string | null): string {
   )
 }
 
+function CopyApplicationLink() {
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopy() {
+    const url = `${window.location.origin}/solicitud`
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="inline-flex items-center justify-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors flex-1 sm:flex-none"
+    >
+      <Link2 size={15} />
+      {copied ? '¡Link copiado!' : 'Link de solicitud'}
+    </button>
+  )
+}
+
 export function ContractsTable({ contracts, plans }: ContractsTableProps) {
   const router = useRouter()
   const [search, setSearch] = useState('')
@@ -118,14 +140,17 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
             {contracts.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => router.push('/dashboard/contracts/new')}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors w-full sm:w-auto"
-        >
-          <Plus size={15} />
-          Nuevo contrato
-        </button>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <CopyApplicationLink />
+          <button
+            type="button"
+            onClick={() => router.push('/dashboard/contracts/new')}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors flex-1 sm:flex-none"
+          >
+            <Plus size={15} />
+            Nuevo contrato
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
