@@ -28,7 +28,17 @@
       "Bash(mkdir -p \"d:/Antigravity/Grandir CRM/public/fonts\")",
       "Bash(cp \"d:/Antigravity/Grandir CRM/docs/Montserrat/Montserrat-VariableFont_wght.ttf\" \"d:/Antigravity/Grandir CRM/public/fonts/\")",
       "Bash(cp \"d:/Antigravity/Grandir CRM/docs/Montserrat/Montserrat-Italic-VariableFont_wght.ttf\" \"d:/Antigravity/Grandir CRM/public/fonts/\")",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(ls \"d:/Antigravity/Grandir CRM/src/app/\\(dashboard\\)/dashboard/contracts/\")",
+      "Bash(ls \"d:/Antigravity/Grandir CRM/src/app/\\(dashboard\\)/dashboard/contracts/[id]/\")",
+      "Bash(ls \"d:/Antigravity/Grandir CRM/src/app/\\(dashboard\\)/dashboard/contracts/_components/\")",
+      "Bash(find \"d:/Antigravity/Grandir CRM/src/app/\\(dashboard\\)\" -name \"layout.tsx\")",
+      "Bash(ls \"d:/Antigravity/Grandir CRM/src/app/\\(dashboard\\)/dashboard/\")",
+      "Bash(ls \"d:/Antigravity/Grandir CRM/src/app/\\(dashboard\\)/dashboard/investors/_components/\")",
+      "Read(//d/Antigravity/Grandir CRM/src/app/\\(portal\\)/portal/[token]/**)",
+      "Bash(node -e ':*)",
+      "Bash(pdftotext -layout \"d:/Antigravity/Grandir CRM/docs/requerimientos-cliente/Dashboard GrandirCM \\(5\\).pdf\" -)"
     ],
     "additionalDirectories": [
       "d:\\Antigravity\\Grandir CRM\\.claude\\skills",
