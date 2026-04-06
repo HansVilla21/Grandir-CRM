@@ -304,6 +304,9 @@ export default async function ContractDetailPage({
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Aprobación
                   </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                    Firma
+                  </th>
                   <th className="text-left pl-4 pr-4 sm:pr-6 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Portal
                   </th>
@@ -339,6 +342,15 @@ export default async function ContractDetailPage({
                           {APPROVAL_STATUS_LABELS[ci.approval_status] ??
                             ci.approval_status}
                         </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        {ci.signed_at ? (
+                          <span className="text-xs text-green-700">
+                            Firmado el {new Intl.DateTimeFormat('es-CR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(ci.signed_at))}
+                          </span>
+                        ) : ci.approval_status === 'pending' ? (
+                          <span className="text-xs text-yellow-600">Pendiente de firma</span>
+                        ) : null}
                       </td>
                       <td className="pl-4 pr-4 sm:pr-6 py-3">
                         {ci.portal_token ? (

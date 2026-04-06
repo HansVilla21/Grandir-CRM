@@ -276,6 +276,11 @@ export type Database = {
           portal_token: string | null
           revision_comment: string | null
           role: Database["public"]["Enums"]["contract_investor_role"]
+          signature_cedula: string | null
+          signature_ip: string | null
+          signature_name: string | null
+          signature_user_agent: string | null
+          signed_at: string | null
           token_expires_at: string | null
         }
         Insert: {
@@ -288,6 +293,11 @@ export type Database = {
           portal_token?: string | null
           revision_comment?: string | null
           role?: Database["public"]["Enums"]["contract_investor_role"]
+          signature_cedula?: string | null
+          signature_ip?: string | null
+          signature_name?: string | null
+          signature_user_agent?: string | null
+          signed_at?: string | null
           token_expires_at?: string | null
         }
         Update: {
@@ -300,6 +310,11 @@ export type Database = {
           portal_token?: string | null
           revision_comment?: string | null
           role?: Database["public"]["Enums"]["contract_investor_role"]
+          signature_cedula?: string | null
+          signature_ip?: string | null
+          signature_name?: string | null
+          signature_user_agent?: string | null
+          signed_at?: string | null
           token_expires_at?: string | null
         }
         Relationships: [
@@ -319,6 +334,47 @@ export type Database = {
           },
         ]
       }
+      contract_templates: {
+        Row: {
+          active: boolean
+          content: string
+          created_at: string
+          id: string
+          name: string
+          plan_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          content: string
+          created_at?: string
+          id?: string
+          name: string
+          plan_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          content?: string
+          created_at?: string
+          id?: string
+          name?: string
+          plan_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_templates_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "investment_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           amount: number
@@ -329,6 +385,7 @@ export type Database = {
           parent_contract_id: string | null
           plan_id: string
           report_frequency_months: number
+          source: Database["public"]["Enums"]["contract_source"]
           start_date: string | null
           status: Database["public"]["Enums"]["contract_status"]
           term_months: number
@@ -344,6 +401,7 @@ export type Database = {
           parent_contract_id?: string | null
           plan_id: string
           report_frequency_months?: number
+          source?: Database["public"]["Enums"]["contract_source"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
           term_months: number
@@ -359,6 +417,7 @@ export type Database = {
           parent_contract_id?: string | null
           plan_id?: string
           report_frequency_months?: number
+          source?: Database["public"]["Enums"]["contract_source"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
           term_months?: number
@@ -760,6 +819,44 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_codes: {
+        Row: {
+          attempts: number
+          code: string
+          contract_investor_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          used: boolean
+        }
+        Insert: {
+          attempts?: number
+          code: string
+          contract_investor_id: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          used?: boolean
+        }
+        Update: {
+          attempts?: number
+          code?: string
+          contract_investor_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          used?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_codes_contract_investor_id_fkey"
+            columns: ["contract_investor_id"]
+            isOneToOne: false
+            referencedRelation: "contract_investors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -773,6 +870,7 @@ export type Database = {
       bulletin_status: "draft" | "sent"
       bulletin_target: "all_active" | "all_inactive" | "by_plan" | "custom"
       contract_investor_role: "holder" | "co_investor"
+      contract_source: "external_form" | "manual"
       contract_status:
         | "draft"
         | "pending_approval"
@@ -932,6 +1030,7 @@ export const Constants = {
       bulletin_status: ["draft", "sent"],
       bulletin_target: ["all_active", "all_inactive", "by_plan", "custom"],
       contract_investor_role: ["holder", "co_investor"],
+      contract_source: ["external_form", "manual"],
       contract_status: [
         "draft",
         "pending_approval",

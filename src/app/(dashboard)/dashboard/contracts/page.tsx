@@ -13,7 +13,7 @@ export default async function ContractsPage() {
   const { data: contractsRaw, error: contractsError } = await supabase
     .from('contracts')
     .select(`
-      id, amount, plan_id, status, term_months, start_date, end_date, created_at,
+      id, amount, plan_id, status, source, term_months, start_date, end_date, created_at,
       plan:investment_plans(id, name, type)
     `)
     .order('created_at', { ascending: false })
@@ -57,6 +57,7 @@ export default async function ContractsPage() {
       holder_name: holderMap.get(c.id) ?? null,
       amount: c.amount,
       status: c.status,
+      source: c.source,
       term_months: c.term_months,
       start_date: c.start_date,
       end_date: c.end_date,

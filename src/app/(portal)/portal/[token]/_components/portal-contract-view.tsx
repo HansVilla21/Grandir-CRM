@@ -1,6 +1,5 @@
 import type { PortalData } from '@/types/portal'
-import { PortalApproveButton } from './portal-approve-button'
-import { PortalRevisionButton } from './portal-revision-button'
+import { SigningFlow } from './signing-flow'
 import { PortalDocumentUpload } from './portal-document-upload'
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -15,11 +14,13 @@ function formatCurrency(amount: number): string {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return 'Por confirmar'
+  const date = new Date(dateStr)
+  if (isNaN(date.getTime())) return '—'
   return new Intl.DateTimeFormat('es-CR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date(dateStr + 'T12:00:00'))
+  }).format(date)
 }
 
 function describePaymentStructure(planType: string): string {
@@ -332,21 +333,21 @@ export function PortalContractView({ data, token }: PortalContractViewProps) {
         </div>
       )}
 
-      {/* Acciones: solo si está pendiente */}
+      {/* Firma electronica */}
       {isPendingApproval && (
-        <div className="rounded-xl border-2 border-green-200 bg-green-50 p-4 sm:p-6 space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold text-zinc-900">
-              ¿Estas de acuerdo con los terminos del contrato?
-            </h2>
-            <p className="text-sm text-zinc-600 mt-1">
-              Revisa cuidadosamente la informacion antes de confirmar tu decision.
-            </p>
+        <SigningFlow token={token} amount={contract.amount} />
+      )}
+
+      {contractInvestor.signed_at && (
+        <div className="rounded-xl border-2 border-green-200 bg-green-50 p-4 sm:p-6 text-center space-y-2">
+          <div className="mx-auto w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+            <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
           </div>
-          <div className="space-y-3">
-            <PortalApproveButton token={token} amount={contract.amount} />
-            <PortalRevisionButton token={token} />
-          </div>
+          <p className="text-sm font-semibold text-green-800">
+            Contrato firmado el {new Intl.DateTimeFormat('es-CR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(contractInvestor.signed_at))}
+          </p>
         </div>
       )}
     </div>

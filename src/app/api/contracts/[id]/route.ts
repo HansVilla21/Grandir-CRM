@@ -167,6 +167,99 @@ export async function PATCH(
         return NextResponse.json({ error: updateError.message }, { status: 500 })
       }
 
+      // --- pending_approval: generate tokens, PDF & send invitation ---
+      if (newStatus === 'pending_approval') {
+        const { sendContractInvitationEmail } = await import('@/lib/email/contract-invitation-email')
+        const { generateContractPdf } = await import('@/lib/pdf/generate-contract-pdf')
+
+        // 1. Get contract investors
+        const { data: contractInvestors } = await supabase
+          .from('contract_investors')
+          .select('id, investor_id, portal_token')
+          .eq('contract_id', id)
+
+        // 2. Get contract + plan for PDF and email
+        const { data: contractWithPlan } = await supabase
+          .from('contracts')
+          .select('amount, term_months, start_date, end_date, investment_plans(name, type, annual_rate)')
+          .eq('id', id)
+          .single()
+
+        const plan = contractWithPlan?.investment_plans as { name: string; type: string; annual_rate: number } | null
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+
+        for (const ci of contractInvestors ?? []) {
+          // Generate token if missing
+          let portalToken = ci.portal_token
+          if (!portalToken) {
+            portalToken = crypto.randomUUID()
+            const expiresAt = new Date()
+            expiresAt.setFullYear(expiresAt.getFullYear() + 1)
+            await supabase
+              .from('contract_investors')
+              .update({ portal_token: portalToken, token_expires_at: expiresAt.toISOString() })
+              .eq('id', ci.id)
+          }
+
+          // Get investor data
+          const { data: investor } = await supabase
+            .from('investors')
+            .select('full_name, cedula')
+            .eq('id', ci.investor_id)
+            .single()
+
+          // Get investor primary email
+          const { data: emails } = await supabase
+            .from('investor_emails')
+            .select('email')
+            .eq('investor_id', ci.investor_id)
+            .eq('is_primary', true)
+            .limit(1)
+
+          const primaryEmail = emails?.[0]?.email
+
+          if (investor && primaryEmail && contractWithPlan) {
+            // Generate contract PDF
+            try {
+              const pdfBuffer = await generateContractPdf({
+                investor_name: investor.full_name,
+                investor_cedula: investor.cedula,
+                amount: contractWithPlan.amount,
+                term_months: contractWithPlan.term_months,
+                start_date: contractWithPlan.start_date ?? '',
+                end_date: contractWithPlan.end_date,
+                annual_rate: plan?.annual_rate ?? 0,
+                plan_name: plan?.name ?? '—',
+                plan_type: plan?.type ?? 'annual',
+                contract_id: id,
+              })
+              const storagePath = `${id}/contrato_${Date.now()}.pdf`
+              await supabase.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
+              await supabase.from('contract_documents').insert({
+                contract_id: id,
+                type: 'draft',
+                file_name: `contrato-${id.slice(0, 8)}.pdf`,
+                storage_path: storagePath,
+                file_size: pdfBuffer.length,
+                mime_type: 'application/pdf',
+              })
+            } catch (pdfErr) {
+              console.error('Error generating contract PDF:', pdfErr)
+            }
+
+            // Send invitation email
+            await sendContractInvitationEmail({
+              to: [primaryEmail],
+              investorName: investor.full_name,
+              planName: plan?.name ?? '—',
+              amount: contractWithPlan.amount,
+              termMonths: contractWithPlan.term_months,
+              portalUrl: `${appUrl}/portal/${portalToken}`,
+            })
+          }
+        }
+      }
+
       return NextResponse.json({ contract: updated })
     }
 

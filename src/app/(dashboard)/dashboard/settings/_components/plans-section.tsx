@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Pencil } from 'lucide-react'
+import { Plus, Pencil, Link2 } from 'lucide-react'
 import { PlanForm } from './plan-form'
 import type { Tables } from '@/types/database'
 
@@ -16,6 +16,28 @@ const PLAN_TYPE_LABELS: Record<string, string> = {
   annual: 'Anual',
   monthly: 'Mensual',
   semestral: 'Semestral',
+}
+
+function CopyApplicationLink() {
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopy() {
+    const url = `${window.location.origin}/solicitud`
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+    >
+      <Link2 size={14} />
+      {copied ? '¡Link copiado!' : 'Link de solicitud'}
+    </button>
+  )
 }
 
 export function PlansSection({ plans }: PlansSectionProps) {
@@ -69,13 +91,27 @@ export function PlansSection({ plans }: PlansSectionProps) {
           <h2 className="text-sm font-semibold text-zinc-900">Planes de inversión</h2>
           <p className="text-xs text-zinc-500 mt-0.5">Configuración de planes disponibles para contratos</p>
         </div>
-        <button
-          onClick={openCreate}
-          className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white hover:bg-zinc-700 transition-colors self-start sm:self-auto"
-        >
-          <Plus size={14} />
-          Nuevo plan
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <CopyApplicationLink />
+          <button
+            type="button"
+            onClick={openCreate}
+            className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white hover:bg-zinc-700 transition-colors"
+          >
+            <Plus size={14} />
+            Nuevo plan
+          </button>
+        </div>
+      </div>
+
+      {/* Link de solicitud info */}
+      <div className="rounded-lg bg-zinc-50 border border-zinc-100 px-4 py-3 mb-4 flex items-center gap-3">
+        <Link2 size={14} className="text-zinc-400 shrink-0" />
+        <p className="text-xs text-zinc-500">
+          Los inversionistas pueden aplicar desde{' '}
+          <span className="font-mono text-zinc-700">/solicitud</span>
+          {' '}— comparte este link para recibir solicitudes externas.
+        </p>
       </div>
 
       <div className="rounded-xl border border-zinc-200 overflow-x-auto">

@@ -69,6 +69,8 @@ export interface PortalContractInvestor {
   approval_status: ApprovalStatus
   revision_comment: string | null
   approved_at: string | null
+  signed_at: string | null
+  signature_name: string | null
 }
 
 export interface PortalData {
