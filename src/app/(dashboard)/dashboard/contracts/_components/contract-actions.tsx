@@ -91,7 +91,8 @@ function CopyPortalLinkButton({ contractId }: { contractId: string }) {
     try {
       const res = await fetch(`/api/contracts/${contractId}`)
       const data = await res.json()
-      const holders = data?.contract_investors?.filter(
+      const investors = data?.contract?.contract_investors ?? []
+      const holders = investors.filter(
         (ci: { portal_token: string | null }) => ci.portal_token
       )
       if (holders?.[0]?.portal_token) {
