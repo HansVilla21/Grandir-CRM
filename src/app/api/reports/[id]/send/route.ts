@@ -85,7 +85,7 @@ export async function POST(
     let pdfUrl: string | null = null
     if (report.pdf_path) {
       const { data: signedData } = await supabase.storage
-        .from('reports')
+        .from('contracts')
         .createSignedUrl(report.pdf_path, 60 * 60 * 24 * 7) // 7 days
 
       pdfUrl = signedData?.signedUrl ?? null

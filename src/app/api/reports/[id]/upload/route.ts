@@ -36,7 +36,7 @@ export async function POST(
     const fileBuffer = new Uint8Array(arrayBuffer)
 
     const { error: uploadError } = await supabase.storage
-      .from('reports')
+      .from('contracts')
       .upload(storagePath, fileBuffer, {
         contentType: 'application/pdf',
         upsert: true,

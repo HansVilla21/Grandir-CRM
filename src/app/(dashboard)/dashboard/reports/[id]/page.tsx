@@ -107,7 +107,7 @@ export default async function ReportDetailPage({
   let pdfSignedUrl: string | null = null
   if (reportRaw.pdf_path) {
     const { data: signed } = await supabase.storage
-      .from('reports')
+      .from('contracts')
       .createSignedUrl(reportRaw.pdf_path, 60 * 60) // 1 hour
 
     pdfSignedUrl = signed?.signedUrl ?? null
