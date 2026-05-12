@@ -10,6 +10,7 @@ interface DueReport {
   last_report_period_end: string | null
   next_report_due_date: string // ISO date
   days_overdue: number // negative if not due yet
+  amount: number
 }
 
 function addMonths(date: Date, months: number): Date {
@@ -40,7 +41,7 @@ export async function GET() {
     const { data: contracts } = await supabase
       .from('contracts')
       .select(`
-        id, start_date, report_frequency_months,
+        id, amount, start_date, report_frequency_months,
         investment_plans (name)
       `)
       .eq('status', 'active')
@@ -102,6 +103,7 @@ export async function GET() {
         last_report_period_end: lastPeriodEnd ?? null,
         next_report_due_date: nextDue.toISOString().slice(0, 10),
         days_overdue: daysOverdue,
+        amount: c.amount,
       })
     }
 

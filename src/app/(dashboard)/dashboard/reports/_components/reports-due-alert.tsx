@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { AlertTriangle, ChevronRight } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 
 interface DueReport {
   contract_id: string
@@ -60,17 +59,17 @@ export function ReportsDueAlert() {
             {overdue.length} contrato{overdue.length !== 1 ? 's' : ''} sin reporte reciente
           </h3>
           <p className="text-xs text-orange-700 mt-0.5">
-            Estos contratos activos requieren un nuevo reporte según su periodicidad.
+            Generá los reportes del período con el botón <strong>Generar reportes del período</strong> de arriba —
+            solo ingresás la tasa de crecimiento del fondo una vez y el sistema crea todos a la vez.
           </p>
         </div>
       </div>
 
       <div className="space-y-1.5">
         {overdue.slice(0, 5).map((item) => (
-          <Link
+          <div
             key={item.contract_id}
-            href={`/dashboard/reports?contract_id=${item.contract_id}`}
-            className="flex items-center justify-between gap-3 rounded-lg bg-white border border-orange-100 px-3 py-2 hover:border-orange-300 transition-colors"
+            className="flex items-center justify-between gap-3 rounded-lg bg-white border border-orange-100 px-3 py-2"
           >
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-zinc-900 truncate">
@@ -80,15 +79,10 @@ export function ReportsDueAlert() {
                 {item.plan_name} · Esperado: {formatDate(item.next_report_due_date)}
               </p>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
-              <span className="text-xs font-semibold text-orange-700">
-                {item.days_overdue === 0
-                  ? 'Hoy'
-                  : `${item.days_overdue}d atrasado`}
-              </span>
-              <ChevronRight size={14} className="text-zinc-400" />
-            </div>
-          </Link>
+            <span className="text-xs font-semibold text-orange-700 shrink-0">
+              {item.days_overdue === 0 ? 'Hoy' : `${item.days_overdue}d atrasado`}
+            </span>
+          </div>
         ))}
       </div>
 

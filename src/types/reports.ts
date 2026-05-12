@@ -39,4 +39,5 @@ export interface ContractForReportForm {
   id: string
   holder_name: string
   plan_name: string
+  amount: number
 }
