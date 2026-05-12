@@ -12,6 +12,7 @@ interface UpcomingPaymentsSectionProps {
     date: string
     description: string
   }) => void
+  refreshKey?: number
 }
 
 interface ApiResponse {
@@ -66,7 +67,10 @@ const STATUS_CONFIG: Record<
 
 type FilterStatus = 'pending' | 'this_month' | 'overdue' | 'all'
 
-export function UpcomingPaymentsSection({ onRegisterPayment }: UpcomingPaymentsSectionProps) {
+export function UpcomingPaymentsSection({
+  onRegisterPayment,
+  refreshKey = 0,
+}: UpcomingPaymentsSectionProps) {
   const [data, setData] = useState<ApiResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -75,8 +79,9 @@ export function UpcomingPaymentsSection({ onRegisterPayment }: UpcomingPaymentsS
   useEffect(() => {
     let cancelled = false
     async function load() {
+      setLoading(true)
       try {
-        const res = await fetch('/api/payments/upcoming')
+        const res = await fetch('/api/payments/upcoming', { cache: 'no-store' })
         const json = await res.json()
         if (!cancelled) {
           if (!res.ok) {
@@ -84,6 +89,7 @@ export function UpcomingPaymentsSection({ onRegisterPayment }: UpcomingPaymentsS
             return
           }
           setData(json)
+          setError('')
         }
       } catch {
         if (!cancelled) setError('Error de conexión')
@@ -95,7 +101,7 @@ export function UpcomingPaymentsSection({ onRegisterPayment }: UpcomingPaymentsS
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [refreshKey])
 
   const filtered = useMemo(() => {
     if (!data) return []

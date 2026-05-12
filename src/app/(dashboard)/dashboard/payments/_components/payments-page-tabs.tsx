@@ -28,6 +28,7 @@ export function PaymentsPageTabs({ initialPayments, contracts }: PaymentsPageTab
   const [tab, setTab] = useState<Tab>('upcoming')
   const [formOpen, setFormOpen] = useState(false)
   const [prefill, setPrefill] = useState<PrefillState | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   function handleRegisterPayment(args: {
     contractId: string
@@ -42,7 +43,8 @@ export function PaymentsPageTabs({ initialPayments, contracts }: PaymentsPageTab
   function handleSuccess() {
     setFormOpen(false)
     setPrefill(null)
-    router.refresh()
+    setRefreshKey((k) => k + 1) // re-fetch upcoming payments
+    router.refresh() // re-fetch server-rendered history table
   }
 
   return (
@@ -65,7 +67,10 @@ export function PaymentsPageTabs({ initialPayments, contracts }: PaymentsPageTab
       </div>
 
       {tab === 'upcoming' ? (
-        <UpcomingPaymentsSection onRegisterPayment={handleRegisterPayment} />
+        <UpcomingPaymentsSection
+          onRegisterPayment={handleRegisterPayment}
+          refreshKey={refreshKey}
+        />
       ) : (
         <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-4 sm:p-6">
           <PaymentsTable initialPayments={initialPayments} contracts={contracts} />
