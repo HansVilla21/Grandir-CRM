@@ -50,6 +50,31 @@ export async function PATCH(
         return NextResponse.json({ error: updateError.message }, { status: 500 })
       }
 
+      // Notify OTHER admins (excluding the one who verified)
+      try {
+        const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+        const { data: holderRow } = await adminSupabase
+          .from('contract_investors')
+          .select('investor:investors(full_name)')
+          .eq('contract_id', payment.contract_id)
+          .eq('role', 'holder')
+          .single()
+        const inv = holderRow?.investor as { full_name: string } | null
+        const formattedAmount = `$${payment.amount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`
+        const typeLabel = payment.type === 'deposit' ? 'Depósito' : payment.type === 'withdrawal' ? 'Retiro' : 'Comisión'
+        await notifyAdmins({
+          supabase: adminSupabase,
+          type: 'approval',
+          channel: 'internal',
+          title: 'Pago verificado',
+          body: `${typeLabel} de ${formattedAmount} ${inv ? `(${inv.full_name})` : ''} fue verificado.`,
+          contract_id: payment.contract_id,
+          exclude_user_id: user.id,
+        })
+      } catch (notifErr) {
+        console.error('[payments/verify] notify error:', notifErr)
+      }
+
       return NextResponse.json({ payment })
     }
 

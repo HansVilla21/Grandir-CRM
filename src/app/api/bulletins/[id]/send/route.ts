@@ -158,5 +158,19 @@ export async function POST(
     return NextResponse.json({ error: updateError.message }, { status: 500 })
   }
 
+  // Notify admins (we don't have user context here easily; notify all)
+  try {
+    const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+    await notifyAdmins({
+      supabase,
+      type: 'approval',
+      channel: 'internal',
+      title: 'Boletín enviado',
+      body: `"${bulletin.subject}" se envió a ${sentCount} de ${recipients.length} destinatario${recipients.length !== 1 ? 's' : ''}.`,
+    })
+  } catch (notifErr) {
+    console.error('[bulletins/send] notify error:', notifErr)
+  }
+
   return NextResponse.json({ ok: true, sent: sentCount, total: recipients.length })
 }

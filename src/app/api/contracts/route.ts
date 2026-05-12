@@ -198,6 +198,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: ciError.message }, { status: 500 })
     }
 
+    // Notify other admins of new contract
+    try {
+      const { createClient } = await import('@/lib/supabase/server')
+      const authClient = await createClient()
+      const { data: { user: actor } } = await authClient.auth.getUser()
+
+      const { data: holderInfo } = await supabase
+        .from('investors')
+        .select('full_name')
+        .eq('id', investor_id)
+        .single()
+
+      const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+      const formattedAmount = `$${Number(amount).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+      await notifyAdmins({
+        supabase,
+        type: 'approval',
+        channel: 'internal',
+        title: 'Nuevo contrato creado',
+        body: `Contrato #${contract.id.slice(0, 8).toUpperCase()} por ${formattedAmount} a nombre de ${holderInfo?.full_name ?? 'inversionista'}.`,
+        contract_id: contract.id,
+        investor_id,
+        exclude_user_id: actor?.id,
+      })
+    } catch (notifErr) {
+      console.error('[contracts/POST] notify error:', notifErr)
+    }
+
     return NextResponse.json({ contract }, { status: 201 })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Error inesperado'

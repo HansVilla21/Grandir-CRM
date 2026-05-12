@@ -10,11 +10,13 @@ interface NotifyAdminsParams {
   body?: string
   contract_id?: string
   investor_id?: string
+  exclude_user_id?: string // No notificar a este usuario (autor de la acción)
 }
 
 /**
  * Creates a notification for every admin user. Non-blocking — logs errors but does not throw.
  * Pass the supabase client from the caller (works with both createAdminClient and createServiceClient).
+ * Optionally exclude a user (typically the one who performed the action).
  */
 export async function notifyAdmins(params: NotifyAdminsParams): Promise<void> {
   try {
@@ -25,7 +27,13 @@ export async function notifyAdmins(params: NotifyAdminsParams): Promise<void> {
 
     if (!admins || admins.length === 0) return
 
-    const rows = admins.map((admin) => ({
+    const recipients = params.exclude_user_id
+      ? admins.filter((a) => a.id !== params.exclude_user_id)
+      : admins
+
+    if (recipients.length === 0) return
+
+    const rows = recipients.map((admin) => ({
       recipient_user_id: admin.id,
       type: params.type,
       channel: params.channel ?? ('internal' as NotificationChannel),

@@ -129,6 +129,21 @@ export async function POST(
       return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
+    // Notify admins
+    try {
+      const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+      await notifyAdmins({
+        supabase,
+        type: 'approval',
+        channel: 'internal',
+        title: 'Reporte enviado',
+        body: `Reporte enviado a ${holderName ?? 'inversionista'} (${recipientEmails.length} destinatario${recipientEmails.length !== 1 ? 's' : ''}).`,
+        contract_id: report.contract_id,
+      })
+    } catch (notifErr) {
+      console.error('[reports/send] notify error:', notifErr)
+    }
+
     // Suppress unused variable warning
     void holders
     void contract
