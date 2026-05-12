@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FileText, Plus, Search } from 'lucide-react'
 import { PaymentForm } from './payment-form'
@@ -36,6 +36,21 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
   const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>('all')
   const [search, setSearch] = useState('')
   const [formOpen, setFormOpen] = useState(false)
+
+  // Sincronizar con datos frescos del servidor cuando router.refresh() actualice initialPayments
+  useEffect(() => {
+    setPayments(initialPayments)
+  }, [initialPayments])
+
+  function markVerifiedLocally(paymentId: string) {
+    setPayments((prev) =>
+      prev.map((p) =>
+        p.id === paymentId
+          ? { ...p, verified: true, verified_at: new Date().toISOString() }
+          : p
+      )
+    )
+  }
 
   // Client-side filtering
   const filtered = useMemo(() => {
@@ -179,6 +194,7 @@ export function PaymentsTable({ initialPayments, contracts }: PaymentsTableProps
                       paymentId={payment.id}
                       verified={payment.verified}
                       amount={payment.amount}
+                      onVerified={() => markVerifiedLocally(payment.id)}
                     />
                   </td>
                 </tr>

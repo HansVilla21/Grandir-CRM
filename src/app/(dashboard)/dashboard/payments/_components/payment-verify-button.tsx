@@ -10,13 +10,19 @@ interface PaymentVerifyButtonProps {
   paymentId: string
   verified: boolean
   amount: number
+  onVerified?: () => void
 }
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
 }
 
-export function PaymentVerifyButton({ paymentId, verified, amount }: PaymentVerifyButtonProps) {
+export function PaymentVerifyButton({
+  paymentId,
+  verified,
+  amount,
+  onVerified,
+}: PaymentVerifyButtonProps) {
   const router = useRouter()
   const toast = useToast()
   const [loading, setLoading] = useState(false)
@@ -52,7 +58,9 @@ export function PaymentVerifyButton({ paymentId, verified, amount }: PaymentVeri
 
       setConfirmOpen(false)
       toast.success(`Pago de ${formatCurrency(amount)} verificado`)
-      router.refresh()
+      onVerified?.()
+      // Defer router.refresh para que no parpadee la UI; el estado local ya está actualizado
+      setTimeout(() => router.refresh(), 100)
     } catch {
       setOptimisticVerified(false)
       toast.error('Error de conexión')
