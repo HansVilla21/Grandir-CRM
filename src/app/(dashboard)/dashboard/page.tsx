@@ -3,6 +3,7 @@ import { StatsGrid } from './_components/stats-grid'
 import { ContractsByStatus } from './_components/contracts-by-status'
 import { ExpiringContracts } from './_components/expiring-contracts'
 import { PendingPaymentsList } from './_components/pending-payments-list'
+import { UpcomingPaymentsWidget } from './_components/upcoming-payments-widget'
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
@@ -238,7 +239,10 @@ export default async function DashboardPage() {
         <ContractsByStatus statusCounts={statusCounts} />
       )}
 
-      {/* Fila 3: Próximos a vencer */}
+      {/* Fila 3: Próximos pagos (widget) */}
+      <UpcomingPaymentsWidget />
+
+      {/* Fila 4: Próximos a vencer */}
       <ExpiringContracts contracts={expiringContracts} />
 
       {/* Fila 4: Pagos pendientes */}
