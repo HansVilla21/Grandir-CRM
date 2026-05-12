@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
 
 interface BatchBody {
   growth_rate: number
@@ -19,6 +19,7 @@ interface BatchBody {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createAdminClient()
+    const storageClient = createServiceClient() // bypass RLS for storage
     const body = (await request.json()) as BatchBody
 
     if (
@@ -129,7 +130,7 @@ export async function POST(request: NextRequest) {
             })
 
             const storagePath = `${contract.id}/report_${report.id}_${Date.now()}.pdf`
-            const { error: uploadError } = await supabase.storage
+            const { error: uploadError } = await storageClient.storage
               .from('contracts')
               .upload(storagePath, pdfBuffer, {
                 contentType: 'application/pdf',

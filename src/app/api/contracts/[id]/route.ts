@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
 import type { ContractStatus } from '@/types/contracts'
 
 // Valid state transitions
@@ -234,7 +234,8 @@ export async function PATCH(
                 contract_id: id,
               })
               const storagePath = `${id}/contrato_${Date.now()}.pdf`
-              await supabase.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
+              const storageClient = createServiceClient()
+              await storageClient.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
               await supabase.from('contract_documents').insert({
                 contract_id: id,
                 type: 'draft',
