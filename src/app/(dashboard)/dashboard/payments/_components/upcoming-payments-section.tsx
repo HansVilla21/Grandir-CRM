@@ -6,7 +6,12 @@ import { cn } from '@/lib/utils'
 import type { UpcomingPayment } from '@/lib/investment/upcoming-payments'
 
 interface UpcomingPaymentsSectionProps {
-  onRegisterPayment?: (contractId: string, suggestedAmount: number) => void
+  onRegisterPayment?: (args: {
+    contractId: string
+    amount: number
+    date: string
+    description: string
+  }) => void
 }
 
 interface ApiResponse {
@@ -230,9 +235,14 @@ export function UpcomingPaymentsSection({ onRegisterPayment }: UpcomingPaymentsS
                             <button
                               type="button"
                               onClick={() =>
-                                onRegisterPayment(item.contract_id, item.expected_amount)
+                                onRegisterPayment({
+                                  contractId: item.contract_id,
+                                  amount: item.expected_amount,
+                                  date: item.scheduled_date,
+                                  description: item.description,
+                                })
                               }
-                              className="text-xs font-medium text-green-700 hover:text-green-800 hover:underline"
+                              className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 transition-colors"
                             >
                               Registrar pago
                             </button>

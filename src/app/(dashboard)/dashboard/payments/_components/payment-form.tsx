@@ -7,6 +7,10 @@ import type { ContractOption } from '@/types/payments'
 interface PaymentFormProps {
   contracts: ContractOption[]
   defaultContractId?: string
+  defaultType?: 'deposit' | 'withdrawal' | 'commission'
+  defaultAmount?: number
+  defaultDate?: string
+  defaultNotes?: string
   open: boolean
   onClose: () => void
   onSuccess: () => void
@@ -25,15 +29,19 @@ function todayISO() {
 export function PaymentForm({
   contracts,
   defaultContractId,
+  defaultType,
+  defaultAmount,
+  defaultDate,
+  defaultNotes,
   open,
   onClose,
   onSuccess,
 }: PaymentFormProps) {
   const [contractId, setContractId] = useState(defaultContractId ?? '')
-  const [type, setType] = useState<'deposit' | 'withdrawal' | 'commission'>('deposit')
-  const [amount, setAmount] = useState('')
-  const [paymentDate, setPaymentDate] = useState(todayISO())
-  const [notes, setNotes] = useState('')
+  const [type, setType] = useState<'deposit' | 'withdrawal' | 'commission'>(defaultType ?? 'deposit')
+  const [amount, setAmount] = useState(defaultAmount ? defaultAmount.toFixed(2) : '')
+  const [paymentDate, setPaymentDate] = useState(defaultDate ?? todayISO())
+  const [notes, setNotes] = useState(defaultNotes ?? '')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -44,16 +52,16 @@ export function PaymentForm({
   useEffect(() => {
     if (open) {
       setContractId(defaultContractId ?? '')
-      setType('deposit')
-      setAmount('')
-      setPaymentDate(todayISO())
-      setNotes('')
+      setType(defaultType ?? 'deposit')
+      setAmount(defaultAmount ? defaultAmount.toFixed(2) : '')
+      setPaymentDate(defaultDate ?? todayISO())
+      setNotes(defaultNotes ?? '')
       setReceiptFile(null)
       setError(null)
       if (fileInputRef.current) fileInputRef.current.value = ''
       setTimeout(() => firstInputRef.current?.focus(), 50)
     }
-  }, [open, defaultContractId])
+  }, [open, defaultContractId, defaultType, defaultAmount, defaultDate, defaultNotes])
 
   // Trap Escape key
   useEffect(() => {

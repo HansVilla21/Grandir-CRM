@@ -1,10 +1,12 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Calendar, ListChecks } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PaymentsTable } from './payments-table'
 import { UpcomingPaymentsSection } from './upcoming-payments-section'
+import { PaymentForm } from './payment-form'
 import type { PaymentListItem, ContractOption } from '@/types/payments'
 
 interface PaymentsPageTabsProps {
@@ -14,8 +16,34 @@ interface PaymentsPageTabsProps {
 
 type Tab = 'upcoming' | 'history'
 
+interface PrefillState {
+  contractId: string
+  amount: number
+  date: string
+  description: string
+}
+
 export function PaymentsPageTabs({ initialPayments, contracts }: PaymentsPageTabsProps) {
+  const router = useRouter()
   const [tab, setTab] = useState<Tab>('upcoming')
+  const [formOpen, setFormOpen] = useState(false)
+  const [prefill, setPrefill] = useState<PrefillState | null>(null)
+
+  function handleRegisterPayment(args: {
+    contractId: string
+    amount: number
+    date: string
+    description: string
+  }) {
+    setPrefill(args)
+    setFormOpen(true)
+  }
+
+  function handleSuccess() {
+    setFormOpen(false)
+    setPrefill(null)
+    router.refresh()
+  }
 
   return (
     <div className="space-y-4">
@@ -37,12 +65,27 @@ export function PaymentsPageTabs({ initialPayments, contracts }: PaymentsPageTab
       </div>
 
       {tab === 'upcoming' ? (
-        <UpcomingPaymentsSection />
+        <UpcomingPaymentsSection onRegisterPayment={handleRegisterPayment} />
       ) : (
         <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-4 sm:p-6">
           <PaymentsTable initialPayments={initialPayments} contracts={contracts} />
         </div>
       )}
+
+      <PaymentForm
+        contracts={contracts}
+        defaultContractId={prefill?.contractId}
+        defaultType="withdrawal"
+        defaultAmount={prefill?.amount}
+        defaultDate={prefill?.date}
+        defaultNotes={prefill?.description}
+        open={formOpen}
+        onClose={() => {
+          setFormOpen(false)
+          setPrefill(null)
+        }}
+        onSuccess={handleSuccess}
+      />
     </div>
   )
 }
