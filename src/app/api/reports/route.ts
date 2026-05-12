@@ -121,6 +121,90 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    // Auto-generate PDF for the report (non-blocking — if it fails the report still exists)
+    try {
+      const { generateReportPdf } = await import('@/lib/pdf/generate-report-pdf')
+
+      // Get contract + plan + holder
+      const { data: contractData } = await supabase
+        .from('contracts')
+        .select(`
+          id, amount,
+          investment_plans (name, type)
+        `)
+        .eq('id', contract_id)
+        .single()
+
+      const { data: holderRow } = await supabase
+        .from('contract_investors')
+        .select('investor:investors(full_name, cedula)')
+        .eq('contract_id', contract_id)
+        .eq('role', 'holder')
+        .single()
+
+      const plan = contractData?.investment_plans as
+        | { name: string; type: string }
+        | null
+      const investor = holderRow?.investor as
+        | { full_name: string; cedula: string }
+        | null
+
+      if (contractData && plan && investor) {
+        const pdfBuffer = await generateReportPdf({
+          report_id: data.id,
+          contract_id: contract_id,
+          investor_name: investor.full_name,
+          investor_cedula: investor.cedula,
+          plan_name: plan.name,
+          plan_type: plan.type,
+          capital_invertido: contractData.amount,
+          period_start,
+          period_end,
+          growth_rate: Number(growth_rate),
+          calculated_amount: calculated_amount != null ? Number(calculated_amount) : null,
+          description: description ?? null,
+          generated_at: new Date().toISOString(),
+        })
+
+        const storagePath = `${contract_id}/report_${data.id}_${Date.now()}.pdf`
+        const { error: uploadError } = await supabase.storage
+          .from('contracts')
+          .upload(storagePath, pdfBuffer, {
+            contentType: 'application/pdf',
+            upsert: false,
+          })
+
+        if (!uploadError) {
+          await supabase
+            .from('reports')
+            .update({
+              pdf_path: storagePath,
+              status: 'generated',
+            })
+            .eq('id', data.id)
+
+          // Also create a contract_documents record for unified document view
+          await supabase.from('contract_documents').insert({
+            contract_id,
+            type: 'report',
+            file_name: `reporte-${data.id.slice(0, 8)}.pdf`,
+            storage_path: storagePath,
+            file_size: pdfBuffer.length,
+            mime_type: 'application/pdf',
+          })
+
+          // Update local data so the response is accurate
+          data.pdf_path = storagePath
+          data.status = 'generated'
+        } else {
+          console.error('[reports] PDF upload error:', uploadError)
+        }
+      }
+    } catch (pdfErr) {
+      console.error('[reports] Auto-PDF generation failed:', pdfErr)
+      // Report still created in 'pending' state; admin can upload manually
+    }
+
     return NextResponse.json(data, { status: 201 })
   } catch (err) {
     console.error('POST /api/reports error:', err)
