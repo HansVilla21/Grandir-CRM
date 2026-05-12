@@ -1,18 +1,112 @@
 ---
 name: sesion-actual
-description: Punto exacto donde está el proyecto al cierre de la última sesión (2026-05-11)
+description: Punto exacto donde está el proyecto al cierre de la última sesión (2026-06-25)
 type: project
 ---
 
-# Estado al cierre de sesión — 2026-05-11
+# Estado al cierre de sesión — 2026-06-25
 
 ## TL;DR para próxima sesión
 
-El CRM está **funcionalmente completo**. Falta:
-1. Reunión con el cliente (April) para validar firma electrónica y pedir PDFs reales de contratos
-2. Configurar Resend en producción (o decidir alternativa)
-3. Setear `NEXT_PUBLIC_APP_URL=https://grandircrm.vercel.app` en Vercel
-4. Mergear `feat/contract-signing` → `main`
+El CRM tiene **núcleo completo + flujos mejorados según el workflow real de April**. Falta:
+1. **Hans:** Conectar Resend en producción (token + verificación de dominio)
+2. **Hans:** Setear `NEXT_PUBLIC_APP_URL=https://grandircrm.vercel.app` en Vercel
+3. Pedir a April los PDFs reales de contratos para reemplazar templates placeholder
+4. Reunión con April para validar firma electrónica y mostrar las mejoras
+5. Mergear `feat/contract-signing` → `main` (43+ commits)
+
+## Lo que se hizo en esta sesión nocturna (2026-06-25)
+
+### Contexto recibido
+- April envió `GRANDIR CM.xlsx` (en `docs/requerimientos-cliente/`) con 3 hojas: CLIENTES, MENSUALES, SEMESTRALES
+- Workflow real: revisa 2 veces al mes para ver "a quién le toca pagarle" cada mes
+- Audio explicado en el chat: rastrea pagos mensuales y semestrales manualmente en Excel
+
+### Feature: Próximos Pagos (el más importante de la noche)
+Resuelve el workflow real de April. Calcula automáticamente quién debe recibir pago este mes.
+
+**Archivos nuevos:**
+- `src/lib/investment/upcoming-payments.ts` — Lógica pura: cruza schedule esperado vs pagos registrados
+- `src/app/api/payments/upcoming/route.ts` — API GET
+- `src/app/(dashboard)/dashboard/payments/_components/upcoming-payments-section.tsx` — UI con filtros
+- `src/app/(dashboard)/dashboard/payments/_components/payments-page-tabs.tsx` — Tabs (Próximos / Historial)
+- `src/app/(dashboard)/dashboard/_components/upcoming-payments-widget.tsx` — Widget para dashboard
+
+**Lógica:**
+- Para cada contrato activo proyecta el cronograma con `calculator.ts`
+- Compara contra `payments` table (tipo withdrawal) con tolerancia ±7 días y ±5% monto
+- Clasifica: `overdue` / `this_month` / `upcoming` / `paid`
+- Summary: cuántos atrasados, este mes, total pendiente $
+
+### Feature: Auto-generación de PDF en Reportes
+Ya no hay que subir el PDF manual al crear un reporte.
+
+**Archivos:**
+- `src/lib/pdf/report-templates/report-template.tsx` — Template con @react-pdf/renderer
+- `src/lib/pdf/generate-report-pdf.ts` — Función `generateReportPdf(data)`
+- Modificado `src/app/api/reports/route.ts` POST — auto-genera + sube a Storage + crea contract_document + cambia status a 'generated'
+
+### Feature: Notificaciones en eventos reales
+Antes solo se disparaban en "nueva solicitud externa". Ahora también:
+
+**Archivos:**
+- `src/lib/notifications/notify-admins.ts` — Helper para notificar a todos los admins
+- Modificados: `sign/route.ts`, `revision/route.ts`, `documents/route.ts` (portal)
+
+**Eventos cubiertos:**
+- Inversionista firma contrato → notif tipo `approval`
+- Inversionista solicita revisión → notif tipo `revision_request` con extracto del comentario
+- Inversionista sube documento al portal → notif tipo `new_application` (es la categoría más cercana)
+
+### Feature: Alerta de reportes vencidos
+En la página de reportes ahora aparece un panel con contratos activos que necesitan nuevo reporte según su periodicidad.
+
+**Archivos:**
+- `src/app/api/reports/due/route.ts` — Detecta contratos sin reporte reciente
+- `src/app/(dashboard)/dashboard/reports/_components/reports-due-alert.tsx` — Panel UI
+
+**Lógica:** Para cada contrato activo, busca último period_end + frequency_months. Si esa fecha ya pasó → vencido.
+
+## Estado real del proyecto (auditoría brutal)
+
+| Módulo | Estado real |
+|--------|-------------|
+| Auth + roles | ✅ Completo |
+| Inversionistas | ✅ Completo (CRUD con país teléfono, formato cédula, beneficiarios) |
+| Planes | ✅ Completo |
+| Contratos | ✅ Completo con firma electrónica integrada |
+| Portal del inversionista | ✅ Completo |
+| Formulario público `/solicitud` | ✅ Completo con calculadora |
+| **Pagos** | ✅ Completo + **Próximos Pagos nuevo** |
+| Referidos | ✅ Funcional |
+| **Reportes** | ✅ Completo con **auto-PDF nuevo** + alerta de vencidos |
+| Boletines | ✅ Funcional |
+| **Notificaciones** | 🟡 In-app sí, faltan triggers para algunos eventos menores |
+| Audit log | ❌ Tabla vacía, no se rellena |
+
+## Lo crítico que NO se hizo (pendiente)
+
+1. **Resend en producción** — Sin esto, los emails no llegan en prod. Hans lo hace.
+2. **PDFs reales de contratos** — Los templates actuales son placeholder. Esperando que April envíe.
+3. **Audit log** — Pendiente diseñar triggers SQL.
+4. **Rate limiting persistente** — `/api/applications` usa Map en memoria (no sirve serverless).
+
+## Git al cierre
+
+- Rama: `feat/contract-signing`
+- Working tree: limpio (excepto `.claude/settings.local.json` que es local)
+- Commits ahead de main: 43+
+
+## Próxima acción sugerida
+
+Cuando arranques nueva sesión:
+1. Leer `memory/sesion-actual.md` (este archivo)
+2. Revisar el localhost para ver los avances:
+   - `/dashboard` — nuevo widget de Próximos Pagos
+   - `/dashboard/payments` — nuevas tabs Próximos/Historial
+   - `/dashboard/reports` — alerta de vencidos + auto-PDF al crear
+3. Coordinar con Hans para conectar Resend
+4. Continuar con: notificaciones automáticas por cron (vencimientos), audit log con triggers SQL
 
 ## Lo que se hizo esta sesión (2026-04-04 a 2026-05-11)
 
