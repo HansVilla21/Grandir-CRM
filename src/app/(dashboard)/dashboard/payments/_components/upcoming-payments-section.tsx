@@ -72,14 +72,13 @@ export function UpcomingPaymentsSection({
   refreshKey = 0,
 }: UpcomingPaymentsSectionProps) {
   const [data, setData] = useState<ApiResponse | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [initialLoading, setInitialLoading] = useState(true)
   const [error, setError] = useState('')
   const [filter, setFilter] = useState<FilterStatus>('pending')
 
   useEffect(() => {
     let cancelled = false
     async function load() {
-      setLoading(true)
       try {
         const res = await fetch('/api/payments/upcoming', { cache: 'no-store' })
         const json = await res.json()
@@ -94,7 +93,7 @@ export function UpcomingPaymentsSection({
       } catch {
         if (!cancelled) setError('Error de conexión')
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setInitialLoading(false)
       }
     }
     load()
@@ -102,6 +101,8 @@ export function UpcomingPaymentsSection({
       cancelled = true
     }
   }, [refreshKey])
+
+  const loading = initialLoading && !data
 
   const filtered = useMemo(() => {
     if (!data) return []

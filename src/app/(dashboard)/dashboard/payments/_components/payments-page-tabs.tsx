@@ -43,8 +43,9 @@ export function PaymentsPageTabs({ initialPayments, contracts }: PaymentsPageTab
   function handleSuccess() {
     setFormOpen(false)
     setPrefill(null)
-    setRefreshKey((k) => k + 1) // re-fetch upcoming payments
-    router.refresh() // re-fetch server-rendered history table
+    setRefreshKey((k) => k + 1) // re-fetch upcoming payments smoothly (no flash)
+    // Defer router.refresh so the history table updates in background without flashing the page
+    setTimeout(() => router.refresh(), 100)
   }
 
   return (

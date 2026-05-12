@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Pencil, UserX } from 'lucide-react'
 import { UserForm } from './user-form'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { useToast } from '@/components/ui/toast'
 
 interface SystemUser {
   id: string
@@ -21,9 +23,11 @@ interface UsersSectionProps {
 
 export function UsersSection({ users, currentUserRole }: UsersSectionProps) {
   const router = useRouter()
+  const toast = useToast()
   const [showForm, setShowForm] = useState(false)
   const [editingUser, setEditingUser] = useState<SystemUser | undefined>(undefined)
   const [deactivating, setDeactivating] = useState<string | null>(null)
+  const [pendingDeactivate, setPendingDeactivate] = useState<SystemUser | null>(null)
 
   if (currentUserRole !== 'admin') {
     return (
@@ -33,12 +37,22 @@ export function UsersSection({ users, currentUserRole }: UsersSectionProps) {
     )
   }
 
-  async function handleDeactivate(userId: string) {
-    if (!confirm('¿Desactivar este usuario?')) return
-    setDeactivating(userId)
+  async function confirmDeactivate() {
+    if (!pendingDeactivate) return
+    setDeactivating(pendingDeactivate.id)
     try {
-      await fetch(`/api/settings/users/${userId}`, { method: 'DELETE' })
+      const res = await fetch(`/api/settings/users/${pendingDeactivate.id}`, {
+        method: 'DELETE',
+      })
+      if (!res.ok) {
+        toast.error('No se pudo desactivar el usuario')
+        return
+      }
+      toast.success(`Usuario ${pendingDeactivate.full_name} desactivado`)
+      setPendingDeactivate(null)
       router.refresh()
+    } catch {
+      toast.error('Error de conexión')
     } finally {
       setDeactivating(null)
     }
@@ -141,7 +155,7 @@ export function UsersSection({ users, currentUserRole }: UsersSectionProps) {
                     </button>
                     {user.active && (
                       <button
-                        onClick={() => handleDeactivate(user.id)}
+                        onClick={() => setPendingDeactivate(user)}
                         disabled={deactivating === user.id}
                         className="rounded-lg p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-40"
                         title="Desactivar"
@@ -160,6 +174,21 @@ export function UsersSection({ users, currentUserRole }: UsersSectionProps) {
       {showForm && (
         <UserForm user={editingUser} onClose={closeForm} />
       )}
+
+      <ConfirmDialog
+        open={pendingDeactivate !== null}
+        title="Desactivar usuario"
+        description={
+          pendingDeactivate
+            ? `¿Desactivar a ${pendingDeactivate.full_name}? El usuario no podrá acceder al sistema hasta que sea reactivado.`
+            : ''
+        }
+        confirmLabel="Desactivar"
+        variant="danger"
+        loading={deactivating !== null}
+        onConfirm={confirmDeactivate}
+        onCancel={() => setPendingDeactivate(null)}
+      />
     </section>
   )
 }

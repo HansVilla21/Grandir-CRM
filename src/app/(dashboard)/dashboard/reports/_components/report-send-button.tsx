@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Send, Loader2, CheckCircle } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { useToast } from '@/components/ui/toast'
 import type { ReportStatus } from '@/types/reports'
 
 interface ReportSendButtonProps {
@@ -12,24 +14,25 @@ interface ReportSendButtonProps {
 }
 
 export function ReportSendButton({ reportId, status, recipientEmails }: ReportSendButtonProps) {
+  const router = useRouter()
+  const toast = useToast()
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const canSend = (status === 'pending' || status === 'generated') && !sent
 
-  async function handleSend() {
+  function handleSendClick() {
     if (recipientEmails.length === 0) {
       setError('No hay emails registrados para enviar.')
       return
     }
+    setError(null)
+    setConfirmOpen(true)
+  }
 
-    const confirmed = window.confirm(
-      `Se enviará el reporte a:\n${recipientEmails.join(', ')}\n\n¿Continuar?`
-    )
-    if (!confirmed) return
-
+  async function handleConfirm() {
     setLoading(true)
     setError(null)
 
@@ -40,14 +43,16 @@ export function ReportSendButton({ reportId, status, recipientEmails }: ReportSe
 
       if (!res.ok) {
         const data = await res.json()
-        setError(data.error ?? 'Error al enviar el reporte')
+        toast.error(data.error ?? 'Error al enviar el reporte')
         return
       }
 
+      setConfirmOpen(false)
       setSent(true)
+      toast.success('Reporte enviado correctamente')
       router.refresh()
     } catch {
-      setError('Error de red. Intenta de nuevo.')
+      toast.error('Error de red. Intenta de nuevo.')
     } finally {
       setLoading(false)
     }
@@ -85,7 +90,7 @@ export function ReportSendButton({ reportId, status, recipientEmails }: ReportSe
       )}
 
       <button
-        onClick={handleSend}
+        onClick={handleSendClick}
         disabled={!canSend || loading}
         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-700 disabled:opacity-40 transition-colors"
       >
@@ -102,6 +107,16 @@ export function ReportSendButton({ reportId, status, recipientEmails }: ReportSe
           Este contrato no tiene emails de inversionistas registrados.
         </p>
       )}
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Enviar reporte"
+        description={`Se enviará el reporte a:\n${recipientEmails.join(', ')}`}
+        confirmLabel="Enviar"
+        loading={loading}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   )
 }
