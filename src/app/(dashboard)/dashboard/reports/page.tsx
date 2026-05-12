@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import { ReportsTable } from './_components/reports-table'
+import { ReportsDueAlert } from './_components/reports-due-alert'
 import type { ReportListItem, ContractForReportForm } from '@/types/reports'
 
 export const metadata = {
@@ -146,6 +147,9 @@ export default async function ReportsPage() {
         <StatCard label="PDF listo (pendiente de envío)" value={generatedCount} />
         <StatCard label="Enviados este mes" value={sentThisMonth} />
       </div>
+
+      {/* Reportes vencidos */}
+      <ReportsDueAlert />
 
       {/* Table */}
       <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
