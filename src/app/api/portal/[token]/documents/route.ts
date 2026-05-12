@@ -101,5 +101,31 @@ export async function POST(
     )
   }
 
+  // Notify admins that an investor uploaded a document from the portal
+  try {
+    const { data: ciDetail } = await supabase
+      .from('contract_investors')
+      .select('investor_id, investor:investors(full_name)')
+      .eq('id', contractInvestor.id)
+      .single()
+    const investor = ciDetail?.investor as { full_name: string } | null
+
+    const docTypeLabel =
+      docType === 'signed_contract' ? 'contrato firmado' : 'comprobante de depósito'
+
+    const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+    await notifyAdmins({
+      supabase,
+      type: 'new_application',
+      channel: 'both',
+      title: 'Nuevo documento subido al portal',
+      body: `${investor?.full_name ?? 'Un inversionista'} subió un ${docTypeLabel} en el contrato #${contractId.slice(0, 8).toUpperCase()}`,
+      contract_id: contractId,
+      investor_id: ciDetail?.investor_id ?? undefined,
+    })
+  } catch (notifyError) {
+    console.error('[documents] notify error:', notifyError)
+  }
+
   return NextResponse.json({ success: true, document_id: docRecord.id })
 }

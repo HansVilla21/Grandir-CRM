@@ -233,7 +233,19 @@ export async function POST(
       }
     }
 
-    // 9. Send notification to admin(s)
+    // 9. In-app notification for admins
+    const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+    await notifyAdmins({
+      supabase,
+      type: 'approval',
+      channel: 'both',
+      title: 'Contrato firmado',
+      body: `${investor.full_name} firmó el contrato #${contractId.slice(0, 8).toUpperCase()}`,
+      contract_id: contractId,
+      investor_id: ci.investor_id,
+    })
+
+    // 10. Send notification email to admin(s)
     try {
       const { data: adminProfiles } = await supabase
         .from('user_profiles')
