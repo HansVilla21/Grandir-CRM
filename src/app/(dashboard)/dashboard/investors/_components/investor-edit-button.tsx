@@ -7,10 +7,15 @@ import type { Investor } from '@/types/investors'
 
 interface InvestorEditButtonProps {
   investor: Investor
+  defaultEmail?: string
   activeInvestors: { id: string; full_name: string }[]
 }
 
-export function InvestorEditButton({ investor, activeInvestors }: InvestorEditButtonProps) {
+export function InvestorEditButton({
+  investor,
+  defaultEmail,
+  activeInvestors,
+}: InvestorEditButtonProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -28,6 +33,7 @@ export function InvestorEditButton({ investor, activeInvestors }: InvestorEditBu
         open={open}
         onClose={() => setOpen(false)}
         investor={investor}
+        defaultEmail={defaultEmail}
         activeInvestors={activeInvestors}
       />
     </>

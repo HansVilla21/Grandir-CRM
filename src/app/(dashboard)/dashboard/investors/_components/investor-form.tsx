@@ -30,6 +30,8 @@ interface InvestorFormProps {
   onClose: () => void
   /** If provided, puts the form in edit mode */
   investor?: Investor
+  /** Primary email of the investor (only relevant in edit mode) */
+  defaultEmail?: string
   /** List of active investors for referrer select */
   activeInvestors: { id: string; full_name: string }[]
 }
@@ -54,6 +56,7 @@ export function InvestorForm({
   open,
   onClose,
   investor,
+  defaultEmail,
   activeInvestors,
 }: InvestorFormProps) {
   const router = useRouter()
@@ -103,7 +106,7 @@ export function InvestorForm({
           cedula: formatCedula(investor.cedula),
           phone_code: parsed.code,
           phone_number: parsed.number,
-          email: '',
+          email: defaultEmail ?? '',
           referrer_id: investor.referrer_id ?? '',
         })
       } else {
@@ -113,7 +116,7 @@ export function InvestorForm({
       setReferrerSearch('')
       setReferrerOpen(false)
     }
-  }, [open, investor])
+  }, [open, investor, defaultEmail])
 
   // Close referrer dropdown on outside click
   useEffect(() => {
@@ -152,7 +155,7 @@ export function InvestorForm({
     if (!values.full_name.trim()) next.full_name = 'El nombre es requerido'
     if (!values.cedula.trim()) next.cedula = 'La cédula es requerida'
     if (!isEdit && !values.email.trim()) next.email = 'El email es requerido'
-    if (!isEdit && values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+    if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
       next.email = 'Email inválido'
     }
     setErrors(next)
@@ -178,6 +181,7 @@ export function InvestorForm({
             full_name: values.full_name.trim(),
             cedula: values.cedula.trim(),
             phone,
+            email: values.email.trim() || null,
             referrer_id: values.referrer_id || null,
           }
         : {
@@ -335,29 +339,27 @@ export function InvestorForm({
               </div>
             </div>
 
-            {/* Email — solo en creación */}
-            {!isEdit && (
-              <div className="space-y-1.5">
-                <label className="block text-sm font-medium text-zinc-700" htmlFor="email">
-                  Email principal <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={values.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  placeholder="juan@ejemplo.com"
-                  className={cn(
-                    'w-full rounded-lg border px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400',
-                    'outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 transition-colors',
-                    errors.email ? 'border-red-400 bg-red-50' : 'border-zinc-300 bg-white'
-                  )}
-                />
-                {errors.email && (
-                  <p className="text-xs text-red-600">{errors.email}</p>
+            {/* Email */}
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-zinc-700" htmlFor="email">
+                Email principal {!isEdit && <span className="text-red-500">*</span>}
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={values.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                placeholder="juan@ejemplo.com"
+                className={cn(
+                  'w-full rounded-lg border px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400',
+                  'outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 transition-colors',
+                  errors.email ? 'border-red-400 bg-red-50' : 'border-zinc-300 bg-white'
                 )}
-              </div>
-            )}
+              />
+              {errors.email && (
+                <p className="text-xs text-red-600">{errors.email}</p>
+              )}
+            </div>
 
             {/* Referidor — combobox con búsqueda */}
             <div className="space-y-1.5">

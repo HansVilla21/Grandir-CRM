@@ -78,25 +78,89 @@ export async function PATCH(
       }
     }
 
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 })
+    let investor = null
+    if (Object.keys(updates).length > 0) {
+      const { data, error } = await supabase
+        .from('investors')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) {
+        if (error.code === '23505') {
+          return NextResponse.json(
+            { error: 'Ya existe un inversionista con esa cédula' },
+            { status: 409 }
+          )
+        }
+        return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+      investor = data
     }
 
-    const { data: investor, error } = await supabase
-      .from('investors')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
+    // Update primary email (if provided)
+    if ('email' in body) {
+      const newEmail = body.email ? String(body.email).trim().toLowerCase() : null
 
-    if (error) {
-      if (error.code === '23505') {
-        return NextResponse.json(
-          { error: 'Ya existe un inversionista con esa cédula' },
-          { status: 409 }
-        )
+      if (newEmail) {
+        // Validate format
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+          return NextResponse.json({ error: 'Email inválido' }, { status: 400 })
+        }
+
+        // Find current primary email
+        const { data: primaryRows } = await supabase
+          .from('investor_emails')
+          .select('id, email')
+          .eq('investor_id', id)
+          .eq('is_primary', true)
+          .limit(1)
+
+        const currentPrimary = primaryRows?.[0]
+        if (currentPrimary) {
+          if (currentPrimary.email !== newEmail) {
+            const { error: updateEmailError } = await supabase
+              .from('investor_emails')
+              .update({ email: newEmail })
+              .eq('id', currentPrimary.id)
+
+            if (updateEmailError) {
+              return NextResponse.json(
+                { error: `Error al actualizar email: ${updateEmailError.message}` },
+                { status: 500 }
+              )
+            }
+          }
+        } else {
+          // No primary exists — create one
+          const { error: insertEmailError } = await supabase
+            .from('investor_emails')
+            .insert({
+              investor_id: id,
+              email: newEmail,
+              is_primary: true,
+              verified: false,
+            })
+
+          if (insertEmailError) {
+            return NextResponse.json(
+              { error: `Error al crear email: ${insertEmailError.message}` },
+              { status: 500 }
+            )
+          }
+        }
       }
-      return NextResponse.json({ error: error.message }, { status: 500 })
+
+      // If investor wasn't updated (only email changed), fetch fresh data
+      if (!investor) {
+        const { data } = await supabase.from('investors').select().eq('id', id).single()
+        investor = data
+      }
+    }
+
+    if (!investor && Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 })
     }
 
     return NextResponse.json({ investor })

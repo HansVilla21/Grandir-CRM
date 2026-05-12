@@ -189,6 +189,7 @@ export default async function InvestorDetailPage({
             />
             <InvestorEditButton
               investor={investor}
+              defaultEmail={investor.emails.find((e) => e.is_primary)?.email ?? investor.emails[0]?.email}
               activeInvestors={activeInvestors}
             />
             <InvestorDeleteButton
