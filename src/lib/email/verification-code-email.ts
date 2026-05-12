@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { EMAIL_FROM } from './config'
 
 interface SendVerificationCodeEmailParams {
   to: string[]
@@ -86,7 +87,7 @@ export async function sendVerificationCodeEmail(
 
   const resend = new Resend(process.env.RESEND_API_KEY)
   const result = await resend.emails.send({
-    from: 'Grandir CM <seguridad@grandir.com>',
+    from: EMAIL_FROM.seguridad,
     to: params.to,
     subject: `Tu código de verificación: ${params.code}`,
     html,

@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/server'
-import { PaymentsTable } from './_components/payments-table'
+import { PaymentsPageTabs } from './_components/payments-page-tabs'
 import type { PaymentListItem, PaymentSummary, ContractOption } from '@/types/payments'
 
 export const metadata = {
@@ -171,10 +171,8 @@ export default async function PaymentsPage() {
         </div>
       </div>
 
-      {/* Table card */}
-      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-4 sm:p-6">
-        <PaymentsTable initialPayments={paymentList} contracts={contracts} />
-      </div>
+      {/* Tabs: Upcoming vs History */}
+      <PaymentsPageTabs initialPayments={paymentList} contracts={contracts} />
     </div>
   )
 }

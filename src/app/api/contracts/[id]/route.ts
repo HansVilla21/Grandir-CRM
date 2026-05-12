@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
 import type { ContractStatus } from '@/types/contracts'
 
 // Valid state transitions
@@ -167,6 +167,65 @@ export async function PATCH(
         return NextResponse.json({ error: updateError.message }, { status: 500 })
       }
 
+      // --- Notify admins of state transition (excluding the actor) ---
+      try {
+        const { createClient } = await import('@/lib/supabase/server')
+        const authClient = await createClient()
+        const { data: { user: actor } } = await authClient.auth.getUser()
+
+        const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+
+        // Get holder for context
+        const { data: holderRow } = await supabase
+          .from('contract_investors')
+          .select('investor_id, investor:investors(full_name)')
+          .eq('contract_id', id)
+          .eq('role', 'holder')
+          .single()
+        const inv = holderRow?.investor as { full_name: string } | null
+        const holderName = inv?.full_name ?? 'inversionista'
+        const shortId = id.slice(0, 8).toUpperCase()
+
+        const STATE_NOTIFS: Partial<Record<ContractStatus, { title: string; body: string }>> = {
+          pending_approval: {
+            title: 'Contrato enviado a aprobación',
+            body: `El contrato #${shortId} de ${holderName} pasó a "Pendiente de aprobación".`,
+          },
+          active: {
+            title: 'Contrato activado',
+            body: `El contrato #${shortId} de ${holderName} está ahora activo.`,
+          },
+          expired: {
+            title: 'Contrato vencido',
+            body: `El contrato #${shortId} de ${holderName} fue marcado como vencido.`,
+          },
+          cancelled: {
+            title: 'Contrato cancelado',
+            body: `El contrato #${shortId} de ${holderName} fue cancelado.`,
+          },
+          revision_requested: {
+            title: 'Contrato en revisión',
+            body: `El contrato #${shortId} de ${holderName} fue marcado para revisión.`,
+          },
+        }
+
+        const notifConfig = STATE_NOTIFS[newStatus]
+        if (notifConfig) {
+          await notifyAdmins({
+            supabase,
+            type: newStatus === 'revision_requested' ? 'revision_request' : 'approval',
+            channel: 'internal',
+            title: notifConfig.title,
+            body: notifConfig.body,
+            contract_id: id,
+            investor_id: holderRow?.investor_id ?? undefined,
+            exclude_user_id: actor?.id,
+          })
+        }
+      } catch (notifErr) {
+        console.error('[contracts/PATCH] notify error:', notifErr)
+      }
+
       // --- pending_approval: generate tokens, PDF & send invitation ---
       if (newStatus === 'pending_approval') {
         const { sendContractInvitationEmail } = await import('@/lib/email/contract-invitation-email')
@@ -234,7 +293,8 @@ export async function PATCH(
                 contract_id: id,
               })
               const storagePath = `${id}/contrato_${Date.now()}.pdf`
-              await supabase.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
+              const storageClient = createServiceClient()
+              await storageClient.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
               await supabase.from('contract_documents').insert({
                 contract_id: id,
                 type: 'draft',

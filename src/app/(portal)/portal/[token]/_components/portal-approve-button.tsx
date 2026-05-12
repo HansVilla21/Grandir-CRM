@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 interface PortalApproveButtonProps {
   token: string
@@ -11,6 +12,7 @@ export function PortalApproveButton({ token, amount }: PortalApproveButtonProps)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const formattedAmount = new Intl.NumberFormat('es-CR', {
     style: 'currency',
@@ -18,12 +20,7 @@ export function PortalApproveButton({ token, amount }: PortalApproveButtonProps)
     minimumFractionDigits: 2,
   }).format(amount)
 
-  async function handleApprove() {
-    const confirmed = window.confirm(
-      `¿Confirmas tu aprobación del contrato de inversión por ${formattedAmount}?\n\nEsta acción no se puede deshacer.`
-    )
-    if (!confirmed) return
-
+  async function handleConfirm() {
     setLoading(true)
     setError(null)
 
@@ -39,16 +36,18 @@ export function PortalApproveButton({ token, amount }: PortalApproveButtonProps)
         } else {
           setError('Ocurrió un error al procesar tu aprobación. Intenta de nuevo.')
         }
+        setConfirmOpen(false)
         return
       }
 
+      setConfirmOpen(false)
       setSuccess(true)
-      // Recargar la página para reflejar el nuevo estado
       setTimeout(() => {
         window.location.reload()
       }, 1500)
     } catch {
       setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+      setConfirmOpen(false)
     } finally {
       setLoading(false)
     }
@@ -65,7 +64,7 @@ export function PortalApproveButton({ token, amount }: PortalApproveButtonProps)
   return (
     <div className="space-y-2">
       <button
-        onClick={handleApprove}
+        onClick={() => setConfirmOpen(true)}
         disabled={loading}
         className="w-full rounded-lg bg-green-600 px-6 py-3 text-white font-semibold text-base hover:bg-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
@@ -74,6 +73,17 @@ export function PortalApproveButton({ token, amount }: PortalApproveButtonProps)
       {error && (
         <p className="text-sm text-red-600 text-center">{error}</p>
       )}
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Confirmar aprobación del contrato"
+        description={`¿Confirmas tu aprobación del contrato de inversión por ${formattedAmount}? Esta acción no se puede deshacer.`}
+        confirmLabel="Aprobar contrato"
+        variant="success"
+        loading={loading}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   )
 }

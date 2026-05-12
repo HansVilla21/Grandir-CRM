@@ -56,19 +56,19 @@ export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
           </p>
         ) : (
           <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[480px]">
+          <table className="w-full text-sm min-w-[520px]">
             <thead>
               <tr className="border-b border-zinc-100">
-                <th className="text-left py-3 pl-4 sm:pl-6 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-left py-3 pl-4 sm:pl-6 pr-4 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Titular
                 </th>
-                <th className="text-left py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                   Tipo
                 </th>
-                <th className="text-right py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-right py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
                   Monto
                 </th>
-                <th className="text-left py-3 pr-4 sm:pr-6 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <th className="text-right py-3 pl-4 pr-4 sm:pr-6 text-xs font-medium text-zinc-500 uppercase tracking-wide whitespace-nowrap">
                   Fecha pago
                 </th>
               </tr>
@@ -76,10 +76,10 @@ export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
             <tbody className="divide-y divide-zinc-100">
               {payments.map((payment) => (
                 <tr key={payment.id} className="hover:bg-zinc-50 transition-colors">
-                  <td className="py-3 pl-4 sm:pl-6 font-medium text-zinc-900">
+                  <td className="py-3 pl-4 sm:pl-6 pr-4 font-medium text-zinc-900">
                     {payment.holder_name}
                   </td>
-                  <td className="py-3">
+                  <td className="py-3 px-4">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
                         TYPE_STYLES[payment.type] ?? 'bg-zinc-100 text-zinc-600 border-zinc-200'
@@ -88,10 +88,10 @@ export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
                       {TYPE_LABELS[payment.type] ?? payment.type}
                     </span>
                   </td>
-                  <td className="py-3 text-right font-mono font-semibold text-zinc-900">
+                  <td className="py-3 px-4 text-right font-mono font-semibold text-zinc-900 whitespace-nowrap">
                     {formatCurrency(payment.amount)}
                   </td>
-                  <td className="py-3 pr-4 sm:pr-6 text-xs text-zinc-500">
+                  <td className="py-3 pl-4 pr-4 sm:pr-6 text-right text-xs text-zinc-500 whitespace-nowrap">
                     {formatDate(payment.payment_date)}
                   </td>
                 </tr>

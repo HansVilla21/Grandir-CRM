@@ -100,6 +100,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: emailError.message }, { status: 500 })
     }
 
+    // Notify other admins of new investor creation
+    try {
+      const { createClient } = await import('@/lib/supabase/server')
+      const authClient = await createClient()
+      const { data: { user: actor } } = await authClient.auth.getUser()
+
+      const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+      await notifyAdmins({
+        supabase,
+        type: 'approval',
+        channel: 'internal',
+        title: 'Nuevo inversionista registrado',
+        body: `${investor.full_name} (cédula ${investor.cedula}) fue registrado en el sistema.`,
+        investor_id: investor.id,
+        exclude_user_id: actor?.id,
+      })
+    } catch (notifErr) {
+      console.error('[investors] notify error:', notifErr)
+    }
+
     return NextResponse.json({ investor }, { status: 201 })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Error inesperado'

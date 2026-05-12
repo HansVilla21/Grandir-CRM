@@ -34,7 +34,7 @@ export async function POST(
   // Buscar contract_investor por token
   const { data: contractInvestor, error: ciError } = await supabase
     .from('contract_investors')
-    .select('id, contract_id, approval_status, token_expires_at')
+    .select('id, contract_id, investor_id, approval_status, token_expires_at')
     .eq('portal_token', token)
     .single()
 
@@ -81,6 +81,29 @@ export async function POST(
 
   if (updateContractError) {
     return NextResponse.json({ error: 'UPDATE_FAILED' }, { status: 500 })
+  }
+
+  // Notify admins of revision request
+  try {
+    const { data: investor } = await supabase
+      .from('investors')
+      .select('full_name')
+      .eq('id', contractInvestor.investor_id)
+      .single()
+
+    const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+    const truncated = comment.length > 100 ? `${comment.slice(0, 100)}...` : comment
+    await notifyAdmins({
+      supabase,
+      type: 'revision_request',
+      channel: 'both',
+      title: 'Revisión solicitada',
+      body: `${investor?.full_name ?? 'Un inversionista'} solicitó cambios al contrato #${contractInvestor.contract_id.slice(0, 8).toUpperCase()}: "${truncated}"`,
+      contract_id: contractInvestor.contract_id,
+      investor_id: contractInvestor.investor_id,
+    })
+  } catch (notifyError) {
+    console.error('[revision] notify error:', notifyError)
   }
 
   return NextResponse.json({ success: true })

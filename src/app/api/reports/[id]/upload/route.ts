@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
 
 export async function POST(
   request: NextRequest,
@@ -35,8 +35,9 @@ export async function POST(
     const arrayBuffer = await file.arrayBuffer()
     const fileBuffer = new Uint8Array(arrayBuffer)
 
-    const { error: uploadError } = await supabase.storage
-      .from('reports')
+    const storageClient = createServiceClient()
+    const { error: uploadError } = await storageClient.storage
+      .from('contracts')
       .upload(storagePath, fileBuffer, {
         contentType: 'application/pdf',
         upsert: true,

@@ -7,6 +7,8 @@ import { ContractStatusBadge } from '../_components/contract-status-badge'
 import { ContractActions } from '../_components/contract-actions'
 import { DocumentUpload } from '../_components/document-upload'
 import { ContractPaymentsSection } from '../_components/contract-payments-section'
+import { InvestmentCalculator } from '@/components/investment/investment-calculator'
+import type { PlanType } from '@/lib/investment/calculator'
 import type { ContractDetail } from '@/types/contracts'
 import type { ContractOption } from '@/types/payments'
 
@@ -279,6 +281,17 @@ export default async function ContractDetailPage({
           </div>
         )}
       </div>
+
+      {/* Proyección — calculadora de rendimiento */}
+      {contract.plan && (
+        <InvestmentCalculator
+          planType={contract.plan.type as PlanType}
+          annualRate={contract.plan.annual_rate}
+          amount={contract.amount}
+          termMonths={contract.term_months}
+          startDate={contract.start_date ? new Date(contract.start_date) : undefined}
+        />
+      )}
 
       {/* Investors */}
       <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">

@@ -85,7 +85,7 @@ export async function POST(
     let pdfUrl: string | null = null
     if (report.pdf_path) {
       const { data: signedData } = await supabase.storage
-        .from('reports')
+        .from('contracts')
         .createSignedUrl(report.pdf_path, 60 * 60 * 24 * 7) // 7 days
 
       pdfUrl = signedData?.signedUrl ?? null
@@ -127,6 +127,21 @@ export async function POST(
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 500 })
+    }
+
+    // Notify admins
+    try {
+      const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
+      await notifyAdmins({
+        supabase,
+        type: 'approval',
+        channel: 'internal',
+        title: 'Reporte enviado',
+        body: `Reporte enviado a ${holderName ?? 'inversionista'} (${recipientEmails.length} destinatario${recipientEmails.length !== 1 ? 's' : ''}).`,
+        contract_id: report.contract_id,
+      })
+    } catch (notifErr) {
+      console.error('[reports/send] notify error:', notifErr)
     }
 
     // Suppress unused variable warning

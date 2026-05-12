@@ -1,5 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import { ReportsTable } from './_components/reports-table'
+import { ReportsDueAlert } from './_components/reports-due-alert'
+import { BatchReportButton } from './_components/batch-report-button'
 import type { ReportListItem, ContractForReportForm } from '@/types/reports'
 
 export const metadata = {
@@ -97,7 +99,7 @@ export default async function ReportsPage() {
   // Fetch active contracts for the form
   const { data: contractsRaw } = await supabase
     .from('contracts')
-    .select('id, plan:investment_plans(name)')
+    .select('id, amount, plan:investment_plans(name)')
     .eq('status', 'active')
     .order('created_at', { ascending: false })
 
@@ -126,6 +128,7 @@ export default async function ReportsPage() {
         id: c.id,
         holder_name: contractHolderMap.get(c.id) ?? '—',
         plan_name: plan?.name ?? '—',
+        amount: c.amount,
       }
     }
   )
@@ -133,11 +136,14 @@ export default async function ReportsPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-xl font-semibold text-zinc-900">Reportes periódicos</h1>
-        <p className="text-sm text-zinc-500 mt-0.5">
-          Gestión y envío de reportes a inversionistas
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-zinc-900">Reportes periódicos</h1>
+          <p className="text-sm text-zinc-500 mt-0.5">
+            Gestión y envío de reportes a inversionistas
+          </p>
+        </div>
+        <BatchReportButton />
       </div>
 
       {/* Stat cards */}
@@ -146,6 +152,9 @@ export default async function ReportsPage() {
         <StatCard label="PDF listo (pendiente de envío)" value={generatedCount} />
         <StatCard label="Enviados este mes" value={sentThisMonth} />
       </div>
+
+      {/* Reportes vencidos */}
+      <ReportsDueAlert />
 
       {/* Table */}
       <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
