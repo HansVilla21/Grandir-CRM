@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { EMAIL_FROM } from './config'
 
 interface SendBulletinEmailParams {
   to: string
@@ -71,7 +72,7 @@ export async function sendBulletinEmail(params: SendBulletinEmailParams) {
 
   const resend = new Resend(process.env.RESEND_API_KEY)
   const result = await resend.emails.send({
-    from: 'Grandir CM <comunicados@grandir.com>',
+    from: EMAIL_FROM.comunicados,
     to: params.to,
     subject: params.subject,
     html,

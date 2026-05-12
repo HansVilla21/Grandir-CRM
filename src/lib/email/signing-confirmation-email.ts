@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { EMAIL_FROM } from './config'
 
 interface SendSigningConfirmationEmailParams {
   to: string[]
@@ -118,7 +119,7 @@ export async function sendSigningConfirmationEmail(
 
   const resend = new Resend(process.env.RESEND_API_KEY)
   const result = await resend.emails.send({
-    from: 'Grandir CM <contratos@grandir.com>',
+    from: EMAIL_FROM.contratos,
     to: params.to,
     subject: 'Contrato firmado exitosamente',
     html,

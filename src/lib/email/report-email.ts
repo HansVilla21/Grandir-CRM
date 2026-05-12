@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { EMAIL_FROM } from './config'
 
 interface SendReportEmailParams {
   to: string[]
@@ -134,7 +135,7 @@ export async function sendReportEmail(params: SendReportEmailParams) {
 
   const resend = new Resend(process.env.RESEND_API_KEY)
   const result = await resend.emails.send({
-    from: 'Grandir CM <reportes@grandir.com>',
+    from: EMAIL_FROM.reportes,
     to: params.to,
     subject: `Reporte de inversión — ${periodLabel}`,
     html,

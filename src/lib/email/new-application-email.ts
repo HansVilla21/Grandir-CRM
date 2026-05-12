@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { EMAIL_FROM } from './config'
 
 interface SendNewApplicationParams {
   to: string[]
@@ -75,7 +76,7 @@ export async function sendNewApplicationEmail(params: SendNewApplicationParams) 
 
   const resend = new Resend(process.env.RESEND_API_KEY)
   const result = await resend.emails.send({
-    from: 'Grandir CM <sistema@grandir.com>',
+    from: EMAIL_FROM.sistema,
     to: params.to,
     subject: `Nueva solicitud: ${params.investorName} — ${params.planName}`,
     html,
