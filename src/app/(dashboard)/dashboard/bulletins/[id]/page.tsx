@@ -78,6 +78,41 @@ export default async function BulletinDetailPage({
 
   const isDraft = bulletin.status === 'draft'
 
+  // Compute real recipient count for draft bulletins (used in confirmation)
+  // For sent bulletins, the bulletin_recipients table is the source of truth.
+  let estimatedCount = recipients?.length ?? 0
+  if (isDraft) {
+    if (bulletin.target_group === 'all_active') {
+      const { count } = await supabase
+        .from('investors')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'active')
+      estimatedCount = count ?? 0
+    } else if (bulletin.target_group === 'all_inactive') {
+      const { count } = await supabase
+        .from('investors')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'inactive')
+      estimatedCount = count ?? 0
+    } else if (bulletin.target_group === 'by_plan' && bulletin.target_plan_id) {
+      // Investors with active contracts on this plan
+      const { data: contractRows } = await supabase
+        .from('contracts')
+        .select('id, contract_investors(investor_id)')
+        .eq('plan_id', bulletin.target_plan_id)
+        .eq('status', 'active')
+
+      const investorIds = new Set<string>()
+      for (const c of contractRows ?? []) {
+        const cis = c.contract_investors as { investor_id: string }[] | null
+        for (const ci of cis ?? []) {
+          investorIds.add(ci.investor_id)
+        }
+      }
+      estimatedCount = investorIds.size
+    }
+  }
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
@@ -142,7 +177,7 @@ export default async function BulletinDetailPage({
             </div>
             <BulletinSendButton
               bulletinId={bulletin.id}
-              estimatedCount={recipients?.length ?? 0}
+              estimatedCount={estimatedCount}
               targetGroupLabel={targetLabel}
             />
           </div>
