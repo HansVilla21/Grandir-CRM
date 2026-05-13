@@ -48,7 +48,7 @@ export default async function NewContractPage() {
   }))
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-zinc-900">Nuevo contrato</h1>
         <p className="mt-0.5 text-sm text-zinc-500">
@@ -56,7 +56,7 @@ export default async function NewContractPage() {
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6 lg:p-8">
         <NewContractForm plans={plans} investors={investors} />
       </div>
     </div>

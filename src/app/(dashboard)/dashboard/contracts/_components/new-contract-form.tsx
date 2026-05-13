@@ -156,8 +156,8 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
   const startDateObj = startDate ? new Date(startDate) : undefined
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-6 max-w-6xl">
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_28rem] gap-8 w-full">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       {error && (
         <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
           {error}
