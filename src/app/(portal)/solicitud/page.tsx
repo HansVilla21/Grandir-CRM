@@ -7,6 +7,9 @@ export const metadata = {
   description: 'Formulario de solicitud de inversión con Grandir CM',
 }
 
+// Página pública que consulta Supabase en cada request — no se debe prerender en build
+export const dynamic = 'force-dynamic'
+
 export default async function SolicitudPage() {
   const supabase = createServiceClient()
 
