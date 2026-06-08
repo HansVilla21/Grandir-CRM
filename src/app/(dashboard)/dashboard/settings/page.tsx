@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { UsersSection } from './_components/users-section'
 import { PlansSection } from './_components/plans-section'
+import { ContractTemplatesSection } from './_components/contract-templates-section'
 
 export const metadata = {
   title: 'Configuración | Grandir CM',
@@ -77,6 +78,18 @@ export default async function SettingsPage() {
 
       {/* Planes de inversión */}
       <PlansSection plans={plans ?? []} />
+
+      {/* Divider */}
+      <hr className="border-zinc-100" />
+
+      {/* Plantillas de contratos */}
+      <ContractTemplatesSection
+        plans={(plans ?? []).map((p) => ({
+          id: p.id,
+          name: p.name,
+          type: p.type as 'annual' | 'monthly' | 'semestral',
+        }))}
+      />
     </div>
   )
 }

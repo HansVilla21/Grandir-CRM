@@ -384,10 +384,12 @@ export type Database = {
           notes: string | null
           parent_contract_id: string | null
           plan_id: string
+          rendered_content: string | null
           report_frequency_months: number
           source: Database["public"]["Enums"]["contract_source"]
           start_date: string | null
           status: Database["public"]["Enums"]["contract_status"]
+          template_id: string | null
           term_months: number
           updated_at: string
           version: number
@@ -400,10 +402,12 @@ export type Database = {
           notes?: string | null
           parent_contract_id?: string | null
           plan_id: string
+          rendered_content?: string | null
           report_frequency_months?: number
           source?: Database["public"]["Enums"]["contract_source"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
+          template_id?: string | null
           term_months: number
           updated_at?: string
           version?: number
@@ -416,10 +420,12 @@ export type Database = {
           notes?: string | null
           parent_contract_id?: string | null
           plan_id?: string
+          rendered_content?: string | null
           report_frequency_months?: number
           source?: Database["public"]["Enums"]["contract_source"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
+          template_id?: string | null
           term_months?: number
           updated_at?: string
           version?: number
@@ -437,6 +443,13 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "investment_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "contract_templates"
             referencedColumns: ["id"]
           },
         ]
@@ -856,6 +869,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      wishes: {
+        Row: {
+          achieved_at: string | null
+          category: string
+          created_at: string
+          id: string
+          image_url: string | null
+          is_achieved: boolean
+          notes: string | null
+          price: number
+          priority: number
+          saved_amount: number
+          timeline: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_achieved?: boolean
+          notes?: string | null
+          price?: number
+          priority?: number
+          saved_amount?: number
+          timeline?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_achieved?: boolean
+          notes?: string | null
+          price?: number
+          priority?: number
+          saved_amount?: number
+          timeline?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
