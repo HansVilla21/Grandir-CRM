@@ -166,13 +166,14 @@ function StatusBadge({
   description,
 }: {
   label: string
-  color: 'gray' | 'yellow' | 'orange' | 'green' | 'blue' | 'red'
+  color: 'gray' | 'yellow' | 'orange' | 'purple' | 'green' | 'blue' | 'red'
   description: string
 }) {
   const colorMap: Record<typeof color, string> = {
     gray: 'bg-zinc-100 text-zinc-600',
     yellow: 'bg-yellow-100 text-yellow-700',
     orange: 'bg-orange-100 text-orange-700',
+    purple: 'bg-purple-100 text-purple-700',
     green: 'bg-green-100 text-green-700',
     blue: 'bg-blue-100 text-blue-700',
     red: 'bg-red-100 text-red-700',
@@ -429,9 +430,14 @@ export default function HelpPage() {
                       description="El inversionista pidió cambios. Hay que volver al borrador y corregir."
                     />
                     <StatusBadge
+                      label="Esperando firma de Grandir"
+                      color="purple"
+                      description="El inversionista ya firmó. Solo falta que April firme desde el dashboard para activar el contrato."
+                    />
+                    <StatusBadge
                       label="Activo"
                       color="green"
-                      description="Aprobado y en curso. Ya NO se puede editar."
+                      description="Firmado por ambas partes y en curso. Ya NO se puede editar."
                     />
                     <StatusBadge
                       label="Vencido"

@@ -80,10 +80,12 @@ export async function POST(
         ? addMonths(new Date(contract.start_date), contract.term_months).toISOString().split('T')[0]
         : null
 
+    // Pasa a 'pending_admin_signature' — April debe firmar desde el dashboard
+    // para activar el contrato (Ley 8454 requiere mismo método para ambas partes).
     await supabase
       .from('contracts')
       .update({
-        status: 'active',
+        status: 'pending_admin_signature',
         ...(endDate ? { end_date: endDate } : {}),
         updated_at: new Date().toISOString(),
       })

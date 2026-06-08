@@ -120,8 +120,36 @@ export async function POST(
       )
     }
 
-    // 7. Generate signed PDF
     const contractId = ci.contract_id
+
+    // 6b. Si todos los inversionistas firmaron, marcar el contrato como
+    // 'pending_admin_signature' (April debe firmar desde el dashboard
+    // para activarlo — Ley 8454 requiere el mismo método de firma para ambas partes).
+    const { data: allInvestors } = await supabase
+      .from('contract_investors')
+      .select('approval_status')
+      .eq('contract_id', contractId)
+
+    const allApproved = (allInvestors ?? []).every(
+      (item) => item.approval_status === 'approved'
+    )
+
+    if (allApproved) {
+      const { error: contractStatusError } = await supabase
+        .from('contracts')
+        .update({
+          status: 'pending_admin_signature',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', contractId)
+        .eq('status', 'pending_approval')
+
+      if (contractStatusError) {
+        console.error('[sign] Error updating contract status to pending_admin_signature:', contractStatusError)
+      }
+    }
+
+    // 7. Generate signed PDF
 
     const { data: contract, error: contractError } = await supabase
       .from('contracts')
@@ -177,8 +205,20 @@ export async function POST(
     // Generate the signed PDF (contract + signature certificate)
     const signedBuffer = await generateSignedContractPdf(contractPdfData, signatureCertData, contract.rendered_content)
 
-    // Upload to Supabase Storage
-    const storagePath = `${contractId}/signed_${Date.now()}.pdf`
+    // Build descriptive file name + path (includes investor name + stage)
+    const { buildContractFileName, buildContractStoragePath } = await import(
+      '@/lib/pdf/file-naming'
+    )
+    const storagePath = buildContractStoragePath({
+      contractId,
+      investorName: investor.full_name,
+      stage: 'signed-by-investor',
+    })
+    const fileName = buildContractFileName({
+      contractId,
+      investorName: investor.full_name,
+      stage: 'signed-by-investor',
+    })
 
     const { error: uploadError } = await supabase.storage
       .from('contracts')
@@ -195,7 +235,7 @@ export async function POST(
       const { error: docError } = await supabase.from('contract_documents').insert({
         contract_id: contractId,
         type: 'signed_contract',
-        file_name: `signed_${Date.now()}.pdf`,
+        file_name: fileName,
         storage_path: storagePath,
         file_size: signedBuffer.length,
         mime_type: 'application/pdf',

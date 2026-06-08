@@ -6,13 +6,15 @@ interface PortalDocumentUploadProps {
   token: string
 }
 
+// El tipo "Contrato firmado" se eliminó del portal porque la firma ahora es
+// 100 % electrónica (Ley 8454). El inversor solo puede subir comprobantes
+// y otros documentos justificativos desde el portal.
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
-  signed_contract: 'Contrato firmado',
-  deposit_receipt: 'Comprobante de deposito',
+  deposit_receipt: 'Comprobante de depósito',
 }
 
 export function PortalDocumentUpload({ token }: PortalDocumentUploadProps) {
-  const [docType, setDocType] = useState<string>('signed_contract')
+  const [docType, setDocType] = useState<string>('deposit_receipt')
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)

@@ -5,8 +5,9 @@ import type { ContractStatus } from '@/types/contracts'
 // Valid state transitions
 const ALLOWED_TRANSITIONS: Record<ContractStatus, ContractStatus[]> = {
   draft: ['pending_approval'],
-  pending_approval: ['active', 'revision_requested'],
+  pending_approval: ['pending_admin_signature', 'active', 'revision_requested'],
   revision_requested: ['draft', 'cancelled'],
+  pending_admin_signature: ['active', 'draft', 'cancelled'],
   active: ['expired', 'cancelled'],
   expired: [],
   cancelled: [],
@@ -295,13 +296,25 @@ export async function PATCH(
                 },
                 contractWithPlan.rendered_content,
               )
-              const storagePath = `${id}/contrato_${Date.now()}.pdf`
+              const { buildContractFileName, buildContractStoragePath } = await import(
+                '@/lib/pdf/file-naming'
+              )
+              const storagePath = buildContractStoragePath({
+                contractId: id,
+                investorName: investor.full_name,
+                stage: 'draft',
+              })
+              const fileName = buildContractFileName({
+                contractId: id,
+                investorName: investor.full_name,
+                stage: 'draft',
+              })
               const storageClient = createServiceClient()
               await storageClient.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
               await supabase.from('contract_documents').insert({
                 contract_id: id,
                 type: 'draft',
-                file_name: `contrato-${id.slice(0, 8)}.pdf`,
+                file_name: fileName,
                 storage_path: storagePath,
                 file_size: pdfBuffer.length,
                 mime_type: 'application/pdf',

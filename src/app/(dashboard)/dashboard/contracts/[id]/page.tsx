@@ -7,6 +7,8 @@ import { ContractStatusBadge } from '../_components/contract-status-badge'
 import { ContractActions } from '../_components/contract-actions'
 import { DocumentUpload } from '../_components/document-upload'
 import { ContractPaymentsSection } from '../_components/contract-payments-section'
+import { AdminSignatureBanner } from './_components/admin-signature-banner'
+import { DocumentDownloadButton } from './_components/document-download-button'
 import { InvestmentCalculator } from '@/components/investment/investment-calculator'
 import type { PlanType } from '@/lib/investment/calculator'
 import type { ContractDetail } from '@/types/contracts'
@@ -215,6 +217,16 @@ export default async function ContractDetailPage({
           />
         </div>
       </div>
+
+      {/* Admin signature banner (only when waiting for admin signature) */}
+      {contract.status === 'pending_admin_signature' && userRole === 'admin' && (
+        <AdminSignatureBanner
+          contractId={contract.id}
+          contractShortId={contract.id.slice(0, 8).toUpperCase()}
+          holderName={holderName}
+          holderSignedAt={holder?.signed_at ?? null}
+        />
+      )}
 
       {/* Summary */}
       <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-4 sm:p-6">
@@ -425,6 +437,10 @@ export default async function ContractDetailPage({
                     {formatDate(doc.created_at)}
                   </p>
                 </div>
+                <DocumentDownloadButton
+                  storagePath={doc.storage_path}
+                  fileName={doc.file_name}
+                />
               </div>
             ))}
           </div>

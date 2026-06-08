@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import type { PortalData } from '@/types/portal'
 import { PortalContractView } from './_components/portal-contract-view'
 
@@ -10,12 +11,24 @@ export const metadata: Metadata = {
   title: 'Portal del Inversionista — Grandir CM',
 }
 
-async function fetchPortalData(token: string): Promise<PortalData | null> {
-  // Construir URL absoluta (requerida en Server Components)
-  const baseUrl =
+async function getBaseUrl(): Promise<string> {
+  // Derivar la URL absoluta del request actual — robusto contra cambios de dominio
+  // y desfase entre env vars de dev/prod.
+  const h = await headers()
+  const host = h.get('x-forwarded-host') ?? h.get('host')
+  if (host) {
+    const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https')
+    return `${proto}://${host}`
+  }
+  // Fallbacks por si los headers no están disponibles
+  return (
     process.env.NEXT_PUBLIC_APP_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+  )
+}
 
+async function fetchPortalData(token: string): Promise<PortalData | null> {
+  const baseUrl = await getBaseUrl()
   try {
     const res = await fetch(`${baseUrl}/api/portal/${token}`, {
       cache: 'no-store',

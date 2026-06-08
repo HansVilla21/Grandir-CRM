@@ -377,6 +377,11 @@ export type Database = {
       }
       contracts: {
         Row: {
+          admin_signature_ip: string | null
+          admin_signature_name: string | null
+          admin_signature_user_agent: string | null
+          admin_signed_at: string | null
+          admin_signed_by: string | null
           amount: number
           created_at: string
           end_date: string | null
@@ -395,6 +400,11 @@ export type Database = {
           version: number
         }
         Insert: {
+          admin_signature_ip?: string | null
+          admin_signature_name?: string | null
+          admin_signature_user_agent?: string | null
+          admin_signed_at?: string | null
+          admin_signed_by?: string | null
           amount: number
           created_at?: string
           end_date?: string | null
@@ -413,6 +423,11 @@ export type Database = {
           version?: number
         }
         Update: {
+          admin_signature_ip?: string | null
+          admin_signature_name?: string | null
+          admin_signature_user_agent?: string | null
+          admin_signed_at?: string | null
+          admin_signed_by?: string | null
           amount?: number
           created_at?: string
           end_date?: string | null
@@ -939,6 +954,7 @@ export type Database = {
         | "draft"
         | "pending_approval"
         | "revision_requested"
+        | "pending_admin_signature"
         | "active"
         | "expired"
         | "cancelled"
@@ -1099,6 +1115,7 @@ export const Constants = {
         "draft",
         "pending_approval",
         "revision_requested",
+        "pending_admin_signature",
         "active",
         "expired",
         "cancelled",

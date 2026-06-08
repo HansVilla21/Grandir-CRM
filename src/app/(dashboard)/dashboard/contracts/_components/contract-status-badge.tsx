@@ -17,6 +17,10 @@ const STATUS_CONFIG: Record<
     label: 'Revisión solicitada',
     className: 'bg-orange-50 text-orange-700 border-orange-200',
   },
+  pending_admin_signature: {
+    label: 'Esperando firma de Grandir',
+    className: 'bg-purple-50 text-purple-700 border-purple-200',
+  },
   active: {
     label: 'Activo',
     className: 'bg-green-50 text-green-700 border-green-200',

@@ -10,8 +10,8 @@
  * Los emails empezarán a salir desde direcciones reales como `contratos@grandircm.com`.
  */
 
-const USE_VERIFIED_DOMAIN = false
-const EMAIL_DOMAIN = 'grandircm.com' // cuando se compre
+const USE_VERIFIED_DOMAIN = true
+const EMAIL_DOMAIN = 'grandircm.com'
 
 function buildFrom(localPart: string): string {
   if (USE_VERIFIED_DOMAIN) {

@@ -46,6 +46,16 @@ export interface SignatureCertificateData {
   signed_at: string
   ip_address: string
   document_hash: string
+  /**
+   * Datos opcionales de la firma del admin (Grandir). Cuando existe, el
+   * certificado de firma se renderiza con AMBAS firmas (inversionista + admin)
+   * para cumplir con Ley 8454 (ambas partes con mismo método de firma).
+   */
+  admin_signer?: {
+    name: string
+    signed_at: string
+    ip_address: string
+  } | null
 }
 
 export type SigningStep = 'identity' | 'verification' | 'confirmation' | 'success'
