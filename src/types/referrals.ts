@@ -10,6 +10,7 @@ export interface ReferralCommissionItem {
   amount: number
   paid: boolean
   paid_at: string | null
+  receipt_path: string | null
   created_at: string
 }
 

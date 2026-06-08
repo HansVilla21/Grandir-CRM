@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Search } from 'lucide-react'
+import { Search, FileText, Loader2 } from 'lucide-react'
 import { CommissionPayButton } from './commission-pay-button'
+import { useToast } from '@/components/ui/toast'
 import type { ReferralCommissionItem } from '@/types/referrals'
 
 interface ReferralsTableProps {
@@ -136,9 +137,14 @@ export function ReferralsTable({ commissions }: ReferralsTableProps) {
                         amount={commission.amount}
                       />
                     ) : (
-                      <span className="text-xs text-zinc-400">
-                        {commission.paid_at ? formatDate(commission.paid_at) : '—'}
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs text-zinc-400 whitespace-nowrap">
+                          {commission.paid_at ? formatDate(commission.paid_at) : '—'}
+                        </span>
+                        {commission.receipt_path && (
+                          <ReceiptLink path={commission.receipt_path} />
+                        )}
+                      </div>
                     )}
                   </td>
                 </tr>
@@ -154,6 +160,45 @@ export function ReferralsTable({ commissions }: ReferralsTableProps) {
         </p>
       )}
     </>
+  )
+}
+
+function ReceiptLink({ path }: { path: string }) {
+  const toast = useToast()
+  const [loading, setLoading] = useState(false)
+
+  async function handleOpen() {
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/referrals/receipt-url?path=${encodeURIComponent(path)}`)
+      const data = await res.json()
+      if (!res.ok || !data.url) {
+        toast.error(data.error ?? 'No se pudo abrir el comprobante')
+        return
+      }
+      window.open(data.url, '_blank', 'noopener,noreferrer')
+    } catch {
+      toast.error('Error de conexión')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleOpen}
+      disabled={loading}
+      className="inline-flex items-center gap-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:underline disabled:opacity-50"
+      title="Ver comprobante"
+    >
+      {loading ? (
+        <Loader2 size={11} className="animate-spin" />
+      ) : (
+        <FileText size={11} />
+      )}
+      Comprobante
+    </button>
   )
 }
 

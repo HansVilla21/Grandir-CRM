@@ -19,6 +19,7 @@ export default async function ReferralsPage() {
       amount,
       paid,
       paid_at,
+      receipt_path,
       created_at,
       referrer:investors!referral_commissions_referrer_id_fkey(full_name),
       referred:investors!referral_commissions_referred_id_fkey(full_name),
@@ -59,6 +60,7 @@ export default async function ReferralsPage() {
       amount: row.amount,
       paid: row.paid,
       paid_at: row.paid_at,
+      receipt_path: row.receipt_path,
       created_at: row.created_at,
     }
   })
