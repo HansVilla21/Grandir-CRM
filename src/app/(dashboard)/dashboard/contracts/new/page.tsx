@@ -18,7 +18,7 @@ export default async function NewContractPage() {
   // Active investors
   const { data: investorsRaw, error: investorsError } = await supabase
     .from('investors')
-    .select('id, full_name, cedula')
+    .select('id, full_name, cedula, phone')
     .eq('status', 'active')
     .order('full_name', { ascending: true })
 
@@ -45,6 +45,7 @@ export default async function NewContractPage() {
     id: inv.id,
     full_name: inv.full_name,
     cedula: inv.cedula,
+    phone: inv.phone,
   }))
 
   return (

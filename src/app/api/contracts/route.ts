@@ -110,6 +110,8 @@ export async function POST(request: NextRequest) {
       start_date,
       notes,
       report_frequency_months,
+      template_id,
+      rendered_content,
     } = body
 
     // Basic validation
@@ -170,6 +172,8 @@ export async function POST(request: NextRequest) {
         report_frequency_months: report_frequency_months ?? 2,
         status: 'draft',
         version: 1,
+        template_id: template_id || null,
+        rendered_content: rendered_content || null,
       })
       .select()
       .single()

@@ -240,7 +240,7 @@ export async function PATCH(
         // 2. Get contract + plan for PDF and email
         const { data: contractWithPlan } = await supabase
           .from('contracts')
-          .select('amount, term_months, start_date, end_date, investment_plans(name, type, annual_rate)')
+          .select('amount, term_months, start_date, end_date, rendered_content, investment_plans(name, type, annual_rate)')
           .eq('id', id)
           .single()
 
@@ -280,18 +280,21 @@ export async function PATCH(
           if (investor && primaryEmail && contractWithPlan) {
             // Generate contract PDF
             try {
-              const pdfBuffer = await generateContractPdf({
-                investor_name: investor.full_name,
-                investor_cedula: investor.cedula,
-                amount: contractWithPlan.amount,
-                term_months: contractWithPlan.term_months,
-                start_date: contractWithPlan.start_date ?? '',
-                end_date: contractWithPlan.end_date,
-                annual_rate: plan?.annual_rate ?? 0,
-                plan_name: plan?.name ?? '—',
-                plan_type: plan?.type ?? 'annual',
-                contract_id: id,
-              })
+              const pdfBuffer = await generateContractPdf(
+                {
+                  investor_name: investor.full_name,
+                  investor_cedula: investor.cedula,
+                  amount: contractWithPlan.amount,
+                  term_months: contractWithPlan.term_months,
+                  start_date: contractWithPlan.start_date ?? '',
+                  end_date: contractWithPlan.end_date,
+                  annual_rate: plan?.annual_rate ?? 0,
+                  plan_name: plan?.name ?? '—',
+                  plan_type: plan?.type ?? 'annual',
+                  contract_id: id,
+                },
+                contractWithPlan.rendered_content,
+              )
               const storagePath = `${id}/contrato_${Date.now()}.pdf`
               const storageClient = createServiceClient()
               await storageClient.storage.from('contracts').upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })

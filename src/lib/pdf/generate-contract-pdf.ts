@@ -4,6 +4,7 @@ import { createElement, type ReactElement } from 'react'
 import { createHash } from 'crypto'
 import type { ContractPdfData, SignatureCertificateData } from '@/types/signing'
 import { ContractDocument, ContractPage } from './contract-templates/base-template'
+import { ContractFromTemplateDocument, ContractFromTemplatePage } from './contract-templates/from-template'
 import { SignatureCertificatePage } from './contract-templates/signature-page'
 
 // ---------------------------------------------------------------------------
@@ -13,14 +14,20 @@ import { SignatureCertificatePage } from './contract-templates/signature-page'
 function CombinedDocument({
   contractData,
   signatureData,
+  renderedContent,
 }: {
   contractData: ContractPdfData
   signatureData: SignatureCertificateData
+  renderedContent?: string | null
 }) {
+  const contractPage = renderedContent
+    ? createElement(ContractFromTemplatePage, { content: renderedContent })
+    : createElement(ContractPage, { data: contractData })
+
   return createElement(
     Document,
     null,
-    createElement(ContractPage, { data: contractData }),
+    contractPage,
     createElement(SignatureCertificatePage, { data: signatureData }),
   )
 }
@@ -31,11 +38,16 @@ function CombinedDocument({
 
 /**
  * Genera el PDF del contrato sin firma.
+ * Si se proporciona `renderedContent` (markdown-light), lo usa para renderizar.
+ * Si no, cae al template hardcoded antiguo (compatibilidad con contratos viejos).
  */
 export async function generateContractPdf(
   data: ContractPdfData,
+  renderedContent?: string | null,
 ): Promise<Buffer> {
-  const element = createElement(ContractDocument, { data }) as unknown as ReactElement<DocumentProps>
+  const element = renderedContent
+    ? (createElement(ContractFromTemplateDocument, { content: renderedContent }) as unknown as ReactElement<DocumentProps>)
+    : (createElement(ContractDocument, { data }) as unknown as ReactElement<DocumentProps>)
   const buffer = await renderToBuffer(element)
   return Buffer.from(buffer)
 }
@@ -46,10 +58,12 @@ export async function generateContractPdf(
 export async function generateSignedContractPdf(
   contractData: ContractPdfData,
   signatureData: SignatureCertificateData,
+  renderedContent?: string | null,
 ): Promise<Buffer> {
   const element = createElement(CombinedDocument, {
     contractData,
     signatureData,
+    renderedContent,
   }) as unknown as ReactElement<DocumentProps>
   const buffer = await renderToBuffer(element)
   return Buffer.from(buffer)

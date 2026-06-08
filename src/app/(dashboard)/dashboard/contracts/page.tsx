@@ -32,7 +32,7 @@ export default async function ContractsPage() {
 
   // Fetch all holders in one query
   const contractIds = contracts.map((c) => c.id)
-  let holderMap = new Map<string, string | null>()
+  const holderMap = new Map<string, string | null>()
 
   if (contractIds.length > 0) {
     const { data: holdersRaw } = await supabase

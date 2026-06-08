@@ -131,6 +131,7 @@ export async function POST(
         term_months,
         start_date,
         end_date,
+        rendered_content,
         investment_plans (
           name,
           type,
@@ -161,8 +162,8 @@ export async function POST(
       contract_id: contract.id,
     }
 
-    // Generate unsigned PDF first to compute hash
-    const unsignedBuffer = await generateContractPdf(contractPdfData)
+    // Generate unsigned PDF first to compute hash (uses rendered_content if present)
+    const unsignedBuffer = await generateContractPdf(contractPdfData, contract.rendered_content)
     const documentHash = computeDocumentHash(unsignedBuffer)
 
     const signatureCertData: SignatureCertificateData = {
@@ -174,7 +175,7 @@ export async function POST(
     }
 
     // Generate the signed PDF (contract + signature certificate)
-    const signedBuffer = await generateSignedContractPdf(contractPdfData, signatureCertData)
+    const signedBuffer = await generateSignedContractPdf(contractPdfData, signatureCertData, contract.rendered_content)
 
     // Upload to Supabase Storage
     const storagePath = `${contractId}/signed_${Date.now()}.pdf`

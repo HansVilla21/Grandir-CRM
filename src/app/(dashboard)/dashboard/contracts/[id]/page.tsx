@@ -136,7 +136,7 @@ export default async function ContractDetailPage({
     .order('created_at', { ascending: false })
 
   const formContractIds = (contractsForFormRaw ?? []).map((c) => c.id)
-  let formHolderMap = new Map<string, string | null>()
+  const formHolderMap = new Map<string, string | null>()
   if (formContractIds.length > 0) {
     const { data: formHoldersRaw } = await supabase
       .from('contract_investors')

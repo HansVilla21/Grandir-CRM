@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search } from 'lucide-react'
+import { Search, FileText } from 'lucide-react'
 import { InvestmentCalculator } from '@/components/investment/investment-calculator'
+import { renderTemplate } from '@/lib/contract-templates/render'
+import { buildContractVariables } from '@/lib/contract-templates/build-variables'
+import { TemplatePreview } from '@/app/(dashboard)/dashboard/settings/_components/template-preview'
 import type { PlanType } from '@/lib/investment/calculator'
 
 interface Plan {
@@ -18,6 +21,14 @@ interface Investor {
   id: string
   full_name: string
   cedula: string
+  phone?: string | null
+}
+
+interface TemplateOption {
+  id: string
+  name: string
+  content: string
+  version: number
 }
 
 interface NewContractFormProps {
@@ -56,6 +67,13 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
   const [reportFrequency, setReportFrequency] = useState(2)
   const [notes, setNotes] = useState('')
 
+  // Template state
+  const [templates, setTemplates] = useState<TemplateOption[]>([])
+  const [templateId, setTemplateId] = useState('')
+  const [templatesLoading, setTemplatesLoading] = useState(false)
+  const [customizeContent, setCustomizeContent] = useState(false)
+  const [customContent, setCustomContent] = useState('')
+
   const selectedPlan = useMemo(
     () => plans.find((p) => p.id === planId) ?? null,
     [plans, planId]
@@ -78,6 +96,74 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
     [investors, investorId]
   )
 
+  const selectedTemplate = useMemo(
+    () => templates.find((t) => t.id === templateId) ?? null,
+    [templates, templateId]
+  )
+
+  // Load templates when plan changes
+  useEffect(() => {
+    if (!planId) {
+      setTemplates([])
+      setTemplateId('')
+      return
+    }
+    let cancelled = false
+    setTemplatesLoading(true)
+    fetch(`/api/contracts/templates?plan_id=${planId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return
+        const list: TemplateOption[] = data.templates ?? []
+        setTemplates(list)
+        if (list.length > 0) setTemplateId(list[0].id)
+        else setTemplateId('')
+      })
+      .catch(() => {
+        if (!cancelled) setTemplates([])
+      })
+      .finally(() => {
+        if (!cancelled) setTemplatesLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [planId])
+
+  // Compute live preview content (template + variables substituted)
+  const previewContent = useMemo(() => {
+    if (!selectedTemplate || !selectedInvestor || !selectedPlan) return ''
+    const amountNum = Number(amount) || 0
+    const termMonthsNum = Number(termMonths) || 12
+    const variables = buildContractVariables({
+      investor: {
+        full_name: selectedInvestor.full_name,
+        cedula: selectedInvestor.cedula,
+        phone: selectedInvestor.phone ?? null,
+      },
+      contract: {
+        amount: amountNum,
+        term_months: termMonthsNum,
+        start_date: startDate || null,
+      },
+      plan: {
+        name: selectedPlan.name,
+        type: selectedPlan.type as 'annual' | 'monthly' | 'semestral',
+        annual_rate: selectedPlan.annual_rate,
+      },
+    })
+    return renderTemplate(selectedTemplate.content, variables)
+  }, [selectedTemplate, selectedInvestor, selectedPlan, amount, termMonths, startDate])
+
+  // Reset custom content when previewContent changes (unless user is actively editing)
+  useEffect(() => {
+    if (!customizeContent) {
+      setCustomContent(previewContent)
+    }
+  }, [previewContent, customizeContent])
+
+  const canPreview = selectedTemplate && selectedInvestor && selectedPlan && Number(amount) > 0
+
   function selectInvestor(inv: Investor) {
     setInvestorId(inv.id)
     setInvestorSearch(inv.full_name)
@@ -89,6 +175,16 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
     const plan = plans.find((p) => p.id === id)
     if (plan && (!amount || Number(amount) < plan.min_amount)) {
       setAmount(String(plan.min_amount))
+    }
+    // Reset customization when changing plan
+    setCustomizeContent(false)
+  }
+
+  function toggleCustomize(checked: boolean) {
+    setCustomizeContent(checked)
+    if (checked) {
+      // Snapshot current preview into the editable textarea
+      setCustomContent(previewContent)
     }
   }
 
@@ -119,6 +215,9 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
       return
     }
 
+    // Decide what content gets persisted
+    const finalContent = customizeContent ? customContent : previewContent
+
     setSubmitting(true)
 
     try {
@@ -133,6 +232,8 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
           start_date: startDate || null,
           notes: notes.trim() || null,
           report_frequency_months: reportFrequency,
+          template_id: templateId || null,
+          rendered_content: finalContent || null,
         }),
       })
 
@@ -189,6 +290,44 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
           </p>
         )}
       </div>
+
+      {/* Template selector — solo aparece si hay plantillas disponibles */}
+      {planId && (templatesLoading || templates.length > 0) && (
+        <div>
+          <label htmlFor="contract-template" className="block text-sm font-medium text-zinc-700 mb-1.5">
+            Plantilla del contrato
+          </label>
+          {templatesLoading ? (
+            <p className="text-xs text-zinc-400">Cargando plantillas...</p>
+          ) : (
+            <>
+              <select
+                id="contract-template"
+                value={templateId}
+                onChange={(e) => setTemplateId(e.target.value)}
+                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 transition-colors"
+              >
+                {templates.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-zinc-500">
+                El texto del contrato se va a generar a partir de esta plantilla.
+              </p>
+            </>
+          )}
+        </div>
+      )}
+
+      {planId && !templatesLoading && templates.length === 0 && (
+        <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5 text-xs text-amber-800">
+          <strong>Atención:</strong> Este plan no tiene plantillas activas. Andá a{' '}
+          <a href="/dashboard/settings" className="underline font-medium">Configuración</a> y
+          creá una plantilla, o usá el botón <em>&ldquo;Generar plantillas por defecto&rdquo;</em>.
+        </div>
+      )}
 
       {/* Investor */}
       <div className="relative">
@@ -327,6 +466,48 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
           className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 resize-none transition-colors"
         />
       </div>
+
+      {/* Preview + customize */}
+      {canPreview && (
+        <div className="space-y-3 pt-2 border-t border-zinc-100">
+          <div className="flex items-center gap-2">
+            <FileText size={14} className="text-zinc-500" />
+            <h3 className="text-sm font-semibold text-zinc-900">Vista previa del contrato</h3>
+          </div>
+          <p className="text-xs text-zinc-500">
+            Así va a quedar el PDF con los datos del inversionista ya completos.
+          </p>
+
+          {customizeContent ? (
+            <div className="space-y-2">
+              <textarea
+                value={customContent}
+                onChange={(e) => setCustomContent(e.target.value)}
+                className="w-full min-h-[400px] max-h-[600px] rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-xs font-mono text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/20 focus:border-zinc-400 transition-colors leading-relaxed"
+                spellCheck={true}
+              />
+              <p className="text-xs text-zinc-500">
+                Los cambios se aplican <strong>solo a este contrato</strong>. La plantilla
+                {selectedTemplate ? ` "${selectedTemplate.name}"` : ''} no se modifica.
+              </p>
+            </div>
+          ) : (
+            <div className="max-h-[600px] overflow-y-auto rounded-lg border border-zinc-200 bg-zinc-50/30 p-1">
+              <TemplatePreview content={previewContent} />
+            </div>
+          )}
+
+          <label className="inline-flex items-center gap-2 text-sm text-zinc-700 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={customizeContent}
+              onChange={(e) => toggleCustomize(e.target.checked)}
+              className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
+            />
+            Necesito ajustar algo en este contrato
+          </label>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
