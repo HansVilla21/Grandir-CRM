@@ -303,7 +303,14 @@ export function ContractTemplateForm({
                 <div className="mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded text-[11px] text-amber-800">
                   Preview con datos de muestra. Las variables se sustituyen al generar el PDF real.
                 </div>
-                <TemplatePreview content={rendered} />
+                <TemplatePreview
+                  content={rendered}
+                  signatures={[
+                    sampleVars.investor_name,
+                    sampleVars.representative_1_name,
+                    sampleVars.representative_2_name,
+                  ]}
+                />
               </div>
             )}
           </div>

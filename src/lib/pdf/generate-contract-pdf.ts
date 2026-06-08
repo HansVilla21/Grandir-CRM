@@ -7,6 +7,14 @@ import { ContractDocument, ContractPage } from './contract-templates/base-templa
 import { ContractFromTemplateDocument, ContractFromTemplatePage } from './contract-templates/from-template'
 import { SignatureCertificatePage } from './contract-templates/signature-page'
 
+/**
+ * Bloque de firmas estándar que aparece al final de los contratos: el
+ * contratante (inversionista) y los dos representantes legales de Grandir.
+ */
+function buildDefaultSignatures(investorName: string): string[] {
+  return [investorName, 'April Mora Araya', 'José Leoncio Castro Quesada']
+}
+
 // ---------------------------------------------------------------------------
 // Combined Document (contract pages + signature certificate)
 // ---------------------------------------------------------------------------
@@ -21,7 +29,10 @@ function CombinedDocument({
   renderedContent?: string | null
 }) {
   const contractPage = renderedContent
-    ? createElement(ContractFromTemplatePage, { content: renderedContent })
+    ? createElement(ContractFromTemplatePage, {
+        content: renderedContent,
+        signatures: buildDefaultSignatures(contractData.investor_name),
+      })
     : createElement(ContractPage, { data: contractData })
 
   return createElement(
@@ -38,7 +49,8 @@ function CombinedDocument({
 
 /**
  * Genera el PDF del contrato sin firma.
- * Si se proporciona `renderedContent` (markdown-light), lo usa para renderizar.
+ * Si se proporciona `renderedContent` (markdown-light), lo usa para renderizar
+ * con el formato visual mejorado + bloque de firmas al final.
  * Si no, cae al template hardcoded antiguo (compatibilidad con contratos viejos).
  */
 export async function generateContractPdf(
@@ -46,7 +58,10 @@ export async function generateContractPdf(
   renderedContent?: string | null,
 ): Promise<Buffer> {
   const element = renderedContent
-    ? (createElement(ContractFromTemplateDocument, { content: renderedContent }) as unknown as ReactElement<DocumentProps>)
+    ? (createElement(ContractFromTemplateDocument, {
+        content: renderedContent,
+        signatures: buildDefaultSignatures(data.investor_name),
+      }) as unknown as ReactElement<DocumentProps>)
     : (createElement(ContractDocument, { data }) as unknown as ReactElement<DocumentProps>)
   const buffer = await renderToBuffer(element)
   return Buffer.from(buffer)

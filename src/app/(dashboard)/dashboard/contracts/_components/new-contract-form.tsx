@@ -493,7 +493,14 @@ export function NewContractForm({ plans, investors }: NewContractFormProps) {
             </div>
           ) : (
             <div className="max-h-[600px] overflow-y-auto rounded-lg border border-zinc-200 bg-zinc-50/30 p-1">
-              <TemplatePreview content={previewContent} />
+              <TemplatePreview
+                content={previewContent}
+                signatures={[
+                  selectedInvestor?.full_name ?? 'Contratante',
+                  'April Mora Araya',
+                  'José Leoncio Castro Quesada',
+                ]}
+              />
             </div>
           )}
 

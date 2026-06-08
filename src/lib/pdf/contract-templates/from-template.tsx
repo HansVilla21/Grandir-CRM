@@ -2,78 +2,136 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { Fragment } from 'react'
 
 /**
- * Renderiza un contrato a PDF a partir del `rendered_content` (markdown-light)
- * guardado en la BD del contrato. Esto reemplaza al template hardcoded antiguo.
+ * Renderiza un contrato a PDF a partir del `rendered_content` (markdown-light).
  *
- * Formato soportado (mismo que el editor de plantillas):
- *   # TÍTULO PRINCIPAL          → centrado, mayúsculas, espaciado
- *   ## SECCIÓN                  → encabezado de cláusula con línea inferior
- *   - bullet                    → lista con viñeta
+ * Formato soportado:
+ *   # TÍTULO PRINCIPAL          → encabezado tipo "GRANDIR CM"
+ *   ## SECCIÓN                  → cláusula (PRIMERA, SEGUNDA, ...)
+ *   - bullet                    → viñeta
  *   **texto**                   → negrita
  *   párrafo normal              → justificado
  *   (línea vacía)               → spacer
+ *
+ * El bloque de firmas se agrega automáticamente al final con los nombres
+ * pasados en `signatures` (típicamente: contratante, representante 1, representante 2).
  */
+
+const PALETTE = {
+  text: '#1c1c1c',
+  textMuted: '#52525b',
+  separator: '#d4d4d8',
+  footerGrey: '#a1a1aa',
+} as const
 
 const styles = StyleSheet.create({
   page: {
-    padding: 60,
-    fontFamily: 'Helvetica',
+    paddingTop: 64,
+    paddingHorizontal: 70,
+    paddingBottom: 80,
+    fontFamily: 'Times-Roman',
     fontSize: 11,
-    color: '#18181b',
-    lineHeight: 1.5,
+    color: PALETTE.text,
+    lineHeight: 1.55,
   },
-  h1: {
-    fontSize: 16,
-    fontFamily: 'Helvetica-Bold',
+
+  // Header block — "GRANDIR CM" + "CONTRATO POR SERVICIOS PROFESIONALES"
+  brand: {
+    fontFamily: 'Times-Bold',
+    fontSize: 18,
     textAlign: 'center' as const,
-    marginBottom: 4,
-    letterSpacing: 1,
+    letterSpacing: 2,
+    marginBottom: 6,
   },
-  h2: {
+  brandSubtitle: {
+    fontFamily: 'Times-Bold',
     fontSize: 12,
-    fontFamily: 'Helvetica-Bold',
-    marginTop: 16,
-    marginBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d4d4d8',
-    borderBottomStyle: 'solid' as const,
-    paddingBottom: 4,
+    textAlign: 'center' as const,
+    letterSpacing: 0.5,
+    marginBottom: 24,
   },
+
+  // Other (rare) h1 lines after the brand block
+  h1: {
+    fontFamily: 'Times-Bold',
+    fontSize: 13,
+    textAlign: 'center' as const,
+    letterSpacing: 0.5,
+    marginTop: 12,
+    marginBottom: 6,
+  },
+
+  // Clauses
+  h2: {
+    fontFamily: 'Times-Bold',
+    fontSize: 11.5,
+    marginTop: 14,
+    marginBottom: 6,
+  },
+
+  // Body paragraphs
   paragraph: {
     marginBottom: 6,
     textAlign: 'justify' as const,
   },
+
+  // Bullets
   bulletRow: {
     flexDirection: 'row' as const,
     marginBottom: 4,
-    paddingLeft: 8,
+    paddingLeft: 14,
   },
   bulletMarker: {
     width: 12,
-    color: '#52525b',
+    color: PALETTE.textMuted,
   },
   bulletText: {
     flex: 1,
     textAlign: 'justify' as const,
   },
+
   spacer: {
-    height: 4,
+    height: 6,
   },
+
   bold: {
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Times-Bold',
   },
-  footer: {
+
+  // Signature block
+  signaturesContainer: {
+    marginTop: 50,
+  },
+  signatureItem: {
+    marginBottom: 36,
+  },
+  signatureLine: {
+    borderBottomWidth: 0.8,
+    borderBottomColor: PALETTE.text,
+    borderBottomStyle: 'solid' as const,
+    width: '70%',
+    marginBottom: 6,
+  },
+  signatureLabel: {
+    fontFamily: 'Times-Bold',
+    fontSize: 11,
+  },
+
+  // Page number footer
+  pageNumber: {
     position: 'absolute' as const,
-    bottom: 30,
-    left: 60,
-    right: 60,
+    bottom: 40,
+    left: 70,
+    right: 70,
+    fontSize: 9,
+    color: PALETTE.footerGrey,
     textAlign: 'center' as const,
-    fontSize: 8,
-    color: '#a1a1aa',
-    borderTopWidth: 1,
-    borderTopColor: '#e4e4e7',
-    borderTopStyle: 'solid' as const,
-    paddingTop: 8,
+  },
+  pageFooterLeft: {
+    position: 'absolute' as const,
+    bottom: 40,
+    left: 70,
+    fontSize: 9,
+    color: PALETTE.footerGrey,
   },
 })
 
@@ -102,25 +160,21 @@ function parseBlocks(content: string): Block[] {
       blocks.push({ type: 'spacer', text: '' })
       continue
     }
-
     if (line.startsWith('# ')) {
       flushParagraph()
       blocks.push({ type: 'h1', text: line.slice(2).trim() })
       continue
     }
-
     if (line.startsWith('## ')) {
       flushParagraph()
       blocks.push({ type: 'h2', text: line.slice(3).trim() })
       continue
     }
-
     if (line.startsWith('- ')) {
       flushParagraph()
       blocks.push({ type: 'bullet', text: line.slice(2).trim() })
       continue
     }
-
     paragraphBuffer.push(line)
   }
   flushParagraph()
@@ -128,9 +182,6 @@ function parseBlocks(content: string): Block[] {
   return blocks
 }
 
-/**
- * Renderiza segmentos de texto con soporte para **negrita**.
- */
 function renderInline(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g)
   return parts.map((part, i) => {
@@ -145,18 +196,61 @@ function renderInline(text: string) {
   })
 }
 
-export function ContractFromTemplatePage({ content }: { content: string }) {
-  const blocks = parseBlocks(content)
+/**
+ * Heuristic: detect the first two consecutive h1 blocks at the top and treat
+ * them as brand + subtitle. Reduces visual noise of having 2 big headers.
+ */
+function splitBrandHeader(blocks: Block[]): {
+  brand: string | null
+  subtitle: string | null
+  rest: Block[]
+} {
+  // Skip leading spacers
+  let i = 0
+  while (i < blocks.length && blocks[i].type === 'spacer') i++
 
-  // Collapse consecutive spacers
+  const first = blocks[i]
+  const second = blocks[i + 1]
+  if (first?.type === 'h1' && second?.type === 'h1') {
+    return {
+      brand: first.text,
+      subtitle: second.text,
+      rest: blocks.slice(i + 2),
+    }
+  }
+  if (first?.type === 'h1') {
+    return {
+      brand: first.text,
+      subtitle: null,
+      rest: blocks.slice(i + 1),
+    }
+  }
+  return { brand: null, subtitle: null, rest: blocks.slice(i) }
+}
+
+interface ContractFromTemplateProps {
+  content: string
+  signatures?: string[]
+}
+
+export function ContractFromTemplatePage({ content, signatures }: ContractFromTemplateProps) {
+  const blocks = parseBlocks(content)
+  const { brand, subtitle, rest } = splitBrandHeader(blocks)
+
+  // Collapse consecutive spacers in body
   const cleaned: Block[] = []
-  for (const block of blocks) {
+  for (const block of rest) {
     if (block.type === 'spacer' && cleaned[cleaned.length - 1]?.type === 'spacer') continue
     cleaned.push(block)
   }
 
+  const sigList = signatures && signatures.length > 0 ? signatures : []
+
   return (
     <Page size="LETTER" style={styles.page} wrap>
+      {brand && <Text style={styles.brand}>{renderInline(brand)}</Text>}
+      {subtitle && <Text style={styles.brandSubtitle}>{renderInline(subtitle)}</Text>}
+
       {cleaned.map((block, i) => {
         switch (block.type) {
           case 'h1':
@@ -173,7 +267,7 @@ export function ContractFromTemplatePage({ content }: { content: string }) {
             )
           case 'bullet':
             return (
-              <View key={i} style={styles.bulletRow}>
+              <View key={i} style={styles.bulletRow} wrap={false}>
                 <Text style={styles.bulletMarker}>•</Text>
                 <Text style={styles.bulletText}>{renderInline(block.text)}</Text>
               </View>
@@ -190,17 +284,32 @@ export function ContractFromTemplatePage({ content }: { content: string }) {
         }
       })}
 
-      <Text style={styles.footer}>
-        Grandir CM S.R.L. — Cédula jurídica 3-102-873916 — Costa Rica
-      </Text>
+      {sigList.length > 0 && (
+        <View style={styles.signaturesContainer} wrap={false}>
+          {sigList.map((name, idx) => (
+            <View key={idx} style={styles.signatureItem} wrap={false}>
+              <View style={styles.signatureLine} />
+              <Text style={styles.signatureLabel}>(F) {name}</Text>
+            </View>
+          ))}
+        </View>
+      )}
+
+      <Text
+        style={styles.pageNumber}
+        render={({ pageNumber, totalPages }) =>
+          `Grandir CM S.R.L. — Cédula jurídica 3-102-873916 · Página ${pageNumber} de ${totalPages}`
+        }
+        fixed
+      />
     </Page>
   )
 }
 
-export function ContractFromTemplateDocument({ content }: { content: string }) {
+export function ContractFromTemplateDocument({ content, signatures }: ContractFromTemplateProps) {
   return (
     <Document>
-      <ContractFromTemplatePage content={content} />
+      <ContractFromTemplatePage content={content} signatures={signatures} />
     </Document>
   )
 }
