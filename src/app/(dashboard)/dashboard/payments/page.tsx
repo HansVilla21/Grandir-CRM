@@ -31,7 +31,7 @@ export default async function PaymentsPage() {
   // Fetch holders for all contracts
   const contractIds = [...new Set(payments.map((p) => p.contract_id))]
 
-  let holderMap = new Map<string, string>()
+  const holderMap = new Map<string, string>()
   if (contractIds.length > 0) {
     const { data: holdersRaw } = await supabase
       .from('contract_investors')
@@ -92,7 +92,7 @@ export default async function PaymentsPage() {
   const contractsForForm = contractsRaw ?? []
   const contractHolderIds = contractsForForm.map((c) => c.id)
 
-  let contractHolderMap = new Map<string, string | null>()
+  const contractHolderMap = new Map<string, string | null>()
   if (contractHolderIds.length > 0) {
     const { data: contractHoldersRaw } = await supabase
       .from('contract_investors')
@@ -129,7 +129,7 @@ export default async function PaymentsPage() {
       </div>
 
       {/* Summary stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Total depositado */}
         <div className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5">
           <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1.5">
@@ -150,6 +150,17 @@ export default async function PaymentsPage() {
             {formatCurrency(summary.total_withdrawn)}
           </p>
           <p className="text-xs text-zinc-400 mt-1">Retiros verificados</p>
+        </div>
+
+        {/* Total comisiones */}
+        <div className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5">
+          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1.5">
+            Total comisiones
+          </p>
+          <p className="text-2xl font-semibold text-zinc-900">
+            {formatCurrency(summary.total_commissions)}
+          </p>
+          <p className="text-xs text-zinc-400 mt-1">Comisiones verificadas</p>
         </div>
 
         {/* Pendientes de verificación */}

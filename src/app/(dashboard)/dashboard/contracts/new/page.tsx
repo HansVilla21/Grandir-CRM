@@ -23,11 +23,11 @@ export default async function NewContractPage() {
     .order('full_name', { ascending: true })
 
   if (plansError || investorsError) {
+    console.error('[contracts/new] load error:', plansError ?? investorsError)
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-          Error al cargar datos:{' '}
-          {plansError?.message ?? investorsError?.message}
+          No pudimos cargar los datos del formulario. Intenta recargar la página o avisa al administrador si el problema continúa.
         </div>
       </div>
     )

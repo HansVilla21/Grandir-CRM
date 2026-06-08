@@ -1,8 +1,10 @@
 'use client'
 
+import { useState, useRef } from 'react'
 import { NotificationsBell } from '@/components/layout/notifications-bell'
 import { useMobileSidebar } from './mobile-sidebar-context'
-import { Menu } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { Menu, LogOut } from 'lucide-react'
 
 interface HeaderProps {
   userName: string
@@ -26,6 +28,14 @@ const roleLabels: Record<string, string> = {
 
 export function Header({ userName, userRole, logoutAction }: HeaderProps) {
   const { toggle } = useMobileSidebar()
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
+
+  function handleConfirmLogout() {
+    setLoggingOut(true)
+    formRef.current?.requestSubmit()
+  }
 
   return (
     <header className="flex items-center justify-between px-4 sm:px-6 h-14 bg-white border-b border-zinc-200 shrink-0">
@@ -58,7 +68,7 @@ export function Header({ userName, userRole, logoutAction }: HeaderProps) {
           <p className="text-sm font-medium text-zinc-900 leading-none">
             {userName}
           </p>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-zinc-500 mt-0.5">
             {roleLabels[userRole] ?? userRole}
           </p>
         </div>
@@ -66,16 +76,30 @@ export function Header({ userName, userRole, logoutAction }: HeaderProps) {
         {/* Separador */}
         <div className="h-5 w-px bg-zinc-200 hidden sm:block" />
 
-        {/* Logout */}
-        <form action={logoutAction}>
+        {/* Logout — opens confirmation, submits hidden form on confirm */}
+        <form ref={formRef} action={logoutAction} className="contents">
           <button
-            type="submit"
-            className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
+            type="button"
+            onClick={() => setConfirmOpen(true)}
+            className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
+            aria-label="Cerrar sesión"
           >
-            Salir
+            <LogOut size={14} />
+            <span className="hidden sm:inline">Salir</span>
           </button>
         </form>
       </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Cerrar sesión"
+        description="¿Confirmas que quieres cerrar la sesión? Tendrás que iniciar sesión de nuevo para volver a entrar."
+        confirmLabel="Cerrar sesión"
+        variant="default"
+        loading={loggingOut}
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </header>
   )
 }

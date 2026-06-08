@@ -253,7 +253,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
               <thead>
                 <tr className="bg-zinc-50 border-b border-zinc-100">
                   <th className="text-left pl-4 sm:pl-6 pr-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
-                    ID
+                    Origen
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
                     Inversionista
@@ -285,12 +285,7 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
                     className="hover:bg-zinc-50 cursor-pointer transition-colors"
                   >
                     <td className="pl-4 sm:pl-6 pr-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs text-zinc-500">
-                          {contract.id.slice(0, 8)}
-                        </span>
-                        <ContractSourceBadge source={contract.source} />
-                      </div>
+                      <ContractSourceBadge source={contract.source} />
                     </td>
                     <td className="px-4 py-3">
                       <span className="font-medium text-zinc-900">
@@ -320,13 +315,13 @@ export function ContractsTable({ contracts, plans }: ContractsTableProps) {
             </table>
           </div>
         )}
-      </div>
 
-      {filtered.length > 0 && (
-        <p className="mt-3 text-xs text-zinc-400">
-          Mostrando {filtered.length} de {contracts.length} contratos
-        </p>
-      )}
+        {filtered.length > 0 && (
+          <div className="border-t border-zinc-100 px-4 sm:px-6 py-2.5 text-xs text-zinc-400">
+            Mostrando {filtered.length} de {contracts.length} contratos
+          </div>
+        )}
+      </div>
     </>
   )
 }

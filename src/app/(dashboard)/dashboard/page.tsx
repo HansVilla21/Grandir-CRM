@@ -222,7 +222,7 @@ export default async function DashboardPage() {
   }).format(new Date())
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="mb-2">
         <h1 className="text-lg sm:text-xl font-semibold text-zinc-900 break-words">
@@ -245,7 +245,7 @@ export default async function DashboardPage() {
       {/* Fila 4: Próximos a vencer */}
       <ExpiringContracts contracts={expiringContracts} />
 
-      {/* Fila 4: Pagos pendientes */}
+      {/* Fila 5: Pagos pendientes */}
       <PendingPaymentsList payments={pendingPayments} />
     </div>
   )

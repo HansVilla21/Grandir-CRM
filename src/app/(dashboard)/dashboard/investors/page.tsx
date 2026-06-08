@@ -19,10 +19,11 @@ export default async function InvestorsPage() {
     .order('full_name', { ascending: true })
 
   if (error) {
+    console.error('[investors/page] load error:', error)
     return (
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-          Error al cargar inversionistas: {error.message}
+          No pudimos cargar los inversionistas. Intenta recargar la página o avisa al administrador si el problema continúa.
         </div>
       </div>
     )

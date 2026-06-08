@@ -178,7 +178,7 @@ export default async function ContractDetailPage({
     contract.status === 'draft' || contract.status === 'revision_requested'
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Back */}
       <Link
         href="/dashboard/contracts"

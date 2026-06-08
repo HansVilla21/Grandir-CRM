@@ -19,10 +19,11 @@ export default async function ContractsPage() {
     .order('created_at', { ascending: false })
 
   if (contractsError) {
+    console.error('[contracts/page] load error:', contractsError)
     return (
       <div className="max-w-6xl mx-auto">
         <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-          Error al cargar contratos: {contractsError.message}
+          No pudimos cargar los contratos. Intenta recargar la página o avisa al administrador si el problema continúa.
         </div>
       </div>
     )
@@ -75,7 +76,7 @@ export default async function ContractsPage() {
   const plans = (plansRaw ?? []).map((p) => ({ id: p.id, name: p.name }))
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <ContractsTable contracts={contractList} plans={plans} />
     </div>
   )

@@ -58,7 +58,7 @@ export default async function SettingsPage() {
     .order('created_at', { ascending: true })
 
   return (
-    <div className="max-w-5xl mx-auto space-y-10">
+    <div className="max-w-6xl mx-auto space-y-10">
       {/* Page header */}
       <div>
         <h1 className="text-lg font-semibold text-zinc-900">Configuración</h1>

@@ -31,9 +31,12 @@ export default async function ReferralsPage() {
     .order('created_at', { ascending: false })
 
   if (error) {
+    console.error('[referrals/page] load error:', error)
     return (
-      <div className="max-w-5xl mx-auto">
-        <p className="text-sm text-red-600">Error al cargar comisiones: {error.message}</p>
+      <div className="max-w-6xl mx-auto">
+        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          No pudimos cargar las comisiones. Intenta recargar la página o avisa al administrador si el problema continúa.
+        </div>
       </div>
     )
   }
@@ -105,7 +108,7 @@ export default async function ReferralsPage() {
   ]
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <h1 className="text-lg sm:text-xl font-semibold text-zinc-900">Referidos</h1>

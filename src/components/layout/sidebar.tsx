@@ -45,8 +45,8 @@ const navSections = [
 ]
 
 const bottomItems = [
-  { label: 'Ayuda',          href: '/dashboard/help',     icon: HelpCircle },
   { label: 'Configuración',  href: '/dashboard/settings', icon: Settings },
+  { label: 'Ayuda',          href: '/dashboard/help',     icon: HelpCircle },
 ]
 
 function SidebarContent() {

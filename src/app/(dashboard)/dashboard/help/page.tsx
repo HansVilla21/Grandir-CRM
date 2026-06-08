@@ -38,7 +38,7 @@ interface QuickStartStep {
 // Static data
 // ---------------------------------------------------------------------------
 const tocSections: TocSection[] = [
-  { id: 'quick-start', label: 'Quick Start', icon: Zap },
+  { id: 'quick-start', label: 'Primeros pasos', icon: Zap },
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'investors', label: 'Inversionistas', icon: Users },
   { id: 'contracts', label: 'Contratos', icon: FileText },
@@ -57,19 +57,19 @@ const quickStartSteps: QuickStartStep[] = [
     number: 1,
     title: 'Crear tu primer inversionista',
     description:
-      'Antes de hacer cualquier cosa, registrá a la persona que va a invertir. Ve a "Inversionistas" en el menú, hacé clic en "Nuevo inversionista" y completá sus datos: nombre, cédula, teléfono y correo electrónico.',
+      'Antes de hacer cualquier cosa, registra a la persona que va a invertir. Ve a "Inversionistas" en el menú, haz clic en "Nuevo inversionista" y completa sus datos: nombre, cédula, teléfono y correo electrónico.',
   },
   {
     number: 2,
     title: 'Crear un contrato',
     description:
-      'Una vez que tenés el inversionista, ve a "Contratos" y creá un nuevo contrato. Seleccioná el plan de inversión, el inversionista, el monto y el plazo. El contrato empieza como "Borrador".',
+      'Una vez que tienes el inversionista, ve a "Contratos" y crea un nuevo contrato. Selecciona el plan de inversión, el inversionista, el monto y el plazo. El contrato empieza como "Borrador".',
   },
   {
     number: 3,
     title: 'Enviar a aprobación',
     description:
-      'Cuando el contrato esté listo, envialo a aprobación. El estado cambia a "Pendiente de aprobación". El inversionista puede ver su contrato en el Portal usando su link único.',
+      'Cuando el contrato esté listo, envíalo a aprobación. El estado cambia a "Pendiente de aprobación". El inversionista puede ver su contrato en el Portal usando su link único.',
   },
   {
     number: 4,
@@ -81,13 +81,13 @@ const quickStartSteps: QuickStartStep[] = [
     number: 5,
     title: 'Registrar el depósito',
     description:
-      'Ve a "Pagos", registrá el depósito del inversionista con el monto y el comprobante. Un administrador debe verificarlo.',
+      'Ve a "Pagos", registra el depósito del inversionista con el monto y el comprobante. Un administrador debe verificarlo.',
   },
   {
     number: 6,
     title: 'Generar reportes',
     description:
-      'Cada 2 meses (o según la frecuencia del contrato), ve a "Reportes" y generá un nuevo reporte con la tasa de crecimiento del período. Podés subir el PDF y enviarlo por email al inversionista.',
+      'Cada 2 meses (o según la frecuencia del contrato), ve a "Reportes" y genera un nuevo reporte con la tasa de crecimiento del período. Puedes subir el PDF y enviarlo por email al inversionista.',
   },
 ]
 
@@ -209,7 +209,7 @@ export default function HelpPage() {
     <div className="min-h-screen bg-zinc-50">
       {/* ── Header ── */}
       <div className="bg-zinc-900 px-4 sm:px-8 py-8 sm:py-10">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-2 text-zinc-400 text-xs mb-4">
             <span>Dashboard</span>
             <ChevronRight size={12} />
@@ -225,13 +225,13 @@ export default function HelpPage() {
           {/* Barra de búsqueda visual */}
           <div className="mt-6 flex items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 max-w-md">
             <Search size={15} className="text-zinc-500 shrink-0" />
-            <span className="text-sm text-zinc-500">Buscá en la ayuda…</span>
+            <span className="text-sm text-zinc-500">Busca en la ayuda…</span>
           </div>
         </div>
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
         <div className="flex gap-8 items-start">
 
           {/* ── TOC ── */}
@@ -258,18 +258,18 @@ export default function HelpPage() {
           {/* ── Main content ── */}
           <main className="flex-1 min-w-0 space-y-10">
 
-            {/* ══ QUICK START ══ */}
+            {/* ══ PRIMEROS PASOS ══ */}
             <section id="quick-start" className="scroll-mt-6">
               <div className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
-                <div className="bg-zinc-900 px-6 py-5">
+                <div className="bg-zinc-50 border-b border-zinc-200 px-6 py-5">
                   <div className="flex items-center gap-2">
-                    <Zap size={16} className="text-yellow-400" />
-                    <h2 className="text-base font-semibold text-white">
-                      Quick Start — ¿Cómo empezar?
+                    <Zap size={16} className="text-zinc-700" />
+                    <h2 className="text-base font-semibold text-zinc-900">
+                      Primeros pasos — ¿Cómo empezar?
                     </h2>
                   </div>
-                  <p className="mt-1 text-sm text-zinc-400">
-                    Seguí estos 6 pasos para procesar tu primera inversión de principio a fin.
+                  <p className="mt-1 text-sm text-zinc-500">
+                    Sigue estos 6 pasos para procesar tu primera inversión de principio a fin.
                   </p>
                 </div>
                 <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -362,7 +362,7 @@ export default function HelpPage() {
                 <div className="space-y-2">
                   <SubTitle>Ver la lista</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    En la tabla podés ver todos los inversionistas. Podés buscar por nombre o cédula, y filtrar entre Activos e Inactivos.
+                    En la tabla puedes ver todos los inversionistas. Puedes buscar por nombre o cédula, y filtrar entre Activos e Inactivos.
                   </p>
                 </div>
 
@@ -378,7 +378,7 @@ export default function HelpPage() {
                     />
                     <FieldRow
                       name="Referidor"
-                      desc="Si esta persona fue recomendada por otro inversionista, seleccionalo aquí para registrar la comisión de referido."
+                      desc="Si esta persona fue recomendada por otro inversionista, selecciónalo aquí para registrar la comisión de referido."
                     />
                   </div>
                 </div>
@@ -391,7 +391,7 @@ export default function HelpPage() {
                 </div>
 
                 <Tip>
-                  Un inversionista inactivo no recibe boletines del grupo "Activos". Sus contratos existentes no se ven afectados por el cambio de estado.
+                  Un inversionista inactivo no recibe boletines del grupo &ldquo;Activos&rdquo;. Sus contratos existentes no se ven afectados por el cambio de estado.
                 </Tip>
               </div>
             </section>
@@ -475,20 +475,20 @@ export default function HelpPage() {
                 </div>
 
                 <Warning>
-                  Los contratos ACTIVOS no se pueden editar. Si necesitás hacer un cambio, debés crear un addendum o una nueva versión del contrato.
+                  Los contratos ACTIVOS no se pueden editar. Si necesitas hacer un cambio, debes crear un addendum o una nueva versión del contrato.
                 </Warning>
 
                 <div className="space-y-2">
                   <SubTitle>El link del portal</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Cada contrato tiene un link único para que el inversionista lo pueda ver. Se genera automáticamente cuando creás el contrato. Lo encontrás en la sección de detalle del contrato.
+                    Cada contrato tiene un link único para que el inversionista lo pueda ver. Se genera automáticamente cuando creas el contrato. Lo encuentras en la sección de detalle del contrato.
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <SubTitle>Documentos</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Podés subir archivos al contrato: el borrador del contrato, el contrato firmado, comprobantes de pago, reportes o addendums.
+                    Puedes subir archivos al contrato: el borrador del contrato, el contrato firmado, comprobantes de pago, reportes o addendums.
                   </p>
                 </div>
               </div>
@@ -504,12 +504,12 @@ export default function HelpPage() {
                 <div className="space-y-3">
                   <SubTitle>Tipos de movimientos</SubTitle>
                   <div className="rounded-lg border border-zinc-100 p-4 space-y-3">
-                    <FieldRow name="Deposito" desc="Dinero que el inversionista pone en el fondo." />
+                    <FieldRow name="Depósito" desc="Dinero que el inversionista pone en el fondo." />
                     <FieldRow
                       name="Retiro"
                       desc="Dinero que se le paga al inversionista (rendimientos o capital)."
                     />
-                    <FieldRow name="Comision" desc="Pago de comisión por referido." />
+                    <FieldRow name="Comisión" desc="Pago de comisión por referido." />
                   </div>
                 </div>
 
@@ -531,7 +531,7 @@ export default function HelpPage() {
                 <div className="space-y-2">
                   <SubTitle>Verificar un pago</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Todo pago registrado queda como "Pendiente" hasta que un administrador lo verifica. Para verificarlo, hacé clic en el botón de verificación. Una vez verificado, no se puede modificar ni eliminar.
+                    Todo pago registrado queda como &ldquo;Pendiente&rdquo; hasta que un administrador lo verifica. Para verificarlo, haz clic en el botón de verificación. Una vez verificado, no se puede modificar ni eliminar.
                   </p>
                 </div>
 
@@ -579,7 +579,7 @@ export default function HelpPage() {
                 <div className="space-y-3">
                   <SubTitle>Generar un reporte — paso a paso</SubTitle>
                   <div className="space-y-2.5">
-                    <StepBullet n={1}>Ir a Reportes y hacer clic en "Nuevo reporte".</StepBullet>
+                    <StepBullet n={1}>Ir a Reportes y hacer clic en &ldquo;Nuevo reporte&rdquo;.</StepBullet>
                     <StepBullet n={2}>Seleccionar el contrato.</StepBullet>
                     <StepBullet n={3}>
                       Definir el período (fecha inicio y fecha fin del bimestre).
@@ -591,13 +591,13 @@ export default function HelpPage() {
                       Opcionalmente, el monto calculado actual de la inversión.
                     </StepBullet>
                     <StepBullet n={6}>
-                      Guardar — queda en estado "Pendiente".
+                      Guardar — queda en estado &ldquo;Pendiente&rdquo;.
                     </StepBullet>
                     <StepBullet n={7}>
-                      Subir el PDF del reporte (botón "Subir PDF") — pasa a "PDF listo".
+                      Subir el PDF del reporte (botón &ldquo;Subir PDF&rdquo;) — pasa a &ldquo;PDF listo&rdquo;.
                     </StepBullet>
                     <StepBullet n={8}>
-                      Enviar por email (botón "Enviar reporte") — pasa a "Enviado".
+                      Enviar por email (botón &ldquo;Enviar reporte&rdquo;) — pasa a &ldquo;Enviado&rdquo;.
                     </StepBullet>
                   </div>
                 </div>
@@ -643,19 +643,19 @@ export default function HelpPage() {
                 <div className="space-y-3">
                   <SubTitle>Crear y enviar un boletín — paso a paso</SubTitle>
                   <div className="space-y-2.5">
-                    <StepBullet n={1}>Ir a Boletines y hacer clic en "Nuevo boletín".</StepBullet>
+                    <StepBullet n={1}>Ir a Boletines y hacer clic en &ldquo;Nuevo boletín&rdquo;.</StepBullet>
                     <StepBullet n={2}>Escribir el asunto (aparece como título del email).</StepBullet>
                     <StepBullet n={3}>
                       Escribir el contenido (se formatea automáticamente).
                     </StepBullet>
                     <StepBullet n={4}>Elegir el grupo de destinatarios.</StepBullet>
                     <StepBullet n={5}>Guardar como borrador.</StepBullet>
-                    <StepBullet n={6}>Revisar y hacer clic en "Enviar boletín".</StepBullet>
+                    <StepBullet n={6}>Revisar y hacer clic en &ldquo;Enviar boletín&rdquo;.</StepBullet>
                   </div>
                 </div>
 
                 <Warning>
-                  Una vez enviado, no se puede modificar ni reenviar. Revisá bien el contenido y los destinatarios antes de enviar.
+                  Una vez enviado, no se puede modificar ni reenviar. Revisa bien el contenido y los destinatarios antes de enviar.
                 </Warning>
               </div>
             </section>
@@ -738,19 +738,19 @@ export default function HelpPage() {
                 <div className="space-y-2">
                   <SubTitle>Registrar una comisión</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Las comisiones se pueden registrar manualmente. Para que funcione, el inversionista referido debe tener configurado su "referidor" en su perfil.
+                    Las comisiones se pueden registrar manualmente. Para que funcione, el inversionista referido debe tener configurado su &ldquo;referidor&rdquo; en su perfil.
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <SubTitle>Marcar como pagada</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Cuando se le paga la comisión al referidor, hacé clic en "Marcar pagada" y confirmá. Se registra la fecha de pago automáticamente.
+                    Cuando se le paga la comisión al referidor, haz clic en &ldquo;Marcar pagada&rdquo;, adjunta el comprobante (PDF o imagen) y confirma. Se registra la fecha de pago automáticamente.
                   </p>
                 </div>
 
                 <Tip>
-                  Para que el sistema calcule las comisiones correctamente, asegurate de seleccionar el referidor al momento de crear el perfil del inversionista nuevo.
+                  Para que el sistema calcule las comisiones correctamente, asegúrate de seleccionar el referidor al momento de crear el perfil del inversionista nuevo.
                 </Tip>
               </div>
             </section>
@@ -772,11 +772,8 @@ export default function HelpPage() {
                 <div className="space-y-2">
                   <SubTitle>¿Cómo accede el inversionista?</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Le enviás el link que aparece en el detalle del contrato. El link tiene este formato:
+                    Le envías el link que aparece en el detalle del contrato. Cada contrato tiene un código único y seguro que solo ese inversionista debe conocer.
                   </p>
-                  <div className="rounded-md bg-zinc-100 px-3 py-2 font-mono text-xs text-zinc-600">
-                    tudominio.com/portal/[código-único]
-                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -821,7 +818,7 @@ export default function HelpPage() {
                 <div className="space-y-3">
                   <SubTitle>Usuarios del sistema</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Acá se crean y administran las cuentas de las personas que trabajan en Grandir CM. Solo los administradores pueden ver esta sección.
+                    Aquí se crean y administran las cuentas de las personas que trabajan en Grandir CM. Solo los administradores pueden ver esta sección.
                   </p>
                   <div className="rounded-lg border border-zinc-100 p-4 space-y-3">
                     <FieldRow
@@ -838,8 +835,8 @@ export default function HelpPage() {
                 <div className="space-y-3">
                   <SubTitle>Crear un usuario — paso a paso</SubTitle>
                   <div className="space-y-2.5">
-                    <StepBullet n={1}>Hacé clic en "Nuevo usuario".</StepBullet>
-                    <StepBullet n={2}>Ingresá el email, contraseña, nombre y rol.</StepBullet>
+                    <StepBullet n={1}>Haz clic en &ldquo;Nuevo usuario&rdquo;.</StepBullet>
+                    <StepBullet n={2}>Ingresa el email, contraseña, nombre y rol.</StepBullet>
                     <StepBullet n={3}>El usuario puede iniciar sesión inmediatamente.</StepBullet>
                   </div>
                 </div>
@@ -847,7 +844,14 @@ export default function HelpPage() {
                 <div className="space-y-3">
                   <SubTitle>Planes de inversión</SubTitle>
                   <p className="text-sm text-zinc-500">
-                    Acá se administran los planes disponibles (Anual, Mensual, Semestral). Podés crear nuevos planes, modificar tasas y montos mínimos, y activar o desactivar planes.
+                    Aquí se administran los planes disponibles (Anual, Mensual, Semestral). Puedes crear nuevos planes, modificar tasas y montos mínimos, y activar o desactivar planes.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <SubTitle>Plantillas de contratos</SubTitle>
+                  <p className="text-sm text-zinc-500">
+                    Aquí defines el texto base del contrato para cada plan. Puedes tener múltiples plantillas por plan (por ejemplo &ldquo;Anual normal&rdquo; y &ldquo;Anual promoción de diciembre&rdquo;) y elegir cuál usar al crear un contrato. Al crear el contrato, puedes hacer ajustes específicos para ese caso sin modificar la plantilla original.
                   </p>
                 </div>
 
@@ -868,11 +872,11 @@ export default function HelpPage() {
                   {[
                     {
                       q: '¿Qué pasa si el inversionista no aprueba el contrato?',
-                      a: 'El contrato queda en "Pendiente de aprobación" indefinidamente. Podés contactar al inversionista y reenviarle el link. Si pidió revisión, volvé a borrador, corregí y reenvialo.',
+                      a: 'El contrato queda en "Pendiente de aprobación" indefinidamente. Puedes contactar al inversionista y reenviarle el link. Si pidió revisión, vuelve a borrador, corrige y reenvíalo.',
                     },
                     {
                       q: '¿Puedo editar un contrato activo?',
-                      a: 'No. Los contratos activos no se pueden editar para mantener la integridad del acuerdo firmado. Si necesitás cambiar algo, contactá al administrador para crear un addendum.',
+                      a: 'No. Los contratos activos no se pueden editar para mantener la integridad del acuerdo firmado. Si necesitas cambiar algo, contacta al administrador para crear un addendum.',
                     },
                     {
                       q: '¿Se pueden eliminar pagos?',
@@ -883,8 +887,8 @@ export default function HelpPage() {
                       a: 'Los links tienen una validez de 1 año. Si expiran, un administrador debe generar uno nuevo desde el detalle del contrato.',
                     },
                     {
-                      q: '¿Los emails se envían en desarrollo (localhost)?',
-                      a: 'No. En desarrollo, los emails se simulan y aparecen en la consola del servidor. Solo se envían emails reales en producción (Vercel).',
+                      q: '¿Puedo subir una foto del comprobante en vez de un PDF?',
+                      a: 'Sí. El sistema acepta PDF e imágenes (JPG, PNG, HEIC). El tamaño máximo por archivo es de 20 MB.',
                     },
                   ].map(({ q, a }) => (
                     <div key={q} className="space-y-1.5 border-b border-zinc-100 pb-5 last:border-0 last:pb-0">
