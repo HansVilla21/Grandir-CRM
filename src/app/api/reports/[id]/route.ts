@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     const { data: report, error } = await supabase
       .from('reports')
@@ -87,8 +91,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Check current status
     const { data: existing, error: fetchError } = await supabase

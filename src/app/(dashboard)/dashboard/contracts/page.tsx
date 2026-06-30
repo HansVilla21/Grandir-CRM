@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { ContractsTable } from './_components/contracts-table'
 import type { ContractListItem } from '@/types/contracts'
 
@@ -7,7 +7,7 @@ export const metadata = {
 }
 
 export default async function ContractsPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Fetch contracts with plan info
   const { data: contractsRaw, error: contractsError } = await supabase

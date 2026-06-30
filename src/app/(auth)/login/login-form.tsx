@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { login } from '@/lib/auth/actions'
 
-export function LoginForm() {
+export function LoginForm({ notice }: { notice?: string | null }) {
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
@@ -33,6 +33,12 @@ export function LoginForm() {
           <h2 className="text-base font-medium text-zinc-900 mb-6">
             Iniciar sesión
           </h2>
+
+          {notice && (
+            <p className="mb-4 text-sm text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+              {notice}
+            </p>
+          )}
 
           <form action={handleSubmit} className="space-y-4">
             <div>

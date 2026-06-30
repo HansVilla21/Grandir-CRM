@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import { calculateInvestment, type PlanType } from '@/lib/investment/calculator'
 import type { NotificationType } from '@/types/notifications'
 
@@ -49,7 +50,10 @@ function shortId(id: string): string {
 
 export async function POST() {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const today = todayStart()
 
     // Get admin recipients

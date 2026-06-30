@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { PaymentsPageTabs } from './_components/payments-page-tabs'
 import type { PaymentListItem, PaymentSummary, ContractOption } from '@/types/payments'
 
@@ -11,7 +11,7 @@ function formatCurrency(amount: number) {
 }
 
 export default async function PaymentsPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Fetch payments with joins
   const { data: paymentsRaw } = await supabase

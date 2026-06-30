@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/guard'
 
 export async function GET() {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireAdmin()
+    if (response) return response
+
+    const supabase = createServiceClient()
 
     // Fetch auth users list
     const { data: authData, error: authError } = await supabase.auth.admin.listUsers()
@@ -47,6 +51,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const body = await request.json()
     const { email, password, full_name, role } = body as {
       email: string
@@ -70,7 +77,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Rol inválido' }, { status: 400 })
     }
 
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Create in auth.users
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({

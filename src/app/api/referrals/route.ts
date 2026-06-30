@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import type { ReferralCommissionItem, ReferralSummary } from '@/types/referrals'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const { searchParams } = new URL(request.url)
 
     const paidParam = searchParams.get('paid')
@@ -95,16 +99,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
 
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     const body = await request.json()
     const { referrer_id, referred_id, contract_id, amount } = body as {

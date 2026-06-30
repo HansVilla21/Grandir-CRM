@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceClient, createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 /**
  * Genera una signed URL temporal (1 h) para un documento del bucket `contracts`.
@@ -7,14 +8,8 @@ import { createServiceClient, createClient } from '@/lib/supabase/server'
  */
 export async function GET(request: NextRequest) {
   try {
-    const authClient = await createClient()
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const { response } = await requireInternalUser()
+    if (response) return response
 
     const { searchParams } = new URL(request.url)
     const path = searchParams.get('path')

@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import type { ContractStatus } from '@/types/contracts'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const { searchParams } = new URL(request.url)
     const statusParam = searchParams.get('status')
     const planId = searchParams.get('plan_id')
@@ -99,7 +103,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { profile, response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const body = await request.json()
 
     const {
@@ -204,10 +211,6 @@ export async function POST(request: NextRequest) {
 
     // Notify other admins of new contract
     try {
-      const { createClient } = await import('@/lib/supabase/server')
-      const authClient = await createClient()
-      const { data: { user: actor } } = await authClient.auth.getUser()
-
       const { data: holderInfo } = await supabase
         .from('investors')
         .select('full_name')
@@ -224,7 +227,7 @@ export async function POST(request: NextRequest) {
         body: `Contrato #${contract.id.slice(0, 8).toUpperCase()} por ${formattedAmount} a nombre de ${holderInfo?.full_name ?? 'inversionista'}.`,
         contract_id: contract.id,
         investor_id,
-        exclude_user_id: actor?.id,
+        exclude_user_id: profile.id,
       })
     } catch (notifErr) {
       console.error('[contracts/POST] notify error:', notifErr)

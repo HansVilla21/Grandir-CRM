@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser, requireAdmin } from '@/lib/auth/guard'
 import type { Json } from '@/types/database'
 
 type PlanType = 'annual' | 'monthly' | 'semestral'
@@ -26,7 +27,10 @@ function buildPaymentStructure(type: PlanType): Json {
 
 export async function GET() {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
 
     const { data, error } = await supabase
       .from('investment_plans')
@@ -46,6 +50,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const body = await request.json()
     const { name, type, annual_rate, min_amount, description, valid_from, valid_to } =
       body as {
@@ -69,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     const payment_structure = buildPaymentStructure(type)
 
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     const { data, error } = await supabase
       .from('investment_plans')

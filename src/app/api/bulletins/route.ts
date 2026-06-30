@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET() {
-  const supabase = await createAdminClient()
+  const { response } = await requireInternalUser()
+  if (response) return response
+
+  const supabase = createServiceClient()
 
   const { data, error } = await supabase
     .from('bulletins')
@@ -45,14 +48,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const authClient = await createClient()
-  const {
-    data: { user },
-  } = await authClient.auth.getUser()
-
-  if (!user) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  const { profile, response } = await requireInternalUser()
+  if (response) return response
 
   const body = await request.json()
   const { subject, body: bulletinBody, target_group, target_plan_id } = body
@@ -64,7 +61,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { data, error } = await supabase
     .from('bulletins')
@@ -73,7 +70,7 @@ export async function POST(request: NextRequest) {
       body: bulletinBody,
       target_group,
       target_plan_id: target_plan_id ?? null,
-      sent_by: user.id,
+      sent_by: profile.id,
       status: 'draft',
     })
     .select('id')

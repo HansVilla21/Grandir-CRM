@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { NewContractForm } from '../_components/new-contract-form'
 
 export const metadata = {
@@ -6,7 +6,7 @@ export const metadata = {
 }
 
 export default async function NewContractPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Active plans
   const { data: plansRaw, error: plansError } = await supabase

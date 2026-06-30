@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/guard'
 import { sendBulletinEmail } from '@/lib/email/bulletin-email'
 
 export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { response } = await requireAdmin()
+  if (response) return response
+
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Fetch bulletin
   const { data: bulletin, error: bulletinError } = await supabase

@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/guard'
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const { id } = await params
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
-
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     const body = await request.json()
     const { name, content, active, plan_id } = body as {
@@ -61,17 +56,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const { id } = await params
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
-
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     // Block deletion if template is used by any contract
     const { count, error: countError } = await adminSupabase

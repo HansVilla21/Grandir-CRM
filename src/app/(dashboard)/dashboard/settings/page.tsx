@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { UsersSection } from './_components/users-section'
 import { PlansSection } from './_components/plans-section'
@@ -9,12 +9,13 @@ export const metadata = {
 }
 
 export default async function SettingsPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
-  // Verify session
+  // Verify session — la sesión vive en cookies, así que se lee con el cliente con cookies (no el service-role).
+  const authClient = await createClient()
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
 
   if (!user) {
     redirect('/login')

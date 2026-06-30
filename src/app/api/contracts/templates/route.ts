@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const { searchParams } = new URL(request.url)
     const planId = searchParams.get('plan_id')
 

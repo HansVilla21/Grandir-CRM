@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const { searchParams } = new URL(request.url)
     const search = searchParams.get('search')
     const status = searchParams.get('status')
@@ -49,7 +53,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { profile, response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const body = await request.json()
 
     const { full_name, cedula, phone, email, referrer_id } = body
@@ -102,10 +109,6 @@ export async function POST(request: NextRequest) {
 
     // Notify other admins of new investor creation
     try {
-      const { createClient } = await import('@/lib/supabase/server')
-      const authClient = await createClient()
-      const { data: { user: actor } } = await authClient.auth.getUser()
-
       const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
       await notifyAdmins({
         supabase,
@@ -114,7 +117,7 @@ export async function POST(request: NextRequest) {
         title: 'Nuevo inversionista registrado',
         body: `${investor.full_name} (cédula ${investor.cedula}) fue registrado en el sistema.`,
         investor_id: investor.id,
-        exclude_user_id: actor?.id,
+        exclude_user_id: profile.id,
       })
     } catch (notifErr) {
       console.error('[investors] notify error:', notifErr)

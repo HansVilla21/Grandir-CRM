@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 interface BatchBody {
   growth_rate: number
@@ -18,7 +19,10 @@ interface BatchBody {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const storageClient = createServiceClient() // bypass RLS for storage
     const body = (await request.json()) as BatchBody
 

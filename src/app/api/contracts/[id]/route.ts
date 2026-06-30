@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import type { ContractStatus } from '@/types/contracts'
 
 // Valid state transitions
@@ -18,8 +19,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Contract + plan
     const { data: contract, error: contractError } = await supabase
@@ -104,8 +108,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { profile, response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
     const body = await request.json()
 
     // Fetch current contract
@@ -170,10 +177,6 @@ export async function PATCH(
 
       // --- Notify admins of state transition (excluding the actor) ---
       try {
-        const { createClient } = await import('@/lib/supabase/server')
-        const authClient = await createClient()
-        const { data: { user: actor } } = await authClient.auth.getUser()
-
         const { notifyAdmins } = await import('@/lib/notifications/notify-admins')
 
         // Get holder for context
@@ -220,7 +223,7 @@ export async function PATCH(
             body: notifConfig.body,
             contract_id: id,
             investor_id: holderRow?.investor_id ?? undefined,
-            exclude_user_id: actor?.id,
+            exclude_user_id: profile.id,
           })
         }
       } catch (notifErr) {

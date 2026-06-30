@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(request: NextRequest) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { searchParams } = new URL(request.url)
     const path = searchParams.get('path')
 
@@ -10,7 +14,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'path es requerido' }, { status: 400 })
     }
 
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
     const { data, error } = await supabase.storage
       .from('receipts')
       .createSignedUrl(path, 3600)

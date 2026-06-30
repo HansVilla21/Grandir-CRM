@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Mail, Phone, Calendar, User, CheckCircle2 } from 'lucide-react'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { InvestorStatusToggle } from '../_components/investor-status-toggle'
 import { InvestorEditButton } from '../_components/investor-edit-button'
 import { InvestorDeleteButton } from '../_components/investor-delete-button'
@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
   const { data } = await supabase
     .from('investors')
     .select('full_name')
@@ -81,7 +81,7 @@ export default async function InvestorDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Investor
   const { data: investorRaw, error } = await supabase

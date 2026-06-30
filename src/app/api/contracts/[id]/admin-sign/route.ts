@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient, createClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/guard'
 import {
   generateSignedContractPdf,
   computeDocumentHash,
@@ -27,6 +28,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const { id: contractId } = await params
     const authClient = await createClient()
     const supabase = createServiceClient()

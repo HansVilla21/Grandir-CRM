@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { profile, response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
-
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     const body = await request.json()
     const { action } = body as { action?: string }
@@ -40,7 +34,7 @@ export async function PATCH(
         .update({
           verified: true,
           verified_at: new Date().toISOString(),
-          verified_by: user.id,
+          verified_by: profile.id,
         })
         .eq('id', id)
         .select()
@@ -69,7 +63,7 @@ export async function PATCH(
           title: 'Pago verificado',
           body: `${typeLabel} de ${formattedAmount} ${inv ? `(${inv.full_name})` : ''} fue verificado.`,
           contract_id: payment.contract_id,
-          exclude_user_id: user.id,
+          exclude_user_id: profile.id,
         })
       } catch (notifErr) {
         console.error('[payments/verify] notify error:', notifErr)
@@ -129,17 +123,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
-
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     // Fetch to verify it exists and is not verified
     const { data: existing, error: fetchError } = await adminSupabase

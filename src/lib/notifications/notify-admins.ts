@@ -15,7 +15,7 @@ interface NotifyAdminsParams {
 
 /**
  * Creates a notification for every admin user. Non-blocking — logs errors but does not throw.
- * Pass the supabase client from the caller (works with both createAdminClient and createServiceClient).
+ * Pass the supabase client from the caller (debe ser un createServiceClient para escribir notificaciones).
  * Optionally exclude a user (typically the one who performed the action).
  */
 export async function notifyAdmins(params: NotifyAdminsParams): Promise<void> {

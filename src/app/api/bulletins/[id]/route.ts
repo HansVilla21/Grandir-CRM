@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { response } = await requireInternalUser()
+  if (response) return response
+
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { data: bulletin, error } = await supabase
     .from('bulletins')
@@ -68,8 +72,11 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { response } = await requireInternalUser()
+  if (response) return response
+
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Verify it's still a draft
   const { data: existing, error: fetchError } = await supabase
@@ -114,8 +121,11 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { response } = await requireInternalUser()
+  if (response) return response
+
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { data: existing, error: fetchError } = await supabase
     .from('bulletins')

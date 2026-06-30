@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 interface DueReport {
   contract_id: string
@@ -34,7 +35,10 @@ function daysBetween(a: Date, b: Date): number {
  */
 export async function GET() {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const today = new Date()
 
     // 1. Active contracts with frequency

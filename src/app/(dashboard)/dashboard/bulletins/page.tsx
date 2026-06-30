@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { BulletinsTable } from './_components/bulletins-table'
 import type { BulletinListItem } from '@/types/bulletins'
 
@@ -17,7 +17,7 @@ function StatCard({ label, value }: { label: string; value: number | string }) {
 }
 
 export default async function BulletinsPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { data: raw } = await supabase
     .from('bulletins')

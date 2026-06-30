@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import {
   computeUpcomingPayments,
   summarizeUpcomingPayments,
@@ -9,7 +10,10 @@ import {
 
 export async function GET() {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
 
     // 1. Active contracts with plan info
     const { data: contractsRaw, error: contractsError } = await supabase

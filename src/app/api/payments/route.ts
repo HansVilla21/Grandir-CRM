@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import type { PaymentType } from '@/types/payments'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const { searchParams } = new URL(request.url)
 
     const contractId = searchParams.get('contract_id')
@@ -121,16 +124,10 @@ function buildSummary(
 
 export async function POST(request: NextRequest) {
   try {
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
 
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     const formData = await request.formData()
 

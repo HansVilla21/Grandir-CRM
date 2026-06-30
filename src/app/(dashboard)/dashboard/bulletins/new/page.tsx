@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { BulletinForm } from '../_components/bulletin-form'
 
 export const metadata = {
@@ -6,7 +6,7 @@ export const metadata = {
 }
 
 export default async function NewBulletinPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { data: plansRaw } = await supabase
     .from('investment_plans')

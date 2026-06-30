@@ -1,25 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(request: NextRequest) {
-  const authClient = await createClient()
-  const {
-    data: { user },
-  } = await authClient.auth.getUser()
-
-  if (!user) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  const { profile, response } = await requireInternalUser()
+  if (response) return response
 
   const { searchParams } = new URL(request.url)
   const unreadOnly = searchParams.get('unread_only') === 'true'
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   let query = supabase
     .from('notifications')
     .select('id, type, title, body, contract_id, investor_id, read, read_at, created_at')
-    .eq('recipient_user_id', user.id)
+    .eq('recipient_user_id', profile.id)
     .order('created_at', { ascending: false })
 
   if (unreadOnly) {
@@ -36,14 +31,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const authClient = await createClient()
-  const {
-    data: { user },
-  } = await authClient.auth.getUser()
-
-  if (!user) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  const { profile, response } = await requireInternalUser()
+  if (response) return response
 
   const body = await request.json()
 
@@ -51,7 +40,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Acción no reconocida' }, { status: 400 })
   }
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { error } = await supabase
     .from('notifications')
@@ -59,7 +48,7 @@ export async function POST(request: NextRequest) {
       read: true,
       read_at: new Date().toISOString(),
     })
-    .eq('recipient_user_id', user.id)
+    .eq('recipient_user_id', profile.id)
     .eq('read', false)
 
   if (error) {

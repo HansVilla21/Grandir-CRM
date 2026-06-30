@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient, createClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 /**
  * Permite al admin (April) rechazar un contrato que ya fue firmado por el
@@ -15,6 +16,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id: contractId } = await params
     const authClient = await createClient()
     const supabase = createServiceClient()

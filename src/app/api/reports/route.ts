@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const contractId = searchParams.get('contract_id')
@@ -46,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch holder names for all contracts in results
     const contractIds = [...new Set((reports ?? []).map((r) => r.contract_id))]
-    let holderMap = new Map<string, string>()
+    const holderMap = new Map<string, string>()
 
     if (contractIds.length > 0) {
       const { data: holders } = await supabase
@@ -91,7 +95,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
     const body = await request.json()
 
     const { contract_id, period_start, period_end, growth_rate, calculated_amount, description } = body

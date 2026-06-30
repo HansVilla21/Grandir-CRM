@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { InvestorsTable } from './_components/investors-table'
 import type { InvestorWithEmail } from '@/types/investors'
 
@@ -7,7 +7,7 @@ export const metadata = {
 }
 
 export default async function InvestorsPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Fetch all investors with primary email
   const { data: rawInvestors, error } = await supabase

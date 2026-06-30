@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Fetch report to get contract_id
     const { data: report, error: reportError } = await supabase

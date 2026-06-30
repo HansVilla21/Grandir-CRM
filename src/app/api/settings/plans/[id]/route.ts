@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/guard'
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const { id } = await params
     const body = await request.json()
     const { name, annual_rate, min_amount, active, description, valid_from, valid_to } =
@@ -32,7 +36,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 })
     }
 
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     const { data, error } = await supabase
       .from('investment_plans')

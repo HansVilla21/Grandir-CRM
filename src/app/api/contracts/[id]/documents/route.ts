@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 import type { DocumentType } from '@/types/contracts'
 
 const VALID_DOCUMENT_TYPES: DocumentType[] = [
@@ -24,8 +25,11 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id: contractId } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Verify contract exists
     const { data: contract, error: contractError } = await supabase

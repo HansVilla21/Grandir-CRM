@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createClient, createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/guard'
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Pagar comisión es acción sensible → solo admin.
+    const { profile, response } = await requireAdmin()
+    if (response) return response
+
     const { id } = await params
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
-
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     // Detect content-type: multipart for upload, JSON for legacy/no-receipt path
     const contentType = request.headers.get('content-type') ?? ''
@@ -114,7 +110,7 @@ export async function PATCH(
           title: 'Comisión de referido pagada',
           body: `Se pagó una comisión de ${formattedAmount} a ${referrer?.full_name ?? 'un inversionista'}.`,
           investor_id: commission.referrer_id,
-          exclude_user_id: user.id,
+          exclude_user_id: profile.id,
         })
       } catch (notifErr) {
         console.error('[referrals/pay] notify error:', notifErr)

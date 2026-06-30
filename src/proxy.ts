@@ -41,14 +41,23 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  // Protect dashboard routes
+  // Rutas /api públicas (no requieren sesión): portal por token y formulario externo.
+  const PUBLIC_API_PREFIXES = ['/api/portal/', '/api/applications']
+  const isPublicApi = PUBLIC_API_PREFIXES.some((p) => pathname.startsWith(p))
+
+  // Proteger TODAS las rutas /api salvo las públicas: sin sesión => 401 (no fuga de datos).
+  if (pathname.startsWith('/api/') && !isPublicApi && !user) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  // Proteger rutas del dashboard
   if (pathname.startsWith('/dashboard') && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-  // Redirect authenticated users away from login
+  // Redirigir usuarios autenticados fuera del login
   if (pathname.startsWith('/login') && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'

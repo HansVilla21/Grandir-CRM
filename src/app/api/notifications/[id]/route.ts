@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function PATCH(
   request: NextRequest,
@@ -7,14 +8,8 @@ export async function PATCH(
 ) {
   const { id } = await params
 
-  const authClient = await createClient()
-  const {
-    data: { user },
-  } = await authClient.auth.getUser()
-
-  if (!user) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  const { profile, response } = await requireInternalUser()
+  if (response) return response
 
   const body = await request.json()
 
@@ -22,7 +17,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Acción no reconocida' }, { status: 400 })
   }
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { error } = await supabase
     .from('notifications')
@@ -31,7 +26,7 @@ export async function PATCH(
       read_at: new Date().toISOString(),
     })
     .eq('id', id)
-    .eq('recipient_user_id', user.id)
+    .eq('recipient_user_id', profile.id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

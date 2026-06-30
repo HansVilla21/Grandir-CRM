@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { ReportsTable } from './_components/reports-table'
 import { ReportsDueAlert } from './_components/reports-due-alert'
 import { BatchReportButton } from './_components/batch-report-button'
@@ -24,7 +24,7 @@ function StatCard({
 }
 
 export default async function ReportsPage() {
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Fetch all reports with joins
   const { data: reportsRaw } = await supabase

@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser, requireAdmin } from '@/lib/auth/guard'
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Investor + all emails
     const { data: investor, error: investorError } = await supabase
@@ -65,8 +69,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
     const body = await request.json()
 
     const allowedFields = ['full_name', 'phone', 'status', 'cedula', 'referrer_id']
@@ -175,8 +182,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
     const { id } = await params
-    const supabase = await createAdminClient()
+    const supabase = createServiceClient()
 
     // Check if investor has active contracts
     const { count } = await supabase

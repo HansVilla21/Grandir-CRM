@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient, createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser, requireAdmin } from '@/lib/auth/guard'
 import { defaultContentForPlanType } from '@/lib/contract-templates/default-content'
 
 export async function GET() {
   try {
-    const supabase = await createAdminClient()
+    const { response } = await requireInternalUser()
+    if (response) return response
+
+    const supabase = createServiceClient()
 
     const { data: templates, error } = await supabase
       .from('contract_templates')
@@ -58,16 +62,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const adminSupabase = await createAdminClient()
-    const authClient = await createClient()
+    const { response } = await requireAdmin()
+    if (response) return response
 
-    const {
-      data: { user },
-    } = await authClient.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-    }
+    const adminSupabase = createServiceClient()
 
     const body = await request.json()
     const action = body.action as string | undefined

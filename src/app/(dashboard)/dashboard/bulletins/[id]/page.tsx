@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { BulletinForm } from '../_components/bulletin-form'
 import { BulletinSendButton } from '../_components/bulletin-send-button'
 import { TARGET_GROUP_LABELS } from '@/types/bulletins'
@@ -22,7 +22,7 @@ export default async function BulletinDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   const { data: bulletin, error } = await supabase
     .from('bulletins')

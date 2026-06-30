@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft, FileText, ExternalLink } from 'lucide-react'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { ReportSendButton } from '../_components/report-send-button'
 import { ReportPdfUpload } from '../_components/report-pdf-upload'
 import type { ReportDetail, ReportStatus } from '@/types/reports'
@@ -52,7 +52,7 @@ export default async function ReportDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
   // Fetch report with contract data
   const { data: reportRaw, error } = await supabase

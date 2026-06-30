@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { requireInternalUser } from '@/lib/auth/guard'
 
 export async function GET(request: NextRequest) {
   try {
+    const { response } = await requireInternalUser()
+    if (response) return response
+
     const { searchParams } = new URL(request.url)
     const path = searchParams.get('path')
 

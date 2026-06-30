@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft, ExternalLink, FileText } from 'lucide-react'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { createClient } from '@/lib/supabase/server'
 import { ContractStatusBadge } from '../_components/contract-status-badge'
 import { ContractActions } from '../_components/contract-actions'
@@ -59,13 +59,23 @@ const ROLE_LABELS: Record<string, string> = {
   co_investor: 'Co-inversionista',
 }
 
+const CONTRACT_STATUS_LABELS: Record<string, string> = {
+  draft: 'Borrador',
+  pending_approval: 'Pendiente de aprobación',
+  revision_requested: 'Revisión solicitada',
+  pending_admin_signature: 'Esperando firma de Grandir',
+  active: 'Activo',
+  expired: 'Vencido',
+  cancelled: 'Cancelado',
+}
+
 export default async function ContractDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
   const authClient = await createClient()
 
   const {
@@ -536,7 +546,7 @@ export default async function ContractDetailPage({
       {/* Edit warning for non-editable contracts */}
       {!canEdit && (
         <p className="text-xs text-zinc-400 text-center pb-4">
-          Los contratos en estado &ldquo;{contract.status}&rdquo; no se pueden editar.
+          Los contratos en estado &ldquo;{CONTRACT_STATUS_LABELS[contract.status] ?? contract.status}&rdquo; no se pueden editar.
           Para modificar un contrato activo, crea un addendum.
         </p>
       )}

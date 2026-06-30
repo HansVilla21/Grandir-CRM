@@ -1,4 +1,4 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { NotificationItem } from '@/types/notifications'
 import { NotificationsList } from './_components/notifications-list'
@@ -17,17 +17,25 @@ export default async function NotificationsPage() {
     redirect('/login')
   }
 
-  const supabase = await createAdminClient()
+  const supabase = createServiceClient()
 
-  // Trigger a scan on page load so the user sees fresh time-based notifications
+  // Trigger a scan on page load so the user sees fresh time-based notifications.
+  // /api/notifications/scan ahora exige sesión (requireInternalUser), así que reenviamos
+  // las cookies de sesión en este fetch server-to-server.
   try {
-    const { headers } = await import('next/headers')
+    const { headers, cookies } = await import('next/headers')
     const h = await headers()
     const host = h.get('host')
     const protocol = h.get('x-forwarded-proto') ?? 'http'
+    const cookieStore = await cookies()
+    const cookieHeader = cookieStore
+      .getAll()
+      .map((c) => `${c.name}=${c.value}`)
+      .join('; ')
     await fetch(`${protocol}://${host}/api/notifications/scan`, {
       method: 'POST',
       cache: 'no-store',
+      headers: { cookie: cookieHeader },
     }).catch(() => {})
   } catch {
     // silent
