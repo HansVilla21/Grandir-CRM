@@ -9,6 +9,7 @@ import { DocumentUpload } from '../_components/document-upload'
 import { ContractPaymentsSection } from '../_components/contract-payments-section'
 import { AdminSignatureBanner } from './_components/admin-signature-banner'
 import { DocumentDownloadButton } from './_components/document-download-button'
+import { ContractDeleteButton } from './_components/contract-delete-button'
 import { InvestmentCalculator } from '@/components/investment/investment-calculator'
 import type { PlanType } from '@/lib/investment/calculator'
 import type { ContractDetail } from '@/types/contracts'
@@ -220,11 +221,19 @@ export default async function ContractDetailPage({
               )}
             </p>
           </div>
-          <ContractActions
-            contractId={contract.id}
-            currentStatus={contract.status}
-            userRole={userRole}
-          />
+          <div className="flex flex-col items-start sm:items-end gap-3">
+            <ContractActions
+              contractId={contract.id}
+              currentStatus={contract.status}
+              userRole={userRole}
+            />
+            {userRole === 'admin' && (
+              <ContractDeleteButton
+                contractId={contract.id}
+                contractShortId={contract.id.slice(0, 8).toUpperCase()}
+              />
+            )}
+          </div>
         </div>
       </div>
 

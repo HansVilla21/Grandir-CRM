@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { requireInternalUser } from '@/lib/auth/guard'
+import { requireInternalUser, requireAdmin } from '@/lib/auth/guard'
 import type { ContractStatus } from '@/types/contracts'
 
 // Valid state transitions
@@ -379,6 +379,88 @@ export async function PATCH(
     }
 
     return NextResponse.json({ contract: updated })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Error inesperado'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
+
+/**
+ * Borrado definitivo de un contrato (solo admin), en cualquier estado.
+ * Limpia los dependientes con FK NO ACTION (payments, reports, contract_documents,
+ * notifications, referral_commissions) antes de borrar el contrato.
+ * contract_investors y contract_beneficiaries se borran por CASCADE.
+ * Los archivos en Storage se eliminan best-effort (no bloquean el borrado).
+ */
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { response } = await requireAdmin()
+    if (response) return response
+
+    const { id } = await params
+    const supabase = createServiceClient()
+
+    // Verificar que el contrato existe
+    const { data: existing, error: existingError } = await supabase
+      .from('contracts')
+      .select('id')
+      .eq('id', id)
+      .single()
+
+    if (existingError || !existing) {
+      return NextResponse.json({ error: 'Contrato no encontrado' }, { status: 404 })
+    }
+
+    // 1) Best-effort: borrar archivos de Storage (bucket 'contracts')
+    const storagePaths: string[] = []
+    const { data: docs } = await supabase
+      .from('contract_documents')
+      .select('storage_path')
+      .eq('contract_id', id)
+    for (const d of docs ?? []) {
+      if (d.storage_path) storagePaths.push(d.storage_path)
+    }
+    const { data: reps } = await supabase
+      .from('reports')
+      .select('pdf_path')
+      .eq('contract_id', id)
+    for (const r of reps ?? []) {
+      if (r.pdf_path) storagePaths.push(r.pdf_path)
+    }
+    if (storagePaths.length > 0) {
+      try {
+        await supabase.storage.from('contracts').remove(storagePaths)
+      } catch (storageErr) {
+        console.error('[contracts DELETE] storage cleanup error:', storageErr)
+      }
+    }
+
+    // 2) Borrar dependientes con FK NO ACTION (explícito por tabla)
+    const depErrors = [
+      { t: 'payments', e: (await supabase.from('payments').delete().eq('contract_id', id)).error },
+      { t: 'reports', e: (await supabase.from('reports').delete().eq('contract_id', id)).error },
+      { t: 'contract_documents', e: (await supabase.from('contract_documents').delete().eq('contract_id', id)).error },
+      { t: 'notifications', e: (await supabase.from('notifications').delete().eq('contract_id', id)).error },
+      { t: 'referral_commissions', e: (await supabase.from('referral_commissions').delete().eq('contract_id', id)).error },
+    ]
+    const firstDepError = depErrors.find((d) => d.e)
+    if (firstDepError) {
+      return NextResponse.json(
+        { error: `Error al borrar ${firstDepError.t}: ${firstDepError.e!.message}` },
+        { status: 500 }
+      )
+    }
+
+    // 3) Borrar el contrato (contract_investors y contract_beneficiaries -> CASCADE)
+    const { error: deleteError } = await supabase.from('contracts').delete().eq('id', id)
+    if (deleteError) {
+      return NextResponse.json({ error: deleteError.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Error inesperado'
     return NextResponse.json({ error: message }, { status: 500 })

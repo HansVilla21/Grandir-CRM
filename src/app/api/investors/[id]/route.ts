@@ -201,6 +201,25 @@ export async function DELETE(
       )
     }
 
+    // Limpiar dependientes directos con FK NO ACTION.
+    // investor_emails se borra por CASCADE; referrer_id en otros investors -> SET NULL.
+    const notifDel = await supabase.from('notifications').delete().eq('investor_id', id)
+    if (notifDel.error) {
+      return NextResponse.json({ error: `Error al borrar notificaciones: ${notifDel.error.message}` }, { status: 500 })
+    }
+    const bulkDel = await supabase.from('bulletin_recipients').delete().eq('investor_id', id)
+    if (bulkDel.error) {
+      return NextResponse.json({ error: `Error al borrar destinatarios de boletín: ${bulkDel.error.message}` }, { status: 500 })
+    }
+    // referral_commissions referencia al inversionista como referrer o como referido.
+    const commDel = await supabase
+      .from('referral_commissions')
+      .delete()
+      .or(`referrer_id.eq.${id},referred_id.eq.${id}`)
+    if (commDel.error) {
+      return NextResponse.json({ error: `Error al borrar comisiones de referido: ${commDel.error.message}` }, { status: 500 })
+    }
+
     const { error } = await supabase
       .from('investors')
       .delete()
