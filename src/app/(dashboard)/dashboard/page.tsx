@@ -89,6 +89,7 @@ export default async function DashboardPage() {
       .gte('end_date', new Date().toISOString().split('T')[0])
       .lte(
         'end_date',
+        // eslint-disable-next-line react-hooks/purity -- server component, se evalúa una vez por request
         new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
       )
       .eq('contract_investors.role', 'holder')

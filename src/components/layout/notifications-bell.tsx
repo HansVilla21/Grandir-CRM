@@ -65,8 +65,9 @@ export function NotificationsBell() {
     }
   }
 
-  // Initial load + poll every 60s
+  // Initial load + poll every 60s (fetch de datos al montar — patrón estándar)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAll()
     const interval = setInterval(fetchAll, 60000)
     return () => clearInterval(interval)

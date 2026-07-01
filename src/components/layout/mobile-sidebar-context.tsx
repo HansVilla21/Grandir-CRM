@@ -25,8 +25,9 @@ export function MobileSidebarProvider({ children }: { children: React.ReactNode 
   const close = useCallback(() => setIsOpen(false), [])
   const toggle = useCallback(() => setIsOpen((prev) => !prev), [])
 
-  // Close sidebar on route change
+  // Close sidebar on route change (reset intencional de estado al navegar)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false)
   }, [pathname])
 

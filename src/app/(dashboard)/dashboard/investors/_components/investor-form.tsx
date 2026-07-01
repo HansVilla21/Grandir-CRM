@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { X, Search, ChevronDown, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { InvestorWithEmail, Investor } from '@/types/investors'
+import type { Investor } from '@/types/investors'
 
 const COUNTRY_CODES = [
   { code: '+506', country: 'CR', label: 'Costa Rica' },
